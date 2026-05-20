@@ -1,0 +1,7 @@
+﻿task_id,category,attempt,ir_valid,compile_pass,verify_pass,execution_pass,task_success,payload_hex,error_stage,error_code,hint,candidate_mir
+T001,single_set,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"require cap(relay1)
+set relay1 = 1
+halt"
+T002,single_set,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"require cap(relay1)
+set relay1 = 1
+halt"

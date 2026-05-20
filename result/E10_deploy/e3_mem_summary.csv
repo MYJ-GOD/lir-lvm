@@ -1,0 +1,4 @@
+group,variant,n_total,n_ok,time_us_mean,free_heap_min,free_heap_mean,free_heap_max,free_stack_min,free_stack_mean,free_stack_max,heap_waterline,stack_waterline
+arith,e3_telemetry,30,25,53.640,40176.000,40176.000,40176.000,3760.000,3760.000,3760.000,0.000,0.000
+loop100,e3_telemetry,30,30,1205.567,40176.000,40176.000,40176.000,3616.000,3653.867,3760.000,0.000,144.000
+all,e3_telemetry,60,55,681.964,40176.000,40176.000,40176.000,3616.000,3702.109,3760.000,0.000,144.000

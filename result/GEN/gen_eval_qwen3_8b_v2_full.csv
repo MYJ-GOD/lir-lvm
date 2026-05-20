@@ -1,0 +1,781 @@
+﻿task_id,category,attempt,ir_valid,compile_pass,verify_pass,execution_pass,task_success,payload_hex,error_stage,error_code,hint,candidate_mir
+V2_001,single_set,1,1,1,1,1,1,50051e02460552,,,,"task V2_001 {  
+    require cap(relay1)  
+    set relay1 = 1  
+    halt  
+}"
+V2_002,single_set,1,1,1,1,1,1,50051e00460552,,,,"task V2_002 {
+require cap(relay1)
+set relay1 = 0
+halt
+}"
+V2_003,single_set,1,1,1,1,1,1,50061e02460652,,,,"task V2_003 {
+    require cap(relay2)
+    set relay2 = 1
+    halt
+}"
+V2_004,single_set,1,1,1,1,1,0,50061e02460652,task,TASK_SIGNATURE_MISMATCH,Rewrite the program so the final device state and return signature match the instruction exactly.,"task V2_004 {
+    require cap(relay2)
+    set relay2 = 1
+    halt
+}"
+V2_005,single_read,1,1,1,1,1,1,5005470552,,,,"task V2_005 {
+    require cap(relay1)
+    read relay1
+    halt
+}"
+V2_006,single_read,1,1,1,1,1,1,5006470652,,,,"task V2_006 {
+    require cap(relay2)
+    read relay2
+    halt
+}"
+V2_007,single_read,1,1,1,1,1,1,5001470152,,,,"task V2_007 {
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_008,single_read,1,1,1,1,1,1,5002470252,,,,"task V2_008 {
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_009,single_read,1,1,1,1,1,1,5003470352,,,,"task V2_009 {  
+    require cap(humidity_sensor)  
+    read humidity_sensor  
+    halt  
+}"
+V2_010,set_wait_halt,1,1,1,1,1,1,50051e024605513252,,,,"task V2_010 {  
+require cap(relay1)  
+set relay1 = 1  
+wait 50ms  
+halt  
+}"
+V2_011,set_wait_halt,1,1,1,1,1,1,50051e024605516452,,,,"task V2_011 {  
+  require cap(relay1)  
+  set relay1 = 1  
+  wait 100ms  
+  halt  
+}"
+V2_012,set_wait_halt,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task v2_012 {
+  require cap(relay1)
+  task V2_012 {
+      set relay1 = 1
+      wait 200ms
+      halt
+  }
+}"
+V2_013,set_wait_halt,1,1,1,1,1,1,50051e02460551f40352,,,,"task V2_013 {  
+require cap(relay1)  
+set relay1 = 1  
+wait 500ms  
+halt  
+}"
+V2_014,set_wait_halt,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,task V2_014 { require cap(relay1); set relay1 = 0; wait 50ms; halt; }
+V2_015,set_wait_halt,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,task V2_015 { require cap(relay1); set relay1 = 1; wait 100ms; halt; }
+V2_016,set_wait_halt,1,1,1,1,1,1,50051e00460551c80152,,,,"task V2_016 {  
+    require cap(relay1)  
+    set relay1 = 0  
+    wait 200ms  
+    halt  
+}"
+V2_017,set_wait_halt,1,1,1,1,1,0,50051e02460551f40352,task,TASK_SIGNATURE_MISMATCH,Rewrite the program so the final device state and return signature match the instruction exactly.,"task V2_017 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    halt
+}"
+V2_018,set_wait_halt,1,1,1,1,1,1,50061e024606513252,,,,"task V2_018 {  
+    require cap(relay2)  
+    set relay2 = 1  
+    wait 50ms  
+    halt  
+}"
+V2_019,set_wait_halt,1,1,1,1,1,1,50061e024606516452,,,,"task V2_019 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    halt
+}"
+V2_020,set_wait_halt,1,1,1,1,1,1,50061e02460651c80152,,,,"task V2_020 {  
+    require cap(relay2)  
+    set relay2 = 1  
+    wait 200ms  
+    halt  
+}"
+V2_021,set_wait_halt,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,task V2_021 { require cap(relay2); set relay2 = 1; wait 500ms; halt; }
+V2_022,set_wait_halt,1,1,1,1,1,1,50061e004606513252,,,,"task V2_022 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    halt
+}"
+V2_023,set_wait_halt,1,1,1,1,1,0,50061e024606516452,task,TASK_SIGNATURE_MISMATCH,Rewrite the program so the final device state and return signature match the instruction exactly.,"task V2_023 {
+require cap(relay2)
+set relay2 = 1
+wait 100ms
+halt
+}"
+V2_024,set_wait_halt,1,1,1,1,1,1,50061e00460651c80152,,,,"task V2_024 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 200ms
+    halt
+}"
+V2_025,set_wait_halt,1,1,1,1,1,1,50061e00460651f40352,,,,"task V2_025 {  
+    require cap(relay2)  
+    set relay2 = 0  
+    wait 500ms  
+    halt  
+}"
+V2_026,wait_read,1,1,1,1,1,1,50015164470152,,,,"task V2_026 {
+    require cap(water_sensor)
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_027,wait_read,1,1,1,1,1,1,500151c801470152,,,,"task V2_027 {
+    require cap(water_sensor)
+    wait 200ms
+    read water_sensor
+    halt
+}"
+V2_028,wait_read,1,1,1,1,1,1,500151f403470152,,,,"task V2_028 {
+require cap(water_sensor)
+wait 500ms
+read water_sensor
+halt
+}"
+V2_029,wait_read,1,1,1,1,1,1,500151e807470152,,,,"task V2_029 {
+    require cap(water_sensor)
+    wait 1000ms
+    read water_sensor
+    halt
+}"
+V2_030,wait_read,1,1,1,1,1,1,50025164470252,,,,"task V2_030 {
+    require cap(temperature_sensor)
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+V2_031,wait_read,1,1,1,1,1,1,500251c801470252,,,,"task V2_031 {  
+  require cap(temperature_sensor)  
+  wait 200ms  
+  read temperature_sensor  
+  halt  
+}"
+V2_032,wait_read,1,1,1,1,1,1,500251f403470252,,,,"task V2_032 {
+    require cap(temperature_sensor)
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_033,wait_read,1,1,1,1,1,1,500251e807470252,,,,"task V2_033 {
+    require cap(temperature_sensor)
+    wait 1000ms
+    read temperature_sensor
+    halt
+}"
+V2_034,wait_read,1,1,1,1,1,1,50035164470352,,,,"task V2_034 {
+    require cap(humidity_sensor)
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_035,wait_read,1,1,1,1,1,1,500351c801470352,,,,"task V2_035 {
+    require cap(humidity_sensor)
+    wait 200ms
+    read humidity_sensor
+    halt
+}"
+V2_036,wait_read,1,1,1,1,1,1,500351f403470352,,,,"task V2_036 {
+    require cap(humidity_sensor)
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_037,wait_read,1,1,1,1,1,1,500351e807470352,,,,"task V2_037 {
+    require cap(humidity_sensor)
+    wait 1000ms
+    read humidity_sensor
+    halt
+}"
+V2_038,set_wait_read,1,1,1,1,1,1,500550011e0246055132470152,,,,"task V2_038 {  
+    require cap(relay1)  
+    require cap(water_sensor)  
+    set relay1 = 1  
+    wait 50ms  
+    read water_sensor  
+    halt  
+}"
+V2_039,set_wait_read,1,1,1,1,1,1,500550011e0246055164470152,,,,"task V2_039 {
+require cap(relay1)
+require cap(water_sensor)
+set relay1 = 1
+wait 100ms
+read water_sensor
+halt
+}"
+V2_040,set_wait_read,1,1,1,1,1,1,500550011e02460551c801470152,,,,"task V2_040 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 1
+    wait 200ms
+    read water_sensor
+    halt
+}"
+V2_041,set_wait_read,1,1,1,1,1,1,500550011e02460551f403470152,,,,"task V2_041 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 1
+    wait 500ms
+    read water_sensor
+    halt
+}"
+V2_042,set_wait_read,1,1,1,1,1,1,500550011e0046055132470152,,,,"task V2_042 {  
+    require cap(relay1)  
+    require cap(water_sensor)  
+    set relay1 = 0  
+    wait 50ms  
+    read water_sensor  
+    halt  
+}"
+V2_043,set_wait_read,1,1,1,1,1,1,500550011e0046055164470152,,,,"task V2_043 {
+require cap(relay1)
+require cap(water_sensor)
+set relay1 = 0
+wait 100ms
+read water_sensor
+halt
+}"
+V2_044,set_wait_read,1,1,1,1,1,1,500550011e00460551c801470152,,,,"task V2_044 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 0
+    wait 200ms
+    read water_sensor
+    halt
+}"
+V2_045,set_wait_read,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task V2_045 {
+    require cap(relay1);
+    require cap(water_sensor);
+    set relay1 = 0;
+    wait 500ms;
+    read water_sensor;
+    halt
+}"
+V2_046,set_wait_read,1,1,1,1,1,1,500550021e0246055132470252,,,,"task V2_046 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+V2_047,set_wait_read,1,1,1,1,1,1,500550021e0246055164470252,,,,"task V2_047 {  
+require cap(relay1)  
+require cap(temperature_sensor)  
+set relay1 = 1  
+wait 100ms  
+read temperature_sensor  
+halt  
+}"
+V2_048,set_wait_read,1,1,1,1,1,1,500550021e02460551c801470252,,,,"task V2_048 {  
+  require cap(relay1)  
+  require cap(temperature_sensor)  
+  set relay1 = 1  
+  wait 200ms  
+  read temperature_sensor  
+  halt  
+}"
+V2_049,set_wait_read,1,1,1,1,1,1,500550021e02460551f403470252,,,,"task V2_049 {  
+    require cap(relay1)  
+    require cap(temperature_sensor)  
+    set relay1 = 1  
+    wait 500ms  
+    read temperature_sensor  
+    halt  
+}"
+V2_050,set_wait_read,1,1,1,1,1,0,500550021e0246055132470252,task,TASK_SIGNATURE_MISMATCH,Rewrite the program so the final device state and return signature match the instruction exactly.,"task V2_050 {  
+    require cap(relay1)  
+    require cap(temperature_sensor)  
+    set relay1 = 1  
+    wait 50ms  
+    read temperature_sensor  
+    halt  
+}"
+V2_051,set_wait_read,1,1,1,1,1,1,500550021e0046055164470252,,,,"task V2_051 {  
+    require cap(relay1)  
+    require cap(temperature_sensor)  
+    set relay1 = 0  
+    wait 100ms  
+    read temperature_sensor  
+    halt  
+}"
+V2_052,set_wait_read,1,1,1,1,1,1,500550021e00460551c801470252,,,,"task V2_052 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 0
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+V2_053,set_wait_read,1,1,1,1,1,1,500550021e00460551f403470252,,,,"task V2_053 {  
+    require cap(relay1)  
+    require cap(temperature_sensor)  
+    set relay1 = 0  
+    wait 500ms  
+    read temperature_sensor  
+    halt  
+}"
+V2_054,set_wait_read,1,1,1,1,1,1,500550031e0246055132470352,,,,"task V2_054 {  
+    require cap(relay1)  
+    require cap(humidity_sensor)  
+    set relay1 = 1  
+    wait 50ms  
+    read humidity_sensor  
+    halt  
+}"
+V2_055,set_wait_read,1,1,1,1,1,1,500550031e0246055164470352,,,,"task V2_055 {  
+    require cap(relay1)  
+    require cap(humidity_sensor)  
+    set relay1 = 1  
+    wait 100ms  
+    read humidity_sensor  
+    halt  
+}"
+V2_056,set_wait_read,1,1,1,1,1,1,500550031e02460551c801470352,,,,"task V2_056 {  
+    require cap(relay1)  
+    require cap(humidity_sensor)  
+    set relay1 = 1  
+    wait 200ms  
+    read humidity_sensor  
+    halt  
+}"
+V2_057,set_wait_read,1,1,1,1,1,1,500550031e02460551f403470352,,,,"task V2_057 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    set relay1 = 1
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_058,set_wait_read,1,1,1,1,1,0,500550031e0246055132470352,task,TASK_SIGNATURE_MISMATCH,Rewrite the program so the final device state and return signature match the instruction exactly.,"task V2_058 {  
+  require cap(relay1)  
+  require cap(humidity_sensor)  
+  set relay1 = 1  
+  wait 50ms  
+  read humidity_sensor  
+  halt  
+}"
+V2_059,set_wait_read,1,1,1,1,1,1,500550031e0046055164470352,,,,"task V2_059 {  
+  require cap(relay1)  
+  require cap(humidity_sensor)  
+  set relay1 = 0  
+  wait 100ms  
+  read humidity_sensor  
+  halt  
+}"
+V2_060,set_wait_read,1,1,1,1,1,1,500550031e00460551c801470352,,,,"task V2_060 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 0
+  wait 200ms
+  read humidity_sensor
+  halt
+}"
+V2_061,set_wait_read,1,1,1,1,1,0,500550031e02460551f403470352,task,TASK_SIGNATURE_MISMATCH,Rewrite the program so the final device state and return signature match the instruction exactly.,"task V2_061 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 500ms
+  read humidity_sensor
+  halt
+}"
+V2_062,set_wait_read,1,1,1,1,1,1,500650011e0246065132470152,,,,"task V2_062 {
+    require cap(relay2)
+    require cap(water_sensor)
+    set relay2 = 1
+    wait 50ms
+    read water_sensor
+    halt
+}"
+V2_063,set_wait_read,1,1,1,1,1,1,500650011e0246065164470152,,,,"task V2_063 {
+    require cap(relay2)
+    require cap(water_sensor)
+    set relay2 = 1
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_064,set_wait_read,1,1,1,1,1,1,500650011e02460651c801470152,,,,"task V2_064 {
+require cap(relay2)
+require cap(water_sensor)
+set relay2 = 1
+wait 200ms
+read water_sensor
+halt
+}"
+V2_065,set_wait_read,1,1,1,1,1,1,500650011e02460651f403470152,,,,"task V2_065 {  
+    require cap(relay2)  
+    require cap(water_sensor)  
+    set relay2 = 1  
+    wait 500ms  
+    read water_sensor  
+    halt  
+}"
+V2_066,set_wait_read,1,1,1,1,1,1,500650011e0046065132470152,,,,"task V2_066 {  
+require cap(relay2)  
+require cap(water_sensor)  
+set relay2 = 0  
+wait 50ms  
+read water_sensor  
+halt  
+}"
+V2_067,set_wait_read,1,1,1,1,1,1,500650011e0046065164470152,,,,"task V2_067 {  
+    require cap(relay2)  
+    require cap(water_sensor)  
+    set relay2 = 0  
+    wait 100ms  
+    read water_sensor  
+    halt  
+}"
+V2_068,set_wait_read,1,1,1,1,1,1,500650011e00460651c801470152,,,,"task V2_068 {
+    require cap(relay2)
+    require cap(water_sensor)
+    set relay2 = 0
+    wait 200ms
+    read water_sensor
+    halt
+}"
+V2_069,set_wait_read,1,1,1,1,1,1,500650011e00460651f403470152,,,,"task V2_069 {  
+  require cap(relay2)  
+  require cap(water_sensor)  
+  set relay2 = 0  
+  wait 500ms  
+  read water_sensor  
+  halt  
+}"
+V2_070,set_wait_read,1,1,1,1,1,1,500650021e0246065132470252,,,,"task V2_070 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+V2_071,set_wait_read,1,1,1,1,1,1,500650021e0246065164470252,,,,"task V2_071 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+V2_072,set_wait_read,1,1,1,1,1,1,500650021e02460651c801470252,,,,"task V2_072 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+V2_073,set_wait_read,1,1,1,1,1,1,500650021e02460651f403470252,,,,"task V2_073 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_074,set_wait_read,1,1,1,1,1,1,500650021e0046065132470252,,,,"task V2_074 {  
+    require cap(relay2)  
+    require cap(temperature_sensor)  
+    set relay2 = 0  
+    wait 50ms  
+    read temperature_sensor  
+    halt  
+}"
+V2_075,set_wait_read,1,1,1,1,1,1,500650021e0046065164470252,,,,"task V2_075 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 0
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+V2_076,set_wait_read,1,1,1,1,1,1,500650021e00460651c801470252,,,,"task V2_076 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 0
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+V2_077,set_wait_read,1,1,1,1,1,1,500650021e00460651f403470252,,,,"task V2_077 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 0
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_078,set_wait_read,1,1,1,1,1,1,500650031e0246065132470352,,,,"task V2_078 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 50ms
+    read humidity_sensor
+    halt
+}"
+V2_079,set_wait_read,1,1,1,1,1,1,500650031e0246065164470352,,,,"task V2_079 {  
+require cap(relay2)  
+require cap(humidity_sensor)  
+set relay2 = 1  
+wait 100ms  
+read humidity_sensor  
+halt  
+}"
+V2_080,set_wait_read,1,1,1,1,1,1,500650031e02460651c801470352,,,,"task V2_080 {  
+    require cap(relay2)  
+    require cap(humidity_sensor)  
+    set relay2 = 1  
+    wait 200ms  
+    read humidity_sensor  
+    halt  
+}"
+V2_081,set_wait_read,1,1,1,1,1,1,500650031e02460651f403470352,,,,"task V2_081 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_082,set_wait_read,1,1,1,1,1,1,500650031e0046065132470352,,,,"task V2_082 {  
+    require cap(relay2)  
+    require cap(humidity_sensor)  
+    set relay2 = 0  
+    wait 50ms  
+    read humidity_sensor  
+    halt  
+}"
+V2_083,set_wait_read,1,1,1,1,1,1,500650031e0046065164470352,,,,"task V2_083 {  
+require cap(relay2)  
+require cap(humidity_sensor)  
+set relay2 = 0  
+wait 100ms  
+read humidity_sensor  
+halt  
+}"
+V2_084,set_wait_read,1,1,1,1,1,1,500650031e00460651c801470352,,,,"task V2_084 {  
+    require cap(relay2)  
+    require cap(humidity_sensor)  
+    set relay2 = 0  
+    wait 200ms  
+    read humidity_sensor  
+    halt  
+}"
+V2_085,set_wait_read,1,1,1,1,1,1,500650031e00460651f403470352,,,,"task V2_085 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 0
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_086,multi_read,1,1,1,1,1,1,500550064705470652,,,,"task V2_086 {
+    require cap(relay1)
+    require cap(relay2)
+    read relay1
+    read relay2
+    halt
+}"
+V2_087,multi_read,1,1,1,1,1,1,500550014705470152,,,,"task V2_087 {
+    require cap(relay1)
+    require cap(water_sensor)
+    read relay1
+    read water_sensor
+    halt
+}"
+V2_088,multi_read,1,1,1,1,1,1,500550024705470252,,,,"task V2_088 {
+require cap(relay1)
+require cap(temperature_sensor)
+read relay1
+read temperature_sensor
+halt
+}"
+V2_089,multi_read,1,1,1,1,1,1,500550034705470352,,,,"task V2_089 {
+    require cap(relay1)
+    read relay1
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_090,multi_read,1,1,1,1,1,1,500650054706470552,,,,"task V2_090 {
+    require cap(relay2)
+    read relay2
+    require cap(relay1)
+    read relay1
+    halt
+}"
+V2_091,multi_read,1,1,1,1,1,1,500650014706470152,,,,"task V2_091 {  
+require cap(relay2)  
+require cap(water_sensor)  
+read relay2  
+read water_sensor  
+halt  
+}"
+V2_092,multi_read,1,1,1,1,1,1,500650024706470252,,,,"task V2_092 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    read relay2
+    read temperature_sensor
+    halt
+}"
+V2_093,multi_read,1,1,1,1,1,1,500650034706470352,,,,"task V2_093 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    read relay2
+    read humidity_sensor
+    halt
+}"
+V2_094,multi_read,1,1,1,1,1,1,500150054701470552,,,,"task V2_094 {  
+  require cap(water_sensor)  
+  require cap(relay1)  
+  read water_sensor  
+  read relay1  
+  halt  
+}"
+V2_095,multi_read,1,1,1,1,1,1,500150064701470652,,,,"task V2_095 {
+    require cap(water_sensor)
+    require cap(relay2)
+    read water_sensor
+    read relay2
+    halt
+}"
+V2_096,multi_read,1,1,1,1,1,1,500150024701470252,,,,"task V2_096 {
+    require cap(water_sensor)
+    read water_sensor
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_097,multi_read,1,1,1,1,1,1,500150034701470352,,,,"task V2_097 {
+    require cap(water_sensor)
+    read water_sensor
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_098,multi_read,1,1,1,1,1,1,500250054702470552,,,,"task V2_098 {
+    require cap(temperature_sensor)
+    require cap(relay1)
+    read temperature_sensor
+    read relay1
+    halt
+}"
+V2_099,multi_read,1,1,1,1,1,1,500250064702470652,,,,"task V2_099 {
+    require cap(temperature_sensor)
+    require cap(relay2)
+    read temperature_sensor
+    read relay2
+    halt
+}"
+V2_100,multi_read,1,1,1,1,1,1,500250014702470152,,,,"task V2_100 {
+require cap(temperature_sensor)
+read temperature_sensor
+require cap(water_sensor)
+read water_sensor
+halt
+}"
+V2_101,multi_read,1,1,1,1,1,1,500250034702470352,,,,"task V2_101 {
+    require cap(temperature_sensor)
+    read temperature_sensor
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_102,multi_read,1,1,1,1,1,1,500350054703470552,,,,"task V2_102 {
+    require cap(humidity_sensor)
+    require cap(relay1)
+    read humidity_sensor
+    read relay1
+    halt
+}"
+V2_103,multi_read,1,1,1,1,1,1,500350064703470652,,,,"task V2_103 {
+    require cap(humidity_sensor)
+    require cap(relay2)
+    read humidity_sensor
+    read relay2
+    halt
+}"
+V2_104,multi_read,1,1,1,1,1,1,500350014703470152,,,,"task V2_104 {
+    require cap(humidity_sensor)
+    require cap(water_sensor)
+    read humidity_sensor
+    read water_sensor
+    halt
+}"
+V2_105,multi_read,1,1,1,1,1,1,500350024703470252,,,,"task V2_105 {
+require cap(humidity_sensor)
+read humidity_sensor
+require cap(temperature_sensor)
+read temperature_sensor
+halt
+}"
+V2_106,pulse,1,1,1,1,1,1,50051e02460551321e00460552,,,,"task V2_106 {
+require cap(relay1)
+set relay1 = 1
+wait 50ms
+set relay1 = 0
+halt
+}"
+V2_107,pulse,1,1,1,1,1,1,50051e02460551641e00460552,,,,"task V2_107 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    set relay1 = 0
+    halt
+}"
+V2_108,pulse,1,1,1,1,1,1,50051e02460551c8011e00460552,,,,"task V2_108 {  
+  require cap(relay1)  
+  set relay1 = 1  
+  wait 200ms  
+  set relay1 = 0  
+  halt  
+}"
+V2_109,pulse,1,1,1,1,1,1,50051e02460551f4031e00460552,,,,"task V2_109 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    set relay1 = 0
+    halt
+}"
+V2_110,pulse,1,1,1,1,1,1,50061e02460651321e00460652,,,,"task V2_110 {  
+    require cap(relay2)  
+    set relay2 = 1  
+    wait 50ms  
+    set relay2 = 0  
+    halt  
+}"
+V2_111,pulse,1,1,1,1,1,1,50061e02460651641e00460652,,,,"task V2_111 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    set relay2 = 0
+    halt
+}"
+V2_112,pulse,1,1,1,1,1,1,50061e02460651c8011e00460652,,,,"task V2_112 {  
+  require cap(relay2)  
+  set relay2 = 1  
+  wait 200ms  
+  set relay2 = 0  
+  halt  
+}"
+V2_113,pulse,1,1,1,1,1,1,50061e02460651f4031e00460652,,,,"task V2_113 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 500ms
+    set relay2 = 0
+    halt
+}"

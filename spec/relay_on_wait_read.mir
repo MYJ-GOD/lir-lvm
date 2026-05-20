@@ -1,0 +1,8 @@
+﻿task relay_on_wait_read {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 1
+  wait 500ms
+  read water_sensor
+  halt
+}

@@ -1,0 +1,7 @@
+variant,n,ok,fault,UABR,CI95,main_fault_dist,source
+a0_base_guarded,210,0,210,1.000000,"[0.982, 1.000]","10:30,11:30,14:30,22:60,23:30,5:30",论文分区/ccfc/result/E2_orthogonal\e2_a0_base_guarded.csv
+a1_no_auth_only,210,30,180,0.857143,"[0.803, 0.898]","10:30,11:30,22:60,23:30,5:30",论文分区/ccfc/result/E2_orthogonal\e2_a1_no_auth_only.csv
+a2_no_load_validator_only,210,0,210,1.000000,"[0.982, 1.000]","10:30,11:30,13:30,14:30,22:60,5:30",论文分区/ccfc/result/E2_orthogonal\e2_a2_no_load_validator_only.csv
+a3_no_step_limit_only,210,30,180,0.857143,"[0.803, 0.898]","10:30,14:30,22:60,23:30,5:30",论文分区/ccfc/result/E2_orthogonal\e2_a3_no_step_limit_only.csv
+a4_no_call_depth_only,210,0,210,1.000000,"[0.982, 1.000]","10:30,11:90,14:30,23:30,5:30",论文分区/ccfc/result/E2_orthogonal\e2_a4_no_call_depth_only.csv
+a5_no_bad_encoding_fault_only,210,0,210,1.000000,"[0.982, 1.000]","10:30,11:30,14:30,22:60,23:30,5:30",论文分区/ccfc/result/E2_orthogonal\e2_a5_no_bad_encoding_fault_only.csv

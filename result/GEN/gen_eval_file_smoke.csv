@@ -1,0 +1,28 @@
+﻿task_id,category,attempt,ir_valid,compile_pass,verify_pass,execution_pass,task_success,payload_hex,error_stage,error_code,hint,candidate_mir
+T001,single_set,1,1,0,,,0,,compile,INVALID_CAPABILITY,Add require cap(<device>) before the first access.,"task relay1_on {
+  set relay1 = 1
+  halt
+}
+"
+T005,single_read,1,1,0,,,0,,compile,UNKNOWN_DEVICE,Use only devices from the provided allow-list.,"task read_water {
+  require cap(pump1)
+  read pump1
+  halt
+}
+"
+T014,sequence,1,1,0,,,0,,compile,UNSUPPORTED_CONSTRUCT,Avoid readback/retry in compiler v0.1.,"task relay1_on_wait_read_water {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 1
+  readback relay1 expect 1
+  halt
+}
+"
+T024,sequence,1,1,1,,,1,50051e02460551321e00460552,,,,"task relay1_pulse {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  set relay1 = 0
+  halt
+}
+"

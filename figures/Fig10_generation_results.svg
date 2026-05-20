@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520">
+  <rect width="960" height="520" fill="white"/>
+  <text x="60" y="50" font-family="Arial, sans-serif" font-size="28" fill="#111">Generation and Repair Results</text>
+  <text x="60" y="82" font-family="Arial, sans-serif" font-size="15" fill="#555">llama3.1:8b on 113 deterministic tasks</text>
+
+  <line x1="80" y1="430" x2="900" y2="430" stroke="#222" stroke-width="2"/>
+  <line x1="80" y1="120" x2="80" y2="430" stroke="#222" stroke-width="2"/>
+
+  <g font-family="Arial, sans-serif" font-size="14" fill="#666">
+    <text x="42" y="434">0.0</text>
+    <text x="42" y="356">0.25</text>
+    <text x="42" y="279">0.50</text>
+    <text x="42" y="201">0.75</text>
+    <text x="42" y="124">1.0</text>
+  </g>
+
+  <g stroke="#ddd" stroke-width="1">
+    <line x1="80" y1="352" x2="900" y2="352"/>
+    <line x1="80" y1="275" x2="900" y2="275"/>
+    <line x1="80" y1="197" x2="900" y2="197"/>
+    <line x1="80" y1="120" x2="900" y2="120"/>
+  </g>
+
+  <g>
+    <rect x="130" y="120" width="90" height="310" fill="#4C78A8"/>
+    <rect x="270" y="120" width="90" height="310" fill="#4C78A8"/>
+    <rect x="410" y="120" width="90" height="310" fill="#4C78A8"/>
+    <rect x="550" y="120" width="90" height="310" fill="#4C78A8"/>
+    <rect x="690" y="126" width="90" height="304" fill="#72B7B2"/>
+    <rect x="830" y="424" width="90" height="6" fill="#72B7B2"/>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="14" fill="#111" text-anchor="middle">
+    <text x="175" y="458">IR valid</text>
+    <text x="315" y="458">Compile</text>
+    <text x="455" y="458">Verify</text>
+    <text x="595" y="458">Execute</text>
+    <text x="735" y="458">Success@1</text>
+    <text x="875" y="458">Success@2</text>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="16" fill="#111" text-anchor="middle">
+    <text x="175" y="112">1.000</text>
+    <text x="315" y="112">1.000</text>
+    <text x="455" y="112">1.000</text>
+    <text x="595" y="112">1.000</text>
+    <text x="735" y="118">0.982</text>
+    <text x="875" y="416">0.018</text>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="13" fill="#555">
+    <text x="130" y="490">Blue: first-pass pipeline rates</text>
+    <text x="420" y="490">Teal: repair-loop gains</text>
+  </g>
+</svg>

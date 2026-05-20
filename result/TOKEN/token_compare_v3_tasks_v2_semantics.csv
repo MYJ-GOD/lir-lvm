@@ -1,0 +1,3114 @@
+﻿task_id,format,prompt_eval_count,eval_count,output_chars,output_bytes,response,model,semantic_ok,expected_semantics,observed_semantics
+V2_001,MIR,148,26,61,61,"task V2_001 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""halt""]]"
+V2_001,JSON,70,33,79,79,"```json
+{
+  ""task_id"": ""V2_001"",
+  ""device"": ""relay1"",
+  ""action"": ""open""
+}
+```",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""halt""]]"
+V2_001,PYTHON,72,5,11,11,relay1.on(),llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""halt""]]"
+V2_002,MIR,148,26,61,61,"task V2_002 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""halt""]]"
+V2_002,JSON,70,29,68,68,"{
+  ""task_id"": ""V2_002"",
+  ""device"": ""relay1"",
+  ""action"": ""close""
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""halt""]]"
+V2_002,PYTHON,72,5,12,12,relay1.off(),llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""halt""]]"
+V2_003,MIR,148,26,61,61,"task V2_003 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""halt""]]"
+V2_003,JSON,70,29,67,67,"{
+  ""task_id"": ""V2_003"",
+  ""device"": ""relay2"",
+  ""action"": ""open""
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""halt""]]"
+V2_003,PYTHON,72,5,11,11,relay2.on(),llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""halt""]]"
+V2_004,MIR,148,26,61,61,"task V2_004 {
+  require cap(relay2)
+  set relay2 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""halt""]]"
+V2_004,JSON,70,29,68,68,"{
+  ""task_id"": ""V2_004"",
+  ""device"": ""relay2"",
+  ""action"": ""close""
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""halt""]]"
+V2_004,PYTHON,72,5,14,14,relay2.close(),llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""halt""]]"
+V2_005,MIR,152,23,58,58,"task V2_005 {
+  require cap(relay1)
+  read relay1
+  halt
+}",llama3.1:8b,1,"[[""read"", ""relay1""], [""halt""]]","[[""read"", ""relay1""], [""halt""]]"
+V2_005,JSON,74,106,406,406,"```json
+{
+  ""task_id"": ""V2_005"",
+  ""device"": ""relay1"",
+  ""instruction"": ""read_current_value""
+}
+```
+
+This JSON object represents a task to read the current value of device `relay1`. The `task_id` field is set to `V2_005`, which matches the provided Task ID. The `device` field specifies that this instruction applies to `relay1`, and the `instruction` field indicates that we want to read its current value.",llama3.1:8b,1,"[[""read"", ""relay1""], [""halt""]]","[[""read"", ""relay1""], [""halt""]]"
+V2_005,PYTHON,76,5,13,13,relay1.read(),llama3.1:8b,1,"[[""read"", ""relay1""], [""halt""]]","[[""read"", ""relay1""], [""halt""]]"
+V2_006,MIR,152,23,58,58,"task V2_006 {
+  require cap(relay2)
+  read relay2
+  halt
+}",llama3.1:8b,1,"[[""read"", ""relay2""], [""halt""]]","[[""read"", ""relay2""], [""halt""]]"
+V2_006,JSON,74,64,241,241,"```json
+{
+  ""task_id"": ""V2_006"",
+  ""device"": ""relay2"",
+  ""instruction"": ""read_current_value""
+}
+```
+
+This JSON object represents a task to read the current value of the relay2 device, which is allowed according to the task ID and instruction.",llama3.1:8b,1,"[[""read"", ""relay2""], [""halt""]]","[[""read"", ""relay2""], [""halt""]]"
+V2_006,PYTHON,76,5,13,13,relay2.read(),llama3.1:8b,1,"[[""read"", ""relay2""], [""halt""]]","[[""read"", ""relay2""], [""halt""]]"
+V2_007,MIR,152,23,70,70,"task V2_007 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""read"", ""water_sensor""], [""halt""]]","[[""read"", ""water_sensor""], [""halt""]]"
+V2_007,JSON,74,61,255,255,"```json
+{
+  ""task_id"": ""V2_007"",
+  ""device"": ""water_sensor"",
+  ""action"": ""read_current_value""
+}
+```
+
+This JSON object represents a compact machine-readable structure that fully represents the task of reading the current value from the water sensor device.",llama3.1:8b,1,"[[""read"", ""water_sensor""], [""halt""]]","[[""read"", ""water_sensor""], [""halt""]]"
+V2_007,PYTHON,76,52,233,233,"```python
+water_sensor_value = water_sensor.read()
+print(water_sensor_value)
+```
+
+This code reads the current value from the `water_sensor` and stores it in the variable `water_sensor_value`. The value is then printed to the console.",llama3.1:8b,1,"[[""read"", ""water_sensor""], [""halt""]]","[[""read"", ""water_sensor""], [""halt""]]"
+V2_008,MIR,152,23,82,82,"task V2_008 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""temperature_sensor""], [""halt""]]"
+V2_008,JSON,74,61,270,270,"```json
+{
+  ""task_id"": ""V2_008"",
+  ""device"": ""temperature_sensor"",
+  ""instruction"": ""read_current_value""
+}
+```
+
+This JSON object represents a compact machine-readable structure that fully represents the task of reading the current value from a temperature sensor device.",llama3.1:8b,1,"[[""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""temperature_sensor""], [""halt""]]"
+V2_008,PYTHON,76,9,52,52,temperature_sensor_value = temperature_sensor.read(),llama3.1:8b,1,"[[""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""temperature_sensor""], [""halt""]]"
+V2_009,MIR,152,29,89,89,"task V2_009 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  wait 100ms
+  halt
+}",llama3.1:8b,0,"[[""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""humidity_sensor""], [""wait"", ""100""], [""halt""]]"
+V2_009,JSON,74,66,269,269,"```json
+{
+  ""task_id"": ""V2_009"",
+  ""device"": ""humidity_sensor"",
+  ""action"": ""read_current_value""
+}
+```
+
+This JSON object represents a compact machine-readable structure that fully represents the task of reading the current value from the humidity sensor with ID V2_009.",llama3.1:8b,1,"[[""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""humidity_sensor""], [""halt""]]"
+V2_009,PYTHON,76,5,22,22,humidity_sensor.read(),llama3.1:8b,1,"[[""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""humidity_sensor""], [""halt""]]"
+V2_010,MIR,158,32,73,73,"task V2_010 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""halt""]]"
+V2_010,JSON,80,81,303,303,"```json
+{
+    ""task_id"": ""V2_010"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""halt""]]",null
+V2_010,PYTHON,82,16,41,41,"relay1.on()
+time.sleep(0.05)
+relay1.off()",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""set"", ""relay1"", ""0""], [""halt""]]"
+V2_011,MIR,158,32,74,74,"task V2_011 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""halt""]]"
+V2_011,JSON,80,74,204,204,"{
+  ""task_id"": ""V2_011"",
+  ""devices"": [
+    {
+      ""id"": ""relay1"",
+      ""action"": ""open""
+    }
+  ],
+  ""wait_time"": 100,
+  ""actions"": [
+    {
+      ""device"": ""relay1"",
+      ""action"": ""close""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""halt""]]",null
+V2_011,PYTHON,82,16,40,40,"relay1.on()
+time.sleep(0.1)
+relay1.off()",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""set"", ""relay1"", ""0""], [""halt""]]"
+V2_012,MIR,158,32,74,74,"task V2_012 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""halt""]]"
+V2_012,JSON,80,74,203,203,"{
+  ""task_id"": ""V2_012"",
+  ""devices"": [
+    {
+      ""id"": ""relay1"",
+      ""action"": ""open""
+    }
+  ],
+  ""wait_time"": 200,
+  ""actions"": [
+    {
+      ""device"": ""relay1"",
+      ""action"": ""stop""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""halt""]]",null
+V2_012,PYTHON,82,16,40,40,"relay1.on()
+time.sleep(0.2)
+relay1.off()",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""set"", ""relay1"", ""0""], [""halt""]]"
+V2_013,MIR,158,32,74,74,"task V2_013 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 500ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""halt""]]"
+V2_013,JSON,80,74,204,204,"{
+  ""task_id"": ""V2_013"",
+  ""devices"": [
+    {
+      ""id"": ""relay1"",
+      ""action"": ""open""
+    }
+  ],
+  ""wait_time"": 500,
+  ""actions"": [
+    {
+      ""device"": ""relay1"",
+      ""action"": ""close""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""halt""]]",null
+V2_013,PYTHON,82,16,40,40,"relay1.on()
+time.sleep(0.5)
+relay1.off()",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""set"", ""relay1"", ""0""], [""halt""]]"
+V2_014,MIR,158,32,73,73,"task V2_014 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 50ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""halt""]]"
+V2_014,JSON,80,62,179,179,"{
+  ""task_id"": ""V2_014"",
+  ""instructions"": [
+    {
+      ""device"": ""relay1"",
+      ""action"": ""close""
+    },
+    {
+      ""delay"": 50
+    },
+    {
+      ""action"": ""stop""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""halt""]]",null
+V2_014,PYTHON,82,16,45,45,"relay1.close()
+time.sleep(0.05)
+relay1.stop()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""halt""]]"
+V2_015,MIR,158,32,74,74,"task V2_015 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""halt""]]"
+V2_015,JSON,80,62,180,180,"{
+  ""task_id"": ""V2_015"",
+  ""instructions"": [
+    {
+      ""device"": ""relay1"",
+      ""action"": ""close""
+    },
+    {
+      ""delay"": 100
+    },
+    {
+      ""action"": ""stop""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""halt""]]",null
+V2_015,PYTHON,82,16,44,44,"relay1.close()
+time.sleep(0.1)
+relay1.stop()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""halt""]]"
+V2_016,MIR,158,32,74,74,"task V2_016 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""halt""]]"
+V2_016,JSON,80,62,180,180,"{
+  ""task_id"": ""V2_016"",
+  ""instructions"": [
+    {
+      ""device"": ""relay1"",
+      ""action"": ""close""
+    },
+    {
+      ""delay"": 200
+    },
+    {
+      ""action"": ""stop""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""halt""]]",null
+V2_016,PYTHON,82,16,44,44,"relay1.close()
+time.sleep(0.2)
+relay1.stop()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""halt""]]"
+V2_017,MIR,158,32,74,74,"task V2_017 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 500ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""halt""]]"
+V2_017,JSON,80,66,176,176,"{
+  ""task_id"": ""V2_017"",
+  ""devices"": [
+    {
+      ""id"": ""relay1"",
+      ""action"": ""close""
+    }
+  ],
+  ""timers"": [
+    {
+      ""duration"": 500,
+      ""unit"": ""ms""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""halt""]]",null
+V2_017,PYTHON,82,16,42,42,"relay1.off()
+time.sleep(0.5)
+relay1.stop()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""halt""]]"
+V2_018,MIR,158,32,73,73,"task V2_018 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""halt""]]"
+V2_018,JSON,80,62,175,175,"{
+  ""task_id"": ""V2_018"",
+  ""device"": ""relay2"",
+  ""instructions"": [
+    {
+      ""action"": ""open""
+    },
+    {
+      ""delay"": 50
+    },
+    {
+      ""action"": ""close""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""halt""]]",null
+V2_018,PYTHON,82,16,41,41,"relay2.on()
+time.sleep(0.05)
+relay2.off()",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""set"", ""relay2"", ""0""], [""halt""]]"
+V2_019,MIR,158,32,74,74,"task V2_019 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""halt""]]"
+V2_019,JSON,80,74,203,203,"{
+  ""task_id"": ""V2_019"",
+  ""devices"": [
+    {
+      ""id"": ""relay2"",
+      ""action"": ""open""
+    }
+  ],
+  ""wait_time"": 100,
+  ""actions"": [
+    {
+      ""device"": ""relay2"",
+      ""action"": ""stop""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""halt""]]",null
+V2_019,PYTHON,82,16,40,40,"relay2.on()
+time.sleep(0.1)
+relay2.off()",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""set"", ""relay2"", ""0""], [""halt""]]"
+V2_020,MIR,158,32,74,74,"task V2_020 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 200ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""halt""]]"
+V2_020,JSON,80,62,175,175,"{
+  ""task_id"": ""V2_020"",
+  ""device"": ""relay2"",
+  ""instructions"": [
+    {
+      ""action"": ""open""
+    },
+    {
+      ""delay"": 200
+    },
+    {
+      ""action"": ""stop""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""halt""]]",null
+V2_020,PYTHON,82,16,40,40,"relay2.on()
+time.sleep(0.2)
+relay2.off()",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""set"", ""relay2"", ""0""], [""halt""]]"
+V2_021,MIR,158,32,74,74,"task V2_021 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""halt""]]"
+V2_021,JSON,80,62,176,176,"{
+  ""task_id"": ""V2_021"",
+  ""device"": ""relay2"",
+  ""instructions"": [
+    {
+      ""action"": ""open""
+    },
+    {
+      ""delay"": 500
+    },
+    {
+      ""action"": ""close""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""halt""]]",null
+V2_021,PYTHON,82,16,40,40,"relay2.on()
+time.sleep(0.5)
+relay2.off()",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""set"", ""relay2"", ""0""], [""halt""]]"
+V2_022,MIR,158,32,73,73,"task V2_022 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 50ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""halt""]]"
+V2_022,JSON,80,66,179,179,"{
+  ""task_id"": ""V2_022"",
+  ""devices"": [
+    {
+      ""device"": ""relay2"",
+      ""action"": ""close""
+    }
+  ],
+  ""wait_time"": 50,
+  ""actions"": [
+    {
+      ""type"": ""stop""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""halt""]]",null
+V2_022,PYTHON,82,16,45,45,"relay2.close()
+time.sleep(0.05)
+relay2.stop()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""halt""]]"
+V2_023,MIR,158,32,74,74,"task V2_023 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 100ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""halt""]]"
+V2_023,JSON,80,84,233,233,"{
+  ""task_id"": ""V2_023"",
+  ""devices"": [
+    {
+      ""device"": ""relay2"",
+      ""action"": ""close""
+    }
+  ],
+  ""wait_time"": 100,
+  ""actions"": [
+    {
+      ""type"": ""wait"",
+      ""time"": 100
+    },
+    {
+      ""type"": ""stop""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""halt""]]",null
+V2_023,PYTHON,82,16,44,44,"relay2.close()
+time.sleep(0.1)
+relay2.stop()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""halt""]]"
+V2_024,MIR,158,32,74,74,"task V2_024 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 200ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""halt""]]"
+V2_024,JSON,80,84,233,233,"{
+  ""task_id"": ""V2_024"",
+  ""devices"": [
+    {
+      ""device"": ""relay2"",
+      ""action"": ""close""
+    }
+  ],
+  ""wait_time"": 200,
+  ""actions"": [
+    {
+      ""type"": ""wait"",
+      ""time"": 200
+    },
+    {
+      ""type"": ""stop""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""halt""]]",null
+V2_024,PYTHON,82,16,44,44,"relay2.close()
+time.sleep(0.2)
+relay2.stop()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""halt""]]"
+V2_025,MIR,158,32,74,74,"task V2_025 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 500ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""halt""]]"
+V2_025,JSON,80,84,233,233,"{
+  ""task_id"": ""V2_025"",
+  ""devices"": [
+    {
+      ""device"": ""relay2"",
+      ""action"": ""close""
+    }
+  ],
+  ""wait_time"": 500,
+  ""actions"": [
+    {
+      ""type"": ""wait"",
+      ""time"": 500
+    },
+    {
+      ""type"": ""stop""
+    }
+  ]
+}",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""halt""]]",null
+V2_025,PYTHON,82,16,44,44,"relay2.close()
+time.sleep(0.5)
+relay2.stop()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""halt""]]"
+V2_026,MIR,156,29,83,83,"task V2_026 {
+  require cap(water_sensor)
+  wait 100ms
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]","[[""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]"
+V2_026,JSON,78,61,182,182,"{
+  ""task_id"": ""V2_026"",
+  ""instructions"": [
+    {
+      ""type"": ""wait"",
+      ""ms"": 100,
+      ""next"": {
+        ""type"": ""read"",
+        ""device"": ""water_sensor""
+      }
+    }
+  ]
+}",llama3.1:8b,0,"[[""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_026,PYTHON,80,32,117,117,"import time
+
+# Wait for 100 milliseconds
+time.sleep(0.1)
+
+# Read the water sensor
+water_level = input(""water_sensor"")",llama3.1:8b,0,"[[""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_027,MIR,156,29,83,83,"task V2_027 {
+  require cap(water_sensor)
+  wait 200ms
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]","[[""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]"
+V2_027,JSON,78,61,182,182,"{
+  ""task_id"": ""V2_027"",
+  ""instructions"": [
+    {
+      ""type"": ""wait"",
+      ""ms"": 200,
+      ""next"": {
+        ""type"": ""read"",
+        ""device"": ""water_sensor""
+      }
+    }
+  ]
+}",llama3.1:8b,0,"[[""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_027,PYTHON,80,32,117,117,"import time
+
+# Wait for 200 milliseconds
+time.sleep(0.2)
+
+# Read the water sensor
+water_level = input(""water_sensor"")",llama3.1:8b,0,"[[""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_028,MIR,156,29,83,83,"task V2_028 {
+  require cap(water_sensor)
+  wait 500ms
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]"
+V2_028,JSON,78,61,182,182,"{
+  ""task_id"": ""V2_028"",
+  ""instructions"": [
+    {
+      ""type"": ""wait"",
+      ""ms"": 500,
+      ""next"": {
+        ""type"": ""read"",
+        ""device"": ""water_sensor""
+      }
+    }
+  ]
+}",llama3.1:8b,0,"[[""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_028,PYTHON,80,32,117,117,"import time
+
+# Wait for 500 milliseconds
+time.sleep(0.5)
+
+# Read the water sensor
+water_level = input(""water_sensor"")",llama3.1:8b,0,"[[""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_029,MIR,157,30,84,84,"task V2_029 {
+  require cap(water_sensor)
+  wait 1000ms
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""1000""], [""read"", ""water_sensor""], [""halt""]]","[[""wait"", ""1000""], [""read"", ""water_sensor""], [""halt""]]"
+V2_029,JSON,79,62,183,183,"{
+  ""task_id"": ""V2_029"",
+  ""instructions"": [
+    {
+      ""type"": ""wait"",
+      ""ms"": 1000,
+      ""next"": {
+        ""type"": ""read"",
+        ""device"": ""water_sensor""
+      }
+    }
+  ]
+}",llama3.1:8b,0,"[[""wait"", ""1000""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_029,PYTHON,81,30,107,107,"import time
+
+# Wait for 1 second
+time.sleep(1)
+
+# Read the water sensor
+water_level = input(""water_sensor"")",llama3.1:8b,0,"[[""wait"", ""1000""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_030,MIR,156,29,95,95,"task V2_030 {
+  require cap(temperature_sensor)
+  wait 100ms
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]","[[""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_030,JSON,78,61,190,190,"{
+  ""task_id"": ""V2_030"",
+  ""instructions"": [
+    {
+      ""type"": ""wait"",
+      ""ms"": 100,
+      ""next"": {
+        ""device"": ""temperature_sensor"",
+        ""action"": ""read""
+      }
+    }
+  ]
+}",llama3.1:8b,0,"[[""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_030,PYTHON,80,32,136,136,"import time
+
+# Wait for 100 milliseconds
+time.sleep(0.1)
+
+# Read the temperature from the sensor
+temperature = temperature_sensor.read()",llama3.1:8b,0,"[[""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_031,MIR,156,29,95,95,"task V2_031 {
+  require cap(temperature_sensor)
+  wait 200ms
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]","[[""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_031,JSON,78,65,198,198,"{
+  ""task_id"": ""V2_031"",
+  ""instructions"": [
+    {
+      ""type"": ""wait"",
+      ""duration"": 200,
+      ""unit"": ""ms""
+    },
+    {
+      ""type"": ""read"",
+      ""device"": ""temperature_sensor""
+    }
+  ]
+}",llama3.1:8b,0,"[[""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_031,PYTHON,80,33,148,148,"import time
+
+# Wait for 200 milliseconds
+time.sleep(0.2)
+
+# Read the temperature from the temperature sensor
+temperature = temperature_sensor.read()",llama3.1:8b,0,"[[""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_032,MIR,156,29,95,95,"task V2_032 {
+  require cap(temperature_sensor)
+  wait 500ms
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]","[[""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_032,JSON,78,61,190,190,"{
+  ""task_id"": ""V2_032"",
+  ""instructions"": [
+    {
+      ""type"": ""wait"",
+      ""ms"": 500,
+      ""next"": {
+        ""device"": ""temperature_sensor"",
+        ""action"": ""read""
+      }
+    }
+  ]
+}",llama3.1:8b,0,"[[""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_032,PYTHON,80,33,148,148,"import time
+
+# Wait for 500 milliseconds
+time.sleep(0.5)
+
+# Read the temperature from the temperature sensor
+temperature = temperature_sensor.read()",llama3.1:8b,0,"[[""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_033,MIR,157,30,96,96,"task V2_033 {
+  require cap(temperature_sensor)
+  wait 1000ms
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""1000""], [""read"", ""temperature_sensor""], [""halt""]]","[[""wait"", ""1000""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_033,JSON,79,66,199,199,"{
+  ""task_id"": ""V2_033"",
+  ""instructions"": [
+    {
+      ""type"": ""wait"",
+      ""duration"": 1000,
+      ""unit"": ""ms""
+    },
+    {
+      ""type"": ""read"",
+      ""device"": ""temperature_sensor""
+    }
+  ]
+}",llama3.1:8b,0,"[[""wait"", ""1000""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_033,PYTHON,81,32,104,116,"import time
+
+# 等待 1000 毫秒
+time.sleep(1)
+
+# 读取 temperature_sensor
+temperature = temperature_sensor.read()",llama3.1:8b,0,"[[""wait"", ""1000""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_034,MIR,156,29,89,89,"task V2_034 {
+  require cap(humidity_sensor)
+  wait 100ms
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]","[[""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_034,JSON,78,61,187,187,"{
+  ""task_id"": ""V2_034"",
+  ""instructions"": [
+    {
+      ""type"": ""wait"",
+      ""ms"": 100,
+      ""next"": {
+        ""device"": ""humidity_sensor"",
+        ""action"": ""read""
+      }
+    }
+  ]
+}",llama3.1:8b,0,"[[""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_034,PYTHON,80,32,130,130,"import time
+
+# Wait for 100 milliseconds
+time.sleep(0.1)
+
+# Read the humidity sensor value
+humidity_value = humidity_sensor.read()",llama3.1:8b,0,"[[""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_035,MIR,156,29,89,89,"task V2_035 {
+  require cap(humidity_sensor)
+  wait 200ms
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]","[[""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_035,JSON,78,61,187,187,"{
+  ""task_id"": ""V2_035"",
+  ""instructions"": [
+    {
+      ""type"": ""wait"",
+      ""ms"": 200,
+      ""next"": {
+        ""device"": ""humidity_sensor"",
+        ""action"": ""read""
+      }
+    }
+  ]
+}",llama3.1:8b,0,"[[""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_035,PYTHON,80,32,130,130,"import time
+
+# Wait for 200 milliseconds
+time.sleep(0.2)
+
+# Read the humidity sensor value
+humidity_value = humidity_sensor.read()",llama3.1:8b,0,"[[""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_036,MIR,156,29,89,89,"task V2_036 {
+  require cap(humidity_sensor)
+  wait 500ms
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]","[[""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_036,JSON,78,61,187,187,"{
+  ""task_id"": ""V2_036"",
+  ""instructions"": [
+    {
+      ""type"": ""wait"",
+      ""ms"": 500,
+      ""next"": {
+        ""device"": ""humidity_sensor"",
+        ""action"": ""read""
+      }
+    }
+  ]
+}",llama3.1:8b,0,"[[""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_036,PYTHON,80,32,130,130,"import time
+
+# Wait for 500 milliseconds
+time.sleep(0.5)
+
+# Read the humidity sensor value
+humidity_value = humidity_sensor.read()",llama3.1:8b,0,"[[""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_037,MIR,157,30,90,90,"task V2_037 {
+  require cap(humidity_sensor)
+  wait 1000ms
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""1000""], [""read"", ""humidity_sensor""], [""halt""]]","[[""wait"", ""1000""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_037,JSON,79,62,188,188,"{
+  ""task_id"": ""V2_037"",
+  ""instructions"": [
+    {
+      ""type"": ""wait"",
+      ""ms"": 1000,
+      ""next"": {
+        ""device"": ""humidity_sensor"",
+        ""action"": ""read""
+      }
+    }
+  ]
+}",llama3.1:8b,0,"[[""wait"", ""1000""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_037,PYTHON,81,37,148,148,"import time
+
+time.sleep(1)  # wait for 1 second, equivalent to 1000 milliseconds
+humidity = humidity_sensor.read()  # read the humidity sensor value",llama3.1:8b,0,"[[""wait"", ""1000""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_038,MIR,164,44,121,121,"task V2_038 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]"
+V2_038,JSON,86,81,308,308,"```json
+{
+    ""task_id"": ""V2_038"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_038,PYTHON,88,18,55,55,"relay1.on()
+time.sleep(0.05)
+print(water_sensor.read())",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""halt""]]"
+V2_039,MIR,164,44,122,122,"task V2_039 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]"
+V2_039,JSON,86,81,309,309,"```json
+{
+    ""task_id"": ""V2_039"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_039,PYTHON,88,18,54,54,"relay1.on()
+time.sleep(0.1)
+print(water_sensor.read())",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""halt""]]"
+V2_040,MIR,164,44,122,122,"task V2_040 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]"
+V2_040,JSON,86,81,309,309,"```json
+{
+    ""task_id"": ""V2_040"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_040,PYTHON,88,18,54,54,"relay1.on()
+time.sleep(0.2)
+print(water_sensor.read())",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""halt""]]"
+V2_041,MIR,164,44,122,122,"task V2_041 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 500ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]"
+V2_041,JSON,86,84,423,423,"```json
+{
+    ""tasks"": [
+        {
+            ""id"": ""V2_041"",
+            ""steps"": [
+                {
+                    ""device"": ""relay1"",
+                    ""action"": ""open""
+                },
+                {
+                    ""wait"": 500
+                },
+                {
+                    ""device"": ""water_sensor"",
+                    ""action"": ""read""
+                }
+            ]
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_041,PYTHON,88,18,54,54,"relay1.on()
+time.sleep(0.5)
+print(water_sensor.read())",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""halt""]]"
+V2_042,MIR,164,44,121,121,"task V2_042 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 50ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]"
+V2_042,JSON,86,81,309,309,"```json
+{
+    ""task_id"": ""V2_042"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_042,PYTHON,88,18,56,56,"relay1.off()
+time.sleep(0.05)
+print(water_sensor.read())",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""halt""]]"
+V2_043,MIR,164,44,122,122,"task V2_043 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]"
+V2_043,JSON,86,81,310,310,"```json
+{
+    ""task_id"": ""V2_043"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_043,PYTHON,88,18,55,55,"relay1.off()
+time.sleep(0.1)
+print(water_sensor.read())",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""halt""]]"
+V2_044,MIR,164,44,122,122,"task V2_044 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]"
+V2_044,JSON,86,81,310,310,"```json
+{
+    ""task_id"": ""V2_044"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_044,PYTHON,88,18,55,55,"relay1.off()
+time.sleep(0.2)
+print(water_sensor.read())",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""halt""]]"
+V2_045,MIR,164,44,122,122,"task V2_045 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 500ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]"
+V2_045,JSON,86,81,310,310,"```json
+{
+    ""task_id"": ""V2_045"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 500,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_045,PYTHON,88,18,55,55,"relay1.off()
+time.sleep(0.5)
+print(water_sensor.read())",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""halt""]]"
+V2_046,MIR,164,44,133,133,"task V2_046 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_046,JSON,86,81,314,314,"```json
+{
+    ""task_id"": ""V2_046"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_046,PYTHON,88,16,54,54,"relay1.on()
+time.sleep(0.05)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_047,MIR,164,44,134,134,"task V2_047 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_047,JSON,86,81,315,315,"```json
+{
+    ""task_id"": ""V2_047"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_047,PYTHON,88,16,53,53,"relay1.on()
+time.sleep(0.1)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_048,MIR,164,44,134,134,"task V2_048 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_048,JSON,86,81,315,315,"```json
+{
+    ""task_id"": ""V2_048"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_048,PYTHON,88,16,53,53,"relay1.on()
+time.sleep(0.2)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_049,MIR,164,44,134,134,"task V2_049 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 500ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_049,JSON,86,81,315,315,"```json
+{
+    ""task_id"": ""V2_049"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 500,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_049,PYTHON,88,16,53,53,"relay1.on()
+time.sleep(0.5)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_050,MIR,164,44,133,133,"task V2_050 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 50ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_050,JSON,86,81,315,315,"```json
+{
+    ""task_id"": ""V2_050"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_050,PYTHON,88,16,55,55,"relay1.off()
+time.sleep(0.05)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_051,MIR,164,44,134,134,"task V2_051 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_051,JSON,86,81,316,316,"```json
+{
+    ""task_id"": ""V2_051"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_051,PYTHON,88,16,54,54,"relay1.off()
+time.sleep(0.1)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_052,MIR,164,44,134,134,"task V2_052 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_052,JSON,86,81,316,316,"```json
+{
+    ""task_id"": ""V2_052"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_052,PYTHON,88,16,54,54,"relay1.off()
+time.sleep(0.2)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_053,MIR,164,44,134,134,"task V2_053 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 500ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_053,JSON,86,81,316,316,"```json
+{
+    ""task_id"": ""V2_053"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 500,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_053,PYTHON,88,16,54,54,"relay1.off()
+time.sleep(0.5)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_054,MIR,164,44,127,127,"task V2_054 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_054,JSON,86,81,311,311,"```json
+{
+    ""task_id"": ""V2_054"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_054,PYTHON,88,18,62,62,"relay1.on()
+time.sleep(0.05)
+humidity = humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_055,MIR,164,44,128,128,"task V2_055 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_055,JSON,86,81,312,312,"```json
+{
+    ""task_id"": ""V2_055"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_055,PYTHON,88,18,61,61,"relay1.on()
+time.sleep(0.1)
+humidity = humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_056,MIR,164,44,128,128,"task V2_056 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_056,JSON,86,81,312,312,"```json
+{
+    ""task_id"": ""V2_056"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_056,PYTHON,88,18,61,61,"relay1.on()
+time.sleep(0.2)
+humidity = humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_057,MIR,164,44,128,128,"task V2_057 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 500ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_057,JSON,86,81,312,312,"```json
+{
+    ""task_id"": ""V2_057"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 500,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_057,PYTHON,88,18,61,61,"relay1.on()
+time.sleep(0.5)
+humidity = humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_058,MIR,164,44,127,127,"task V2_058 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 50ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_058,JSON,86,81,312,312,"```json
+{
+    ""task_id"": ""V2_058"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_058,PYTHON,88,16,52,52,"relay1.off()
+time.sleep(0.05)
+humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_059,MIR,164,44,128,128,"task V2_059 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_059,JSON,86,81,313,313,"```json
+{
+    ""task_id"": ""V2_059"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_059,PYTHON,88,18,62,62,"relay1.off()
+time.sleep(0.1)
+humidity = humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_060,MIR,164,44,128,128,"task V2_060 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_060,JSON,86,81,313,313,"```json
+{
+    ""task_id"": ""V2_060"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_060,PYTHON,88,18,62,62,"relay1.off()
+time.sleep(0.2)
+humidity = humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_061,MIR,164,44,128,128,"task V2_061 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 500ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_061,JSON,86,81,313,313,"```json
+{
+    ""task_id"": ""V2_061"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 500,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_061,PYTHON,88,18,62,62,"relay1.off()
+time.sleep(0.5)
+humidity = humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_062,MIR,164,44,121,121,"task V2_062 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]"
+V2_062,JSON,86,81,308,308,"```json
+{
+    ""task_id"": ""V2_062"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_062,PYTHON,88,16,48,48,"relay2.on()
+time.sleep(0.05)
+water_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]"
+V2_063,MIR,164,44,122,122,"task V2_063 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]"
+V2_063,JSON,86,91,457,457,"```json
+{
+    ""tasks"": [
+        {
+            ""id"": ""V2_063"",
+            ""steps"": [
+                {
+                    ""device"": ""relay2"",
+                    ""action"": ""open""
+                },
+                {
+                    ""wait"": 100,
+                    ""unit"": ""ms""
+                },
+                {
+                    ""device"": ""water_sensor"",
+                    ""action"": ""read""
+                }
+            ]
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_063,PYTHON,88,16,47,47,"relay2.on()
+time.sleep(0.1)
+water_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]"
+V2_064,MIR,164,44,122,122,"task V2_064 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 200ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]"
+V2_064,JSON,86,81,309,309,"```json
+{
+    ""task_id"": ""V2_064"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_064,PYTHON,88,16,47,47,"relay2.on()
+time.sleep(0.2)
+water_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]"
+V2_065,MIR,164,44,122,122,"task V2_065 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]"
+V2_065,JSON,86,81,309,309,"```json
+{
+    ""task_id"": ""V2_065"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 500,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_065,PYTHON,88,18,54,54,"relay2.on()
+time.sleep(0.5)
+print(water_sensor.read())",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""halt""]]"
+V2_066,MIR,164,44,121,121,"task V2_066 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 50ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]"
+V2_066,JSON,86,81,309,309,"```json
+{
+    ""task_id"": ""V2_066"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_066,PYTHON,88,16,49,49,"relay2.off()
+time.sleep(0.05)
+water_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""water_sensor""], [""halt""]]"
+V2_067,MIR,164,44,122,122,"task V2_067 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 100ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]"
+V2_067,JSON,86,81,310,310,"```json
+{
+    ""task_id"": ""V2_067"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_067,PYTHON,88,16,48,48,"relay2.off()
+time.sleep(0.1)
+water_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]"
+V2_068,MIR,164,44,122,122,"task V2_068 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 200ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]"
+V2_068,JSON,86,81,310,310,"```json
+{
+    ""task_id"": ""V2_068"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""water_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_068,PYTHON,88,16,48,48,"relay2.off()
+time.sleep(0.2)
+water_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""water_sensor""], [""halt""]]"
+V2_069,MIR,164,44,122,122,"task V2_069 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 500ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]"
+V2_069,JSON,86,84,424,424,"```json
+{
+    ""tasks"": [
+        {
+            ""id"": ""V2_069"",
+            ""steps"": [
+                {
+                    ""device"": ""relay2"",
+                    ""action"": ""close""
+                },
+                {
+                    ""wait"": 500
+                },
+                {
+                    ""device"": ""water_sensor"",
+                    ""action"": ""read""
+                }
+            ]
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_069,PYTHON,88,18,57,57,"relay2.close()
+time.sleep(0.5)
+print(water_sensor.read())",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""halt""]]"
+V2_070,MIR,164,44,133,133,"task V2_070 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_070,JSON,86,81,314,314,"```json
+{
+    ""task_id"": ""V2_070"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_070,PYTHON,88,16,56,56,"relay2.open()
+time.sleep(0.05)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_071,MIR,164,44,134,134,"task V2_071 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_071,JSON,86,81,315,315,"```json
+{
+    ""task_id"": ""V2_071"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_071,PYTHON,88,16,55,55,"relay2.open()
+time.sleep(0.1)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_072,MIR,164,44,134,134,"task V2_072 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 200ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_072,JSON,86,91,464,464,"```json
+{
+    ""tasks"": [
+        {
+            ""id"": ""V2_072"",
+            ""steps"": [
+                {
+                    ""device"": ""relay2"",
+                    ""action"": ""open""
+                },
+                {
+                    ""delay"": 200,
+                    ""unit"": ""ms""
+                },
+                {
+                    ""device"": ""temperature_sensor"",
+                    ""action"": ""read""
+                }
+            ]
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_072,PYTHON,88,16,55,55,"relay2.open()
+time.sleep(0.2)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_073,MIR,164,44,134,134,"task V2_073 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_073,JSON,86,81,315,315,"```json
+{
+    ""task_id"": ""V2_073"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 500,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_073,PYTHON,88,16,55,55,"relay2.open()
+time.sleep(0.5)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_074,MIR,164,44,133,133,"task V2_074 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 50ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_074,JSON,86,81,315,315,"```json
+{
+    ""task_id"": ""V2_074"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_074,PYTHON,88,16,57,57,"relay2.close()
+time.sleep(0.05)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_075,MIR,164,44,134,134,"task V2_075 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_075,JSON,86,81,316,316,"```json
+{
+    ""task_id"": ""V2_075"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_075,PYTHON,88,16,56,56,"relay2.close()
+time.sleep(0.1)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_076,MIR,164,44,134,134,"task V2_076 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 200ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_076,JSON,86,81,316,316,"```json
+{
+    ""task_id"": ""V2_076"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_076,PYTHON,88,16,56,56,"relay2.close()
+time.sleep(0.2)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_077,MIR,164,44,134,134,"task V2_077 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 500ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_077,JSON,86,81,316,316,"```json
+{
+    ""task_id"": ""V2_077"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 500,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""temperature_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_077,PYTHON,88,16,56,56,"relay2.close()
+time.sleep(0.5)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_078,MIR,164,44,127,127,"task V2_078 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_078,JSON,86,81,311,311,"```json
+{
+    ""task_id"": ""V2_078"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_078,PYTHON,88,16,51,51,"relay2.on()
+time.sleep(0.05)
+humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_079,MIR,164,44,128,128,"task V2_079 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_079,JSON,86,81,312,312,"```json
+{
+    ""task_id"": ""V2_079"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_079,PYTHON,88,18,61,61,"relay2.on()
+time.sleep(0.1)
+humidity = humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_080,MIR,164,44,128,128,"task V2_080 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 200ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_080,JSON,86,81,312,312,"```json
+{
+    ""task_id"": ""V2_080"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_080,PYTHON,88,18,61,61,"relay2.on()
+time.sleep(0.2)
+humidity = humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_081,MIR,164,44,128,128,"task V2_081 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_081,JSON,86,81,312,312,"```json
+{
+    ""task_id"": ""V2_081"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 500,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_081,PYTHON,88,18,61,61,"relay2.on()
+time.sleep(0.5)
+humidity = humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_082,MIR,164,44,127,127,"task V2_082 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 50ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_082,JSON,86,81,312,312,"```json
+{
+    ""task_id"": ""V2_082"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 50,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_082,PYTHON,88,16,54,54,"relay2.close()
+time.sleep(0.05)
+humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""50""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_083,MIR,164,44,128,128,"task V2_083 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 100ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_083,JSON,86,81,313,313,"```json
+{
+    ""task_id"": ""V2_083"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_083,PYTHON,88,16,53,53,"relay2.close()
+time.sleep(0.1)
+humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_084,MIR,164,44,128,128,"task V2_084 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 200ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_084,JSON,86,81,313,313,"```json
+{
+    ""task_id"": ""V2_084"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_084,PYTHON,88,16,53,53,"relay2.close()
+time.sleep(0.2)
+humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_085,MIR,164,44,128,128,"task V2_085 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 500ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_085,JSON,86,81,313,313,"```json
+{
+    ""task_id"": ""V2_085"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        },
+        {
+            ""delay"": 500,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""humidity_sensor"",
+            ""action"": ""read""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_085,PYTHON,88,16,53,53,"relay2.close()
+time.sleep(0.5)
+humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_086,MIR,157,41,106,106,"task V2_086 {
+  require cap(relay1)
+  read relay1
+  wait 10ms
+  require cap(relay2)
+  read relay2
+  halt
+}",llama3.1:8b,0,"[[""read"", ""relay1""], [""read"", ""relay2""], [""halt""]]","[[""read"", ""relay1""], [""wait"", ""10""], [""read"", ""relay2""], [""halt""]]"
+V2_086,JSON,79,94,327,327,"```json
+{
+  ""task_id"": ""V2_086"",
+  ""instructions"": [
+    {
+      ""device"": ""relay1"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""relay2"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task ID V2_086, which involves reading the state of relay1 followed by reading the state of relay2.",llama3.1:8b,0,"[[""read"", ""relay1""], [""read"", ""relay2""], [""halt""]]",null
+V2_086,PYTHON,81,9,27,27,"relay1.read()
+relay2.read()",llama3.1:8b,1,"[[""read"", ""relay1""], [""read"", ""relay2""], [""halt""]]","[[""read"", ""relay1""], [""read"", ""relay2""], [""halt""]]"
+V2_087,MIR,157,41,119,119,"task V2_087 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  read relay1
+  wait 10ms
+  read water_sensor
+  halt
+}",llama3.1:8b,0,"[[""read"", ""relay1""], [""read"", ""water_sensor""], [""halt""]]","[[""read"", ""relay1""], [""wait"", ""10""], [""read"", ""water_sensor""], [""halt""]]"
+V2_087,JSON,79,92,327,327,"```json
+{
+  ""task_id"": ""V2_087"",
+  ""instructions"": [
+    {
+      ""device"": ""relay1"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""water_sensor"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task of reading the state of `relay1` first, followed by reading the state of `water_sensor`.",llama3.1:8b,0,"[[""read"", ""relay1""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_087,PYTHON,81,9,33,33,"relay1.read()
+water_sensor.read()",llama3.1:8b,1,"[[""read"", ""relay1""], [""read"", ""water_sensor""], [""halt""]]","[[""read"", ""relay1""], [""read"", ""water_sensor""], [""halt""]]"
+V2_088,MIR,157,41,131,131,"task V2_088 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+
+  read relay1
+  wait 10ms
+  read temperature_sensor
+  halt
+}",llama3.1:8b,0,"[[""read"", ""relay1""], [""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""relay1""], [""wait"", ""10""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_088,JSON,79,92,344,344,"```json
+{
+  ""task_id"": ""V2_088"",
+  ""instructions"": [
+    {
+      ""device"": ""relay1"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""temperature_sensor"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task of reading the state of `relay1` first, and then reading the temperature from `temperature_sensor`.",llama3.1:8b,0,"[[""read"", ""relay1""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_088,PYTHON,81,9,39,39,"relay1.read()
+temperature_sensor.read()",llama3.1:8b,1,"[[""read"", ""relay1""], [""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""relay1""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_089,MIR,157,41,125,125,"task V2_089 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+
+  read relay1
+  wait 10ms
+  read humidity_sensor
+  halt
+}",llama3.1:8b,0,"[[""read"", ""relay1""], [""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""relay1""], [""wait"", ""10""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_089,JSON,79,93,341,341,"```json
+{
+  ""task_id"": ""V2_089"",
+  ""instructions"": [
+    {
+      ""device"": ""relay1"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""humidity_sensor"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task of reading the state of `relay1` first, and then reading the humidity level from `humidity_sensor`.",llama3.1:8b,0,"[[""read"", ""relay1""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_089,PYTHON,81,9,36,36,"relay1.read()
+humidity_sensor.read()",llama3.1:8b,1,"[[""read"", ""relay1""], [""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""relay1""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_090,MIR,157,41,107,107,"task V2_090 {
+  require cap(relay2)
+  read relay2
+  require cap(relay1)
+  read relay1
+  wait 100ms
+  halt
+}",llama3.1:8b,0,"[[""read"", ""relay2""], [""read"", ""relay1""], [""halt""]]","[[""read"", ""relay2""], [""read"", ""relay1""], [""wait"", ""100""], [""halt""]]"
+V2_090,JSON,79,59,173,173,"{
+  ""task_id"": ""V2_090"",
+  ""instructions"": [
+    {
+      ""device"": ""relay2"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""relay1"",
+      ""action"": ""read""
+    }
+  ]
+}",llama3.1:8b,0,"[[""read"", ""relay2""], [""read"", ""relay1""], [""halt""]]",null
+V2_090,PYTHON,81,9,27,27,"relay2.read()
+relay1.read()",llama3.1:8b,1,"[[""read"", ""relay2""], [""read"", ""relay1""], [""halt""]]","[[""read"", ""relay2""], [""read"", ""relay1""], [""halt""]]"
+V2_091,MIR,157,41,120,120,"task V2_091 {
+  require cap(relay2)
+  require cap(water_sensor)
+
+  read relay2
+  wait 100ms
+  read water_sensor
+  halt
+}",llama3.1:8b,0,"[[""read"", ""relay2""], [""read"", ""water_sensor""], [""halt""]]","[[""read"", ""relay2""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]"
+V2_091,JSON,79,96,352,352,"```json
+{
+  ""task_id"": ""V2_091"",
+  ""instructions"": [
+    {
+      ""device"": ""relay2"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""water_sensor"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task with a clear structure, including the task ID and two instructions to read from `relay2` and then `water_sensor`.",llama3.1:8b,0,"[[""read"", ""relay2""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_091,PYTHON,81,9,33,33,"relay2.read()
+water_sensor.read()",llama3.1:8b,1,"[[""read"", ""relay2""], [""read"", ""water_sensor""], [""halt""]]","[[""read"", ""relay2""], [""read"", ""water_sensor""], [""halt""]]"
+V2_092,MIR,157,35,118,118,"task V2_092 {
+  require cap(relay2)
+  read relay2
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""read"", ""relay2""], [""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""relay2""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_092,JSON,79,88,319,319,"```json
+{
+  ""task_id"": ""V2_092"",
+  ""instructions"": [
+    {
+      ""device"": ""relay2"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""temperature_sensor"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task ID V2_092, which involves reading from relay2 and then temperature_sensor.",llama3.1:8b,0,"[[""read"", ""relay2""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_092,PYTHON,81,9,39,39,"relay2.read()
+temperature_sensor.read()",llama3.1:8b,1,"[[""read"", ""relay2""], [""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""relay2""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_093,MIR,157,35,112,112,"task V2_093 {
+  require cap(relay2)
+  read relay2
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""read"", ""relay2""], [""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""relay2""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_093,JSON,79,88,313,313,"```json
+{
+  ""task_id"": ""V2_093"",
+  ""instructions"": [
+    {
+      ""device"": ""relay2"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""humidity_sensor"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task ID V2_093, which involves reading from relay2 and then humidity_sensor.",llama3.1:8b,0,"[[""read"", ""relay2""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_093,PYTHON,81,9,36,36,"relay2.read()
+humidity_sensor.read()",llama3.1:8b,1,"[[""read"", ""relay2""], [""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""relay2""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_094,MIR,157,35,106,106,"task V2_094 {
+  require cap(water_sensor)
+  read water_sensor
+  require cap(relay1)
+  read relay1
+  halt
+}",llama3.1:8b,1,"[[""read"", ""water_sensor""], [""read"", ""relay1""], [""halt""]]","[[""read"", ""water_sensor""], [""read"", ""relay1""], [""halt""]]"
+V2_094,JSON,79,85,306,306,"```json
+{
+  ""task_id"": ""V2_094"",
+  ""instructions"": [
+    {
+      ""device"": ""water_sensor"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""relay1"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task of reading the water sensor and then reading relay1, as instructed.",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""relay1""], [""halt""]]",null
+V2_094,PYTHON,81,46,127,163,"def control_task():
+    # 读取水位传感器的状态
+    water_level = water_sensor.read()
+    
+    # 读取继电器的状态
+    relay_status = relay1.read()",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""relay1""], [""halt""]]",null
+V2_095,MIR,157,35,106,106,"task V2_095 {
+  require cap(water_sensor)
+  read water_sensor
+  require cap(relay2)
+  read relay2
+  halt
+}",llama3.1:8b,1,"[[""read"", ""water_sensor""], [""read"", ""relay2""], [""halt""]]","[[""read"", ""water_sensor""], [""read"", ""relay2""], [""halt""]]"
+V2_095,JSON,79,85,306,306,"```json
+{
+  ""task_id"": ""V2_095"",
+  ""instructions"": [
+    {
+      ""device"": ""water_sensor"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""relay2"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task of reading the water sensor and then reading relay2, as instructed.",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""relay2""], [""halt""]]",null
+V2_095,PYTHON,81,45,126,160,"def control_task():
+    # 读取水位传感器的数据
+    water_level = water_sensor.read()
+    
+    # 读取继电器状态
+    relay_status = relay2.read()",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""relay2""], [""halt""]]",null
+V2_096,MIR,157,41,143,143,"task V2_096 {
+  require cap(water_sensor)
+  read water_sensor
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""water_sensor""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_096,JSON,79,59,191,191,"{
+  ""task_id"": ""V2_096"",
+  ""instructions"": [
+    {
+      ""device"": ""water_sensor"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""temperature_sensor"",
+      ""action"": ""read""
+    }
+  ]
+}",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_096,PYTHON,81,54,173,209,"def read_sensors():
+    # 读取水温传感器数据
+    water_data = water_sensor.read()
+    
+    # 读取温度传感器数据
+    temp_data = temperature_sensor.read()
+    
+    return water_data, temp_data",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_097,MIR,157,41,137,137,"task V2_097 {
+  require cap(water_sensor)
+  read water_sensor
+  wait 100ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""water_sensor""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_097,JSON,79,59,188,188,"{
+  ""task_id"": ""V2_097"",
+  ""instructions"": [
+    {
+      ""device"": ""water_sensor"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""humidity_sensor"",
+      ""action"": ""read""
+    }
+  ]
+}",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_097,PYTHON,81,33,149,149,"```python
+# Read data from water sensor
+water_data = water_sensor.read()
+
+# Read data from humidity sensor
+humidity_data = humidity_sensor.read()
+```",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_098,MIR,157,35,118,118,"task V2_098 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  require cap(relay1)
+  read relay1
+  halt
+}",llama3.1:8b,1,"[[""read"", ""temperature_sensor""], [""read"", ""relay1""], [""halt""]]","[[""read"", ""temperature_sensor""], [""read"", ""relay1""], [""halt""]]"
+V2_098,JSON,79,85,318,318,"```json
+{
+  ""task_id"": ""V2_098"",
+  ""instructions"": [
+    {
+      ""device"": ""temperature_sensor"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""relay1"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task of reading the temperature sensor and then reading relay1, as instructed.",llama3.1:8b,0,"[[""read"", ""temperature_sensor""], [""read"", ""relay1""], [""halt""]]",null
+V2_098,PYTHON,81,62,278,278,"```python
+temperature = temperature_sensor.read()
+relay_status = relay1.read()
+```
+
+This code first reads the value from the `temperature_sensor` and stores it in the variable `temperature`. Then, it reads the status of the `relay1` and stores it in the variable `relay_status`.",llama3.1:8b,1,"[[""read"", ""temperature_sensor""], [""read"", ""relay1""], [""halt""]]","[[""read"", ""temperature_sensor""], [""read"", ""relay1""], [""halt""]]"
+V2_099,MIR,157,35,118,118,"task V2_099 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  require cap(relay2)
+  read relay2
+  halt
+}",llama3.1:8b,1,"[[""read"", ""temperature_sensor""], [""read"", ""relay2""], [""halt""]]","[[""read"", ""temperature_sensor""], [""read"", ""relay2""], [""halt""]]"
+V2_099,JSON,79,119,484,484,"```json
+{
+  ""task_id"": ""V2_099"",
+  ""instructions"": [
+    {
+      ""device"": ""temperature_sensor"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""relay2"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task of reading the temperature sensor and then reading relay2. The `task_id` field specifies the unique identifier for this task, and the `instructions` array contains two actions: one to read the temperature sensor and another to read relay2.",llama3.1:8b,0,"[[""read"", ""temperature_sensor""], [""read"", ""relay2""], [""halt""]]",null
+V2_099,PYTHON,81,63,285,285,"```python
+temperature = temperature_sensor.read()
+relay_status = relay2.read()
+```
+
+This code first reads the value from the `temperature_sensor` and stores it in the variable `temperature`. Then, it reads the status of the `relay2` device and stores it in the variable `relay_status`.",llama3.1:8b,1,"[[""read"", ""temperature_sensor""], [""read"", ""relay2""], [""halt""]]","[[""read"", ""temperature_sensor""], [""read"", ""relay2""], [""halt""]]"
+V2_100,MIR,157,41,142,142,"task V2_100 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  wait 10ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,0,"[[""read"", ""temperature_sensor""], [""read"", ""water_sensor""], [""halt""]]","[[""read"", ""temperature_sensor""], [""wait"", ""10""], [""read"", ""water_sensor""], [""halt""]]"
+V2_100,JSON,79,123,520,520,"```json
+{
+  ""task_id"": ""V2_100"",
+  ""instructions"": [
+    {
+      ""device"": ""temperature_sensor"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""water_sensor"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task of reading the temperature sensor first, followed by reading the water sensor. The `task_id` field specifies the unique identifier for this task, and the `instructions` array contains two actions: one to read the temperature sensor and another to read the water sensor.",llama3.1:8b,0,"[[""read"", ""temperature_sensor""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_100,PYTHON,81,37,131,151,"```python
+# 读取temperature_sensor的数据
+temp_data = temperature_sensor.read()
+
+# 读取water_sensor的数据
+water_data = water_sensor.read()
+```",llama3.1:8b,0,"[[""read"", ""temperature_sensor""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_101,MIR,157,41,148,148,"task V2_101 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  wait 10ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,0,"[[""read"", ""temperature_sensor""], [""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""temperature_sensor""], [""wait"", ""10""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_101,JSON,79,114,468,468,"```json
+{
+  ""task_id"": ""V2_101"",
+  ""instructions"": [
+    {
+      ""device"": ""temperature_sensor"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""humidity_sensor"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task ID V2_101, which consists of two instructions:
+
+1. Read data from the temperature sensor.
+2. Read data from the humidity sensor.
+
+The structure is compact and machine-readable, following the requirements specified.",llama3.1:8b,0,"[[""read"", ""temperature_sensor""], [""read"", ""humidity_sensor""], [""halt""]]",null
+V2_101,PYTHON,81,15,83,83,"temperature_data = temperature_sensor.read()
+humidity_data = humidity_sensor.read()",llama3.1:8b,1,"[[""read"", ""temperature_sensor""], [""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""temperature_sensor""], [""read"", ""humidity_sensor""], [""halt""]]"
+V2_102,MIR,157,41,125,125,"task V2_102 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  wait 100ms
+  require cap(relay1)
+  read relay1
+  halt
+}",llama3.1:8b,0,"[[""read"", ""humidity_sensor""], [""read"", ""relay1""], [""halt""]]","[[""read"", ""humidity_sensor""], [""wait"", ""100""], [""read"", ""relay1""], [""halt""]]"
+V2_102,JSON,79,119,475,475,"```json
+{
+  ""task_id"": ""V2_102"",
+  ""instructions"": [
+    {
+      ""device"": ""humidity_sensor"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""relay1"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task of reading the humidity sensor and then reading relay1. The `task_id` field specifies the unique identifier for this task, and the `instructions` array contains two actions: one to read the humidity sensor and another to read relay1.",llama3.1:8b,0,"[[""read"", ""humidity_sensor""], [""read"", ""relay1""], [""halt""]]",null
+V2_102,PYTHON,81,64,278,278,"```python
+humidity_value = humidity_sensor.read()
+relay_status = relay1.read()
+```
+
+This code first reads the value from the `humidity_sensor` and stores it in the variable `humidity_value`. Then, it reads the status of the `relay1` and stores it in the variable `relay_status`.",llama3.1:8b,1,"[[""read"", ""humidity_sensor""], [""read"", ""relay1""], [""halt""]]","[[""read"", ""humidity_sensor""], [""read"", ""relay1""], [""halt""]]"
+V2_103,MIR,157,41,124,124,"task V2_103 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  wait 10ms
+  require cap(relay2)
+  read relay2
+  halt
+}",llama3.1:8b,0,"[[""read"", ""humidity_sensor""], [""read"", ""relay2""], [""halt""]]","[[""read"", ""humidity_sensor""], [""wait"", ""10""], [""read"", ""relay2""], [""halt""]]"
+V2_103,JSON,79,119,475,475,"```json
+{
+  ""task_id"": ""V2_103"",
+  ""instructions"": [
+    {
+      ""device"": ""humidity_sensor"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""relay2"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task of reading the humidity sensor and then reading relay2. The `task_id` field specifies the unique identifier for this task, and the `instructions` array contains two actions: one to read the humidity sensor and another to read relay2.",llama3.1:8b,0,"[[""read"", ""humidity_sensor""], [""read"", ""relay2""], [""halt""]]",null
+V2_103,PYTHON,81,64,278,278,"```python
+humidity_value = humidity_sensor.read()
+relay_status = relay2.read()
+```
+
+This code first reads the value from the `humidity_sensor` and stores it in the variable `humidity_value`. Then, it reads the status of the `relay2` and stores it in the variable `relay_status`.",llama3.1:8b,1,"[[""read"", ""humidity_sensor""], [""read"", ""relay2""], [""halt""]]","[[""read"", ""humidity_sensor""], [""read"", ""relay2""], [""halt""]]"
+V2_104,MIR,157,41,137,137,"task V2_104 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  wait 100ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,0,"[[""read"", ""humidity_sensor""], [""read"", ""water_sensor""], [""halt""]]","[[""read"", ""humidity_sensor""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]"
+V2_104,JSON,79,59,188,188,"{
+  ""task_id"": ""V2_104"",
+  ""instructions"": [
+    {
+      ""device"": ""humidity_sensor"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""water_sensor"",
+      ""action"": ""read""
+    }
+  ]
+}",llama3.1:8b,0,"[[""read"", ""humidity_sensor""], [""read"", ""water_sensor""], [""halt""]]",null
+V2_104,PYTHON,81,9,42,42,"humidity_sensor.read()
+water_sensor.read()",llama3.1:8b,1,"[[""read"", ""humidity_sensor""], [""read"", ""water_sensor""], [""halt""]]","[[""read"", ""humidity_sensor""], [""read"", ""water_sensor""], [""halt""]]"
+V2_105,MIR,157,41,149,149,"task V2_105 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,0,"[[""read"", ""humidity_sensor""], [""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""humidity_sensor""], [""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_105,JSON,79,123,529,529,"```json
+{
+  ""task_id"": ""V2_105"",
+  ""instructions"": [
+    {
+      ""device"": ""humidity_sensor"",
+      ""action"": ""read""
+    },
+    {
+      ""device"": ""temperature_sensor"",
+      ""action"": ""read""
+    }
+  ]
+}
+```
+
+This JSON control program represents the task of reading the humidity sensor first, followed by reading the temperature sensor. The `task_id` field specifies the unique identifier for this task, and the `instructions` array contains two actions: one to read the humidity sensor and another to read the temperature sensor.",llama3.1:8b,0,"[[""read"", ""humidity_sensor""], [""read"", ""temperature_sensor""], [""halt""]]",null
+V2_105,PYTHON,81,15,85,85,"humidity_value = humidity_sensor.read()
+temperature_value = temperature_sensor.read()",llama3.1:8b,1,"[[""read"", ""humidity_sensor""], [""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""humidity_sensor""], [""read"", ""temperature_sensor""], [""halt""]]"
+V2_106,MIR,162,40,90,90,"task V2_106 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  set relay1 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""set"", ""relay1"", ""0""], [""halt""]]"
+V2_106,JSON,84,102,337,337,"{
+  ""task_id"": ""V2_106"",
+  ""devices"": [
+    {
+      ""id"": ""relay1"",
+      ""type"": ""relay"",
+      ""actions"": [
+        {
+          ""action"": ""open""
+        },
+        {
+          ""action"": ""wait"",
+          ""ms"": 50
+        },
+        {
+          ""action"": ""close""
+        }
+      ]
+    }
+  ],
+  ""end_action"": {
+    ""action"": ""stop""
+  }
+}",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""set"", ""relay1"", ""0""], [""halt""]]",null
+V2_106,PYTHON,86,16,41,41,"relay1.on()
+time.sleep(0.05)
+relay1.off()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""set"", ""relay1"", ""0""], [""halt""]]"
+V2_107,MIR,162,40,91,91,"task V2_107 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  set relay1 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""set"", ""relay1"", ""0""], [""halt""]]"
+V2_107,JSON,84,81,304,304,"```json
+{
+    ""task_id"": ""V2_107"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""set"", ""relay1"", ""0""], [""halt""]]",null
+V2_107,PYTHON,86,16,40,40,"relay1.on()
+time.sleep(0.1)
+relay1.off()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""100""], [""set"", ""relay1"", ""0""], [""halt""]]"
+V2_108,MIR,162,40,91,91,"task V2_108 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  set relay1 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""set"", ""relay1"", ""0""], [""halt""]]"
+V2_108,JSON,84,81,304,304,"```json
+{
+    ""task_id"": ""V2_108"",
+    ""instructions"": [
+        {
+            ""device"": ""relay1"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""relay1"",
+            ""action"": ""close""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""set"", ""relay1"", ""0""], [""halt""]]",null
+V2_108,PYTHON,86,16,40,40,"relay1.on()
+time.sleep(0.2)
+relay1.off()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""set"", ""relay1"", ""0""], [""halt""]]"
+V2_109,MIR,162,40,91,91,"task V2_109 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 500ms
+  set relay1 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""set"", ""relay1"", ""0""], [""halt""]]"
+V2_109,JSON,84,95,318,318,"{
+  ""task_id"": ""V2_109"",
+  ""devices"": [
+    {
+      ""id"": ""relay1"",
+      ""type"": ""relay"",
+      ""actions"": [
+        {
+          ""action"": ""open""
+        },
+        {
+          ""action"": ""wait"",
+          ""ms"": 500
+        },
+        {
+          ""action"": ""close""
+        }
+      ]
+    }
+  ],
+  ""end_action"": ""stop""
+}",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""set"", ""relay1"", ""0""], [""halt""]]",null
+V2_109,PYTHON,86,16,40,40,"relay1.on()
+time.sleep(0.5)
+relay1.off()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""set"", ""relay1"", ""0""], [""halt""]]"
+V2_110,MIR,162,40,90,90,"task V2_110 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  set relay2 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""set"", ""relay2"", ""0""], [""halt""]]"
+V2_110,JSON,84,91,306,306,"```
+{
+  ""task_id"": ""V2_110"",
+  ""devices"": [
+    {
+      ""device"": ""relay2"",
+      ""actions"": [
+        {
+          ""action"": ""open""
+        },
+        {
+          ""action"": ""wait"",
+          ""ms"": 50
+        },
+        {
+          ""action"": ""close""
+        }
+      ]
+    }
+  ],
+  ""end_action"": ""stop""
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""set"", ""relay2"", ""0""], [""halt""]]",null
+V2_110,PYTHON,86,16,41,41,"relay2.on()
+time.sleep(0.05)
+relay2.off()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""50""], [""set"", ""relay2"", ""0""], [""halt""]]"
+V2_111,MIR,162,40,91,91,"task V2_111 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  set relay2 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""set"", ""relay2"", ""0""], [""halt""]]"
+V2_111,JSON,84,81,304,304,"```json
+{
+    ""task_id"": ""V2_111"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 100,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""set"", ""relay2"", ""0""], [""halt""]]",null
+V2_111,PYTHON,86,16,40,40,"relay2.on()
+time.sleep(0.1)
+relay2.off()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""100""], [""set"", ""relay2"", ""0""], [""halt""]]"
+V2_112,MIR,162,40,91,91,"task V2_112 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 200ms
+  set relay2 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""set"", ""relay2"", ""0""], [""halt""]]"
+V2_112,JSON,84,81,304,304,"```json
+{
+    ""task_id"": ""V2_112"",
+    ""instructions"": [
+        {
+            ""device"": ""relay2"",
+            ""action"": ""open""
+        },
+        {
+            ""delay"": 200,
+            ""unit"": ""ms""
+        },
+        {
+            ""device"": ""relay2"",
+            ""action"": ""close""
+        }
+    ]
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""set"", ""relay2"", ""0""], [""halt""]]",null
+V2_112,PYTHON,86,16,40,40,"relay2.on()
+time.sleep(0.2)
+relay2.off()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""set"", ""relay2"", ""0""], [""halt""]]"
+V2_113,MIR,162,40,91,91,"task V2_113 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""set"", ""relay2"", ""0""], [""halt""]]"
+V2_113,JSON,84,99,459,459,"```json
+{
+    ""task_id"": ""V2_113"",
+    ""devices"": [
+        {
+            ""device"": ""relay2"",
+            ""actions"": [
+                {
+                    ""action"": ""open""
+                },
+                {
+                    ""action"": ""wait"",
+                    ""ms"": 500
+                },
+                {
+                    ""action"": ""close""
+                }
+            ]
+        }
+    ],
+    ""end_action"": {
+        ""action"": ""stop""
+    }
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""set"", ""relay2"", ""0""], [""halt""]]",null
+V2_113,PYTHON,86,16,40,40,"relay2.on()
+time.sleep(0.5)
+relay2.off()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""set"", ""relay2"", ""0""], [""halt""]]"

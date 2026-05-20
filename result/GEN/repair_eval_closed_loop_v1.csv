@@ -1,0 +1,164 @@
+﻿task_id,category,attempt,ir_valid,compile_pass,verify_pass,execution_pass,task_success,payload_hex,error_stage,error_code,hint,candidate_mir,prompt_eval_count,eval_count
+V3_001,readback,1,1,1,1,1,1,50051e024605516447051e022c52,,,,"task V3_001 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  readback relay1 expect 1
+  halt
+}",212,41
+V3_002,readback,1,1,1,1,1,1,50051e004605510a47051e002c52,,,,"task V3_002 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 10ms
+  readback relay1 expect 0
+  halt
+}",212,41
+V3_003,readback,1,1,1,1,1,1,50061e024606516447061e022c52,,,,"task V3_003 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  readback relay2 expect 1
+  halt
+}",212,41
+V3_004,readback,1,1,1,1,1,1,50061e004606510a47061e002c52,,,,"task V3_004 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 10ms
+  readback relay2 expect 0
+  halt
+}",212,41
+V3_005,retry,1,1,1,1,1,1,50051e024605510a47051e022c1e044065201e024605510a47051e022c6502640a1e0233406508641d411e026404411e0052,,,,"task V3_005 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 10ms
+  readback relay1 expect 1
+  retry 2 times {
+    set relay1 = 1
+    wait 10ms
+    readback relay1 expect 1
+  }
+  halt
+}",223,72
+V3_006,retry,1,1,1,1,1,1,50051e004605516447051e002c1e064065201e004605516447051e002c6502640a1e0233406508641d411e026404411e0052,,,,"task V3_006 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  readback relay1 expect 0
+  retry 3 times {
+    set relay1 = 0
+    wait 100ms
+    readback relay1 expect 0
+  }
+  halt
+}",223,72
+V3_007,retry,1,1,1,1,1,1,50061e024606510a47061e022c1e044065201e024606510a47061e022c6502640a1e0233406508641d411e026404411e0052,,,,"task V3_007 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 10ms
+  readback relay2 expect 1
+  retry 2 times {
+    set relay2 = 1
+    wait 10ms
+    readback relay2 expect 1
+  }
+  halt
+}",223,72
+V3_008,retry,1,1,1,1,1,1,50061e024606510a47061e022c1e064065201e004606510a47061e002c6502640a1e0233406508641d411e026404411e0052,,,,"task V3_008 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 10ms
+  readback relay2 expect 1
+  retry 3 times {
+    set relay2 = 0
+    wait 10ms
+    readback relay2 expect 0
+  }
+  halt
+}",223,72
+V3_009,retry_fail,1,1,1,1,1,1,50051e02460547051e002c1e044065201e024605510a47051e002c6502640a1e0233406508641d411e026404411e0052,,,,"task V3_009 {
+  require cap(relay1)
+  set relay1 = 1
+  readback relay1 expect 0
+  retry 2 times {
+    set relay1 = 1
+    wait 10ms
+    readback relay1 expect 0
+  }
+  halt
+}",224,66
+V3_010,retry_fail,1,1,1,1,1,1,50061e004606510a47061e022c1e044065201e004606510a47061e022c6502640a1e0233406508641d411e026404411e0052,,,,"task V3_010 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 10ms
+  readback relay2 expect 1
+  retry 2 times {
+    set relay2 = 0
+    wait 10ms
+    readback relay2 expect 1
+  }
+  halt
+}",224,72
+V3_011,multi_device,1,1,1,1,1,1,500550011e024605516447051e022c470152,,,,"task V3_011 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  readback relay1 expect 1
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",221,53
+V3_012,multi_device,1,1,1,1,1,0,500650021e024606510a47061e002c470252,task,TASK_SIGNATURE_MISMATCH,Rewrite the program so the final device state and return signature match the instruction exactly.,"task V3_012 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 10ms
+  readback relay2 expect 0
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",221,53
+V3_012,multi_device,2,1,1,1,1,1,500650021e00460647061e002c470252,,,,"task V3_012 {
+  require cap(relay2)
+  set relay2 = 0
+  readback relay2 expect 0
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",266,47
+V3_013,retry_wait,1,1,1,1,1,1,50051e064065201e024605516447051e022c6502640a1e0233406508641d411e026404411e0052,,,,"task V3_013 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 1
+    wait 100ms
+    readback relay1 expect 1
+  }
+  halt
+}",229,49
+V3_014,retry_wait,1,1,1,1,1,1,50061e02460647061e022c1e064065201e004606513247061e002c6502640a1e0233406508641d411e026404411e0052,,,,"task V3_014 {
+  require cap(relay2)
+  set relay2 = 1
+  readback relay2 expect 1
+  retry 3 times {
+    set relay2 = 0
+    wait 50ms
+    readback relay2 expect 0
+  }
+  halt
+}",229,66
+V3_015,long_sequence,1,1,1,1,1,1,50051e02460547051e022c51321e00460547051e002c52,,,,"task V3_015 {
+  require cap(relay1)
+  set relay1 = 1
+  readback relay1 expect 1
+  wait 50ms
+  set relay1 = 0
+  readback relay1 expect 0
+  halt
+}",226,58
+V3_016,long_sequence,1,1,1,1,1,1,50061e02460647061e022c51641e00460647061e002c52,,,,"task V3_016 {
+  require cap(relay2)
+  set relay2 = 1
+  readback relay2 expect 1
+  wait 100ms
+  set relay2 = 0
+  readback relay2 expect 0
+  halt
+}",226,58

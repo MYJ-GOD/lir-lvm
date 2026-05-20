@@ -1,0 +1,10 @@
+# E4+ JSON Real Matrix
+
+| group | 说明 | converged/n | SCR | 95%CI | RTT mean±SD (ms) | attempts_mean | 与 G3 差异检验 | 结果文件 |
+|---|---|---:|---:|---|---|---:|---|---|
+| G0_json_real | MCU端真实JSON/文本解析链路（开环） | 67/100 | 0.670 | [0.573, 0.754] | 27.547±2.680 | 1.000 | z=-6.29, p=<1e-4 | `C:\Users\34571\Desktop\M-Language-Core\论文分区\ccfc\result\E4_json_real\e4_json_real_summary_open_loop_fair_20260317_183935.csv` |
+| G0_json_real_with_o_no_retry | JSON+读回无重试（应用层） | 67/100 | 0.670 | [0.573, 0.754] | 27.388±2.661 | 1.000 | z=-6.29, p=<1e-4 | `C:\Users\34571\Desktop\M-Language-Core\论文分区\ccfc\result\E4_json_real\e4_json_real_summary_closed_loop_no_retry_fair_20260317_183921.csv` |
+| G0_json_real_with_o | JSON+读回+重试（应用层） | 100/100 | 1.000 | [0.963, 1.000] | 35.758±14.518 | 1.330 | z=0.00, p=1.0000 | `C:\Users\34571\Desktop\M-Language-Core\论文分区\ccfc\result\E4_json_real\e4_json_real_summary_closed_loop_retry_fair_20260317_183949.csv` |
+| G2_m_no_o | M 开环 | 66/100 | 0.660 | [0.563, 0.745] | 18.598±1.784 | 1.000 | z=-6.40, p=<1e-4 | `C:\Users\34571\Desktop\M-Language-Core\论文分区\ccfc\result\E4\e4_summary.csv` |
+| G4_m_with_o_no_retry | M+读回无重试 | 66/100 | 0.660 | [0.563, 0.745] | 18.572±1.765 | 1.000 | z=-6.40, p=<1e-4 | `C:\Users\34571\Desktop\M-Language-Core\论文分区\ccfc\result\E4\e4_summary.csv` |
+| G3_m_with_o | M+读回+重试 | 100/100 | 1.000 | [0.963, 1.000] | 24.424±9.990 | 1.340 | baseline | `C:\Users\34571\Desktop\M-Language-Core\论文分区\ccfc\result\E4\e4_summary.csv` |

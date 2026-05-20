@@ -1,0 +1,16 @@
+# LaTeX build artifacts
+latex/*.aux
+latex/*.log
+latex/*.out
+latex/*.blg
+latex/*.bbl
+latex/*.toc
+latex/*.lof
+latex/*.lot
+latex/*.fls
+latex/*.fdb_latexmk
+latex/*.synctex.gz
+
+# Python
+tools/__pycache__/
+*.pyc

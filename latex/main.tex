@@ -1,0 +1,1531 @@
+% ============================================================
+% M-IR + MVM 论文 — LaTeX 中文版
+% 由 ccfc论文草稿.md 转换生成
+% ============================================================
+\documentclass[UTF8,a4paper,10pt]{ctexart}
+
+% ---- 页面与字体 ----
+\usepackage[top=2.5cm,bottom=2.5cm,left=2.2cm,right=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{cite}
+\usepackage{doi}
+
+% ---- 图形路径 ----
+\graphicspath{{../figures/}}
+
+% ---- 代码块样式 ----
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=true,
+  frame=single,
+  language={},
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{red},
+  showstringspaces=false,
+  columns=flexible,
+  xleftmargin=2em,
+  framexleftmargin=1em,
+}
+
+% ---- 自定义命令 ----
+\newcommand{\mir}{\texttt{M-IR}}
+\newcommand{\mbc}{\texttt{M-bytecode}}
+\newcommand{\mvm}{\texttt{MVM}}
+
+\lstdefinestyle{mirstyle}{
+  language={},
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=true,
+  frame=single,
+  numbers=none,
+}
+
+\title{\textbf{M-IR + MVM：面向大语言模型生成的\\紧凑硬件控制表示与有界执行框架}}
+\author{马英杰\\北华航天工业学院}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ============================================================
+\begin{abstract}
+大语言模型生成的控制程序在资源受限 MCU 上缺乏既紧凑又可安全执行的表示。本文提出 M-IR + M-bytecode + MVM 两层框架：M-IR 面向 LLM 生成（输出 token 显著低于 JSON，以更长的 system prompt 为代价），编译为传输紧凑的 M-bytecode（压缩率 9.8x vs zlib-JSON, 9.6x vs CBOR），在 MVM 上以 capability gating 和 step-limit 实现运行时有界执行（bounded execution）。在确定性解码模式（temperature=0）下，113 个确定性任务的 M-IR $\to$ M-bytecode 链路含 repair 全线通过率达 1.000，repair loop 的 success@1 为 0.982；在 96 个闭环任务上，通过 prompt 工程消除 retry/repeat 语义混淆后 task\_success\_rate 达 0.948。在非零温度采样模式下成功率显著下降（0.6 时 0.909±0.289，1.0 时 0.847±0.361），表明当前框架的可靠性依赖于确定性解码。有界执行实验验证了 UABR=1.000 的异常阻断能力。实验结果表明该框架在确定性控制与闭环语义子集上均具有可行性，但在采样模式下的鲁棒性仍需进一步研究。
+
+\textbf{关键词}：大语言模型；硬件控制；中间表示；字节码；虚拟机；嵌入式系统
+\end{abstract}
+
+% ============================================================
+\section{引言}
+\label{sec:intro}
+
+\subsection{背景与动机}
+\label{sec:background}
+
+将大语言模型生成的控制程序部署到资源受限微控制器（MCU）上，是 AI 驱动硬件控制的核心落地挑战。已有工作证明 LLM 生成控制逻辑的可行性：Code-as-Policies~\cite{liang2023code} 使用 LLM 生成高层 Python policy 来控制机器人臂，RT-2~\cite{brohan2023rt2} 将视觉语言模型直接输出为机器人动作序列。然而，当目标设备从桌面级机器人变为 ESP8266 等资源受限 MCU 时，问题的约束条件发生了本质变化。考虑一个具体场景：用户对系统说"打开水泵并读取水位传感器"，系统需要将这条自然语言指令转化为可在 MCU 上安全执行的控制程序。这一过程至少面临四类约束：文本表示是否适合 LLM 稳定生成，编译后程序是否足够紧凑以便低带宽链路传输，设备端执行是否有界且可审计，以及当模型输出错误程序时系统能否阻断风险并回传结构化错误。
+
+\subsection{现有方法的局限}
+\label{sec:limitations}
+
+现有方案难以同时满足上述约束。JSON 接口在 IoT 场景中广泛使用，易于生成且生态成熟，但文本冗余高，一条简单控制指令的 JSON 编码可达百字节量级，不利于带宽受限的 MCU 链路。Python 等高层代码表达力强，但端侧执行需要完整解释器，资源代价高，且缺乏形式化的执行边界约束。WASM/WAMR 等通用字节码运行时和 grammar-constrained decoding 等生成约束技术各自解决了问题的一个侧面——前者关注沙箱与可移植性，后者关注输出格式合法性——但均未将 LLM 的生成成本、编译紧凑性、端侧有界执行和闭环反馈作为一个统一问题处理。
+
+\subsection{问题定义与目标}
+\label{sec:problem}
+
+本文探索能否设计一种既适合 LLM 生成、又能编译为紧凑字节码并在 MCU 上安全执行的控制表示。具体而言，系统需同时满足六项设计目标：\texttt{token-efficient}（生成紧凑）、\texttt{compact}（传输紧凑）、\texttt{deterministic-to-compile}（编译确定）、\texttt{statically-checkable}（静态可验证）、\texttt{bounded-to-execute}（执行有界）和 \texttt{auditable-on-fault}（故障可审计），详见 \S\ref{sec:goals}。
+
+为此提出两层框架 M-IR + M-bytecode + MVM，将"生成友好"和"执行友好"分层优化。\textbf{核心思路}：将控制表示拆分为两层——M-IR（面向 LLM 的文本 DSL）负责生成友好，M-bytecode（面向 MCU 的紧凑字节码）负责执行友好，二者通过确定性 compiler 连接；生成与执行不再被强行揉进一个表示，而是各自独立优化。
+
+注：M-IR 的输出紧凑性以更长的 system prompt 为代价，在 prompt 可缓存的场景下总成本优势才会显现（详见 \S\ref{sec:token_analysis}）。这一两层设计体现了一种更广泛的设计思路：\textbf{LLM 与受限环境交互的分层解耦}——上层面向模型的自然表达习惯（生成友好），下层面向执行环境的物理约束（执行友好），二者通过确定性编译连接。\S\ref{sec:problem_def} 给出形式化的问题定义与评价指标。
+
+\subsection{关键挑战}
+\label{sec:challenges}
+
+实现上述目标面临以下技术挑战：
+
+\begin{enumerate}
+  \item \textbf{生成-执行鸿沟}：LLM 擅长结构化文本，但紧凑字节码对模型而言不可读、不可调试；同时，IR 到字节码的 lowering 必须确定且无歧义，任何 ambiguity 都会导致不可预测的端侧行为。这两层之间的张力——既要生成友好又要执行紧凑、既要灵活表达又要确定性编译——是框架设计的核心矛盾。
+  \item \textbf{端侧有界执行}：AI 生成的程序本质上不可信，需要在 MCU 上通过 capability 约束、步数限制和结构验证确保执行不会越权或死循环。
+  \item \textbf{闭环反馈与修复}：当执行失败时，系统需要将结构化错误信息回传给 LLM 以触发修复，而非仅返回不可解析的故障码。
+\end{enumerate}
+
+\subsection{解决方案概述}
+\label{sec:overview}
+
+本文采用两层设计以应对上述挑战：
+
+\begin{enumerate}
+  \item \textbf{M-IR}（面向挑战 1 的生成侧）：面向 LLM 输出的结构化中间表示，强调 token 效率、可编译性和可调试性，支持 capability 声明、读回验证与重试语义。
+  \item \textbf{M-bytecode}（面向挑战 1 的执行侧）：由 compiler 确定性 lowering 生成的紧凑字节码，采用 varint 编码与栈式执行模型，体积显著低于 JSON/CBOR/MessagePack。
+  \item \textbf{MVM 与静态验证器}（面向挑战 2）：在 MCU 上提供 capability gating、step-limit、结构验证与 fault audit，确保有界执行。
+  \item \textbf{生成链路与 repair loop}（面向挑战 3）：打通 \texttt{LLM $\to$ M-IR $\to$ bytecode $\to$ verify $\to$ execute $\to$ feedback $\to$ repair} 的完整路径，支持结构化错误回传与自动修复。
+\end{enumerate}
+
+"生成友好"和"执行友好"不再被强行揉成一个层次，而是分别优化。以贯穿全文的 running example 为例：用户输入"打开水泵并读取水位传感器"，LLM 输出 6 行 M-IR，compiler 将其 lowering 为 12 字节 M-bytecode，在 ESP8266 上以 6 steps 完成执行（完整链路见 \S\ref{sec:pipeline_overall}）。
+
+\subsection{贡献}
+\label{sec:contributions}
+
+本文的贡献依次对应后续章节：
+
+\begin{enumerate}
+  \item 提出两层控制表示框架 M-IR 与 M-bytecode，显式支持 capability 声明、读回验证与重试语义，将工作定位为 LLM 与受限环境交互的分层解耦设计方法（第\ref{sec:mir}章）。
+  \item 实现 MVM 与静态验证器，在 ESP8266 上提供 capability、step-limit、fault audit 与闭环读回支持（第\ref{sec:mvm}章）。
+  \item 实现 LLM $\to$ M-IR $\to$ bytecode 生成管道与 repair loop，在 113 个确定性任务上达到 1.000 全线通过率（repair success@1=0.982），在闭环子集上识别出核心瓶颈（\texttt{retry} 语义混淆占闭环失败的 77.3\%）并给出系统错误分析（第\ref{sec:experiments}--\ref{sec:results}章）。
+\end{enumerate}
+
+\subsection{论文结构}
+\label{sec:structure}
+
+第\ref{sec:problem_def}章定义问题与设计目标；第\ref{sec:related}章介绍相关工作；第\ref{sec:mir}章介绍 M-IR 与 M-bytecode 设计；第\ref{sec:mvm}章介绍 MVM 与 static verifier（静态验证器）；第\ref{sec:pipeline}章描述生成链路与 repair loop；第\ref{sec:experiments}章给出实验设计；第\ref{sec:results}章汇报结果与分析；第\ref{sec:discussion}章讨论局限与扩展；第\ref{sec:conclusion}章总结全文。
+
+\textbf{术语约定与词汇表}：正文统一使用 M-IR、M-bytecode（带连字符）；代码/错误码中 \texttt{MIR\_} 前缀为命名规范。`output-token-efficient' = 输出侧 token 紧凑（LLM 生成的 M-IR 文本 token 数少）；注意 M-IR 的总 token 成本（system prompt + output）高于 JSON 等更简短的 prompt 格式，其 token 效率优势仅在 system prompt 被缓存复用后以增量成本（即仅计 output token）体现（详见 \S\ref{sec:token_analysis}）。`compact' / `byte-compact' = 传输紧凑（编译后字节少）。本文所称"安全"除特别说明外均特指运行时有界执行（bounded execution），完整威胁模型见 \S\ref{sec:threat}。
+
+\begin{quote}
+\textbf{核心术语：} M-IR（LLM 生成友好的文本中间表示，\S\ref{sec:mir}）$\mid$ M-bytecode（MVM 执行的紧凑 varint 字节码）$\mid$ MVM（Micro Virtual Machine，MCU 上的受限栈式 VM，\S\ref{sec:mvm}）$\mid$ Lowering（M-IR $\to$ M-bytecode 的确定性编译）$\mid$ Capability Gating（基于 M-IR 声明的设备能力门控）$\mid$ Step-limit（执行步数上限，保证终止）$\mid$ Fault Audit（运行时故障码记录与回传）$\mid$ UABR（未授权访问阻断率）$\mid$ SCR（安全收敛率，\S\ref{sec:metrics}）$\mid$ Repair Loop（编译/验证失败后的 LLM 修复循环，\S\ref{sec:pipeline}）。
+\end{quote}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{Fig1_architecture}
+  \caption{系统总览图。上半部分为前端生成链路（Natural Language $\to$ LLM $\to$ M-IR $\to$ Compiler $\to$ Verifier $\to$ M-bytecode），下半部分为后端执行链路（Transmission $\to$ MVM $\to$ Hardware I/O $\to$ Feedback $\to$ Repair Loop），运行时保护机制（Capability Gating、Step Limit、Fault Audit、Closed-loop Verify）在运行时约束 MVM 执行。}
+  \label{fig:architecture}
+\end{figure}
+
+% ============================================================
+\section{问题定义与设计目标}
+\label{sec:problem_def}
+
+\subsection{目标场景}
+\label{sec:scenario}
+
+本文面向一类离散或中低频控制任务：上位机或云端 AI 根据自然语言任务描述和设备白名单生成控制程序，端侧 MCU 接收该程序并执行，同时返回故障码、读回值和执行状态。
+
+本文当前不覆盖：
+
+\begin{enumerate}
+  \item 高频硬实时闭环控制；
+  \item 大规模视觉输入到动作的端到端学习；
+  \item 通用脚本运行时生态。
+\end{enumerate}
+
+\subsection{三类成本}
+\label{sec:costs}
+
+本文关注三类成本：
+
+\begin{enumerate}
+  \item \textbf{生成成本}：LLM 输出控制表示所需 token；
+  \item \textbf{传输成本}：编译后程序长度与链路体积；
+  \item \textbf{执行成本}：设备端解析、执行与闭环读回的时延与资源开销。
+\end{enumerate}
+
+\subsection{设计目标}
+\label{sec:goals}
+
+系统目标为：
+
+\begin{enumerate}
+  \item \texttt{token-efficient}
+  \item \texttt{compact}
+  \item \texttt{deterministic-to-compile}
+  \item \texttt{statically-checkable}
+  \item \texttt{bounded-to-execute}
+  \item \texttt{auditable-on-fault}
+\end{enumerate}
+
+\subsection{指标映射}
+\label{sec:metrics}
+
+表~\ref{tab:rq_metrics} 给出研究问题与评价指标映射。
+
+\begin{table}[t]
+\centering
+\caption{研究问题与评价指标映射}
+\label{tab:rq_metrics}
+\begin{tabular}{ll}
+\toprule
+研究问题 & 评价指标 \\
+\midrule
+RQ1 & token 数、bytecode 长度、RTT、执行时延 \\
+RQ2 & IR 合法率、compile pass rate、verify pass rate、execution success rate、success@k \\
+RQ3 & UABR、fault 分布、SAFE 分流、SCR、P95 RTT \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{核心指标定义}
+\label{sec:metric_defs}
+
+本文使用以下核心指标，此处给出形式化定义以确保可复现性。
+
+\textbf{压缩率}：设 $B_{\text{M}}(t)$ 和 $B_{\text{JSON}}(t)$ 分别为任务 $t$ 的 M-bytecode 与 JSON payload 字节数，则平均压缩率与加权压缩率定义为：
+
+\begin{equation}
+R_{\text{AVG}} = \frac{1}{|T|} \sum_{t \in T} \frac{B_{\text{JSON}}(t)}{B_{\text{M}}(t)}, \quad
+R_{\text{WEIGHTED}} = \frac{\sum_{t \in T} B_{\text{JSON}}(t)}{\sum_{t \in T} B_{\text{M}}(t)}
+\label{eq:compression}
+\end{equation}
+
+\textbf{任务成功率（Task Success Rate）}：设 $T$ 为任务集，$\mathbf{1}[\cdot]$ 为指示函数，则：
+
+\begin{equation}
+\text{TSR} = \frac{1}{|T|} \sum_{t \in T} \mathbf{1}[\text{task } t \text{ passes all stages}]
+\label{eq:tsr}
+\end{equation}
+
+其 95\% Wilson 置信区间按标准二项比例方法计算。
+
+\textbf{未授权访问阻断率（UABR）}：在安全实验中，设 $N_{\text{blocked}}$ 为被 capability gating 或 validator 阻断的未授权请求数，$N_{\text{total}}$ 为总未授权请求数，则 $\text{UABR} = N_{\text{blocked}} / N_{\text{total}}$。
+
+\textbf{安全收敛率（SCR）}：在闭环实验中，经过 $k$ 轮 retry 后达到目标状态的任务比例。
+
+\textbf{Repair success@k}：在 repair loop 中，第 $k$ 轮修复后首次成功的任务数占总任务数的比例。
+
+\subsection{威胁模型}
+\label{sec:threat}
+
+\textbf{安全范围说明}：本文所称"安全"特指运行时有界执行（capability 约束、step-limit、结构验证、故障审计），不涵盖链路认证、加密传输、供应链安全或物理对抗等更广泛的安全议题。
+
+本文默认：
+
+\begin{enumerate}
+  \item LLM 输出不可信；
+  \item 外部输入可能被构造、篡改或重放；
+  \item validator、执行器和基础 I/O 驱动是当前可信计算基；
+  \item 链路认证、加密、供应链攻击与物理对抗不在本文验证范围内。
+\end{enumerate}
+
+本文所验证的"安全"边界仅限于：\textbf{运行时有界执行}，即通过 capability gating、step-limit、静态验证和 fault audit 确保 MCU 执行的程序不会越权、不会无限循环、不会产生未审计的故障。这与更广泛意义上的"系统安全"（涵盖认证、加密、防篡改等）有明确区分。
+
+% ============================================================
+\section{相关工作}
+\label{sec:related}
+
+\subsection{资源受限 VM 与字节码执行}
+\label{sec:rw_vm}
+
+TinyVM~\cite{tinyvm} 面向嵌入式 C 子集提供轻量字节码解释器，Darjeeling~\cite{darjeeling} 为 FPGA 上的软处理器设计了 Java 子集 VM，AtomVM~\cite{atomvm} 在 ESP32 上实现 Erlang/BEAM 子集。WASM/WAMR~\cite{wamr} 提供跨平台字节码沙箱，eBPF 在 Linux 内核中实现受限程序的有界执行。这些系统主要强调通用脚本执行、可移植性、沙箱隔离或轻量部署。
+
+本文与它们的差异在于：本文把 \textbf{LLM 生成成本} 明确纳入设计目标，而不是只做"又一个轻量 VM"。M-IR 的语法设计以 LLM 的 token 效率为出发点，M-bytecode 的编码方案以传输体积为优化目标，这是现有嵌入式 VM 工作未涉及的维度。
+
+从编译器 IR 设计的视角看，M-IR 的设计借鉴了经典 IR 的分层思想：类似 LLVM IR 在高层语言与机器码之间提供抽象层，或 WASM 文本格式（WAT）在可读性与紧凑二进制（WASM）之间建立桥梁~\cite{llvm_ir,spirv}。M-IR 的独特之处在于其"面向 LLM 生成"的设计约束——IR 设计通常以编译器分析和优化为目标，而 M-IR 的语句集（set/read/wait/retry 等）直接映射到控制任务的领域语义，牺牲了一般性以换取生成稳定性。关于 step-limit 和 capability gating 机制，本文的设计与实时 Java 安全子集（如 SCJ~\cite{scj}）和沙箱指令计数（如 Google Native Client~\cite{nacl}）共享"有界执行"的核心思想，但在 MCU 级实现上做了显著简化——MVM 以约 500 行 C++ 代码实现完整的栈机 + 22 种 fault 码 + 串口协议，无需操作系统支持。
+
+值得进一步澄清的是：\textbf{为什么 WASM/WAMR 或 eBPF 不能简单适配以解决本文的问题？} WASM 的文本格式（WAT）使用 S-expression 语法，LLM 对其的熟悉度远低于类 C 赋值语句，且在 MCU 上运行完整的 WASM 解释器（即使是最小配置的 WAMR）需要数十 KB 的 RAM 开销，远超 MVM 的约 2KB 栈空间。eBPF 的指令集为内核级数据平面优化，缺少 MCU 硬件控制所需的 GPIO 读写、模拟量采样和毫秒级等待原语。此外，两者均不提供 M-IR 的 \texttt{require cap(...)} 设备能力声明和 \texttt{readback/retry} 闭环语义的原生支持——这些语义需要在应用层额外编码，破坏了端到端的紧凑性。
+
+\subsection{LLM 代码生成与机器人控制}
+\label{sec:rw_llm}
+
+Code-as-Policies~\cite{liang2023code} 使用 LLM 将自然语言指令解析为 Python 代码片段，通过程序合成控制机器人臂执行抓取、搬运等任务。其优势在于 Python 的表达力和生态，但 Python 解释器的资源需求使其难以部署在 MCU 上。RT-2~\cite{brohan2023rt2} 将视觉语言模型直接微调为动作输出模型，实现了端到端的机器人控制，但其设计面向桌面级机器人平台，不涉及资源受限设备的执行约束。
+
+本文关注更窄但更工程化的问题：如何生成适合 MCU 落地、可验证、可编译的控制表示。与 Code-as-Policies 相比，本文将执行层从 Python 下降到字节码；与 RT-2 相比，本文保留了显式的 IR 编译路径而非端到端映射。
+
+\subsection{IoT 控制接口}
+\label{sec:rw_iot}
+
+JSON / text command 在 IoT 场景中广泛存在，MQTT、CoAP 等协议的 payload 通常采用 JSON 编码。其优点是简单与生态成熟；缺点是冗余高，一条简单控制指令的 JSON 编码可达百字节量级。CBOR 和 MessagePack 作为二进制替代方案，能减少约 30--50\% 的体积，但仍保留了通用序列化格式的结构开销。需说明的是，CBOR 和 MessagePack 为二进制序列化格式，其设计目标并非供 LLM 直接生成；让 LLM 输出二进制 payload 面临与 Direct Hex 基线（\S\ref{sec:exp_c}）相同的根本困难——模型无法稳定生成二进制编码，且错误无法被结构化解析与修复。因此，本文的比较聚焦于编译后体积（表~\ref{tab:encoding}），即 M-IR 经确定性 compiler 后的字节码与同等语义的 JSON/CBOR/MessagePack payload 的对比。现有方案均未同时优化生成成本、传输体积和端侧执行边界。
+
+\subsection{本文定位}
+\label{sec:rw_positioning}
+
+本文位于三类工作交叉处：
+
+\begin{enumerate}
+  \item 借用 LLM 的生成能力；
+  \item 借用嵌入式 VM 的有界执行思想；
+  \item 借用 IoT 控制任务的设备语义与部署场景。
+\end{enumerate}
+
+\subsection{结构化生成与约束解码}
+\label{sec:rw_structured}
+
+近年来，结构化生成技术（如 JSON mode、grammar-constrained decoding~\cite{willard2023structured}）已被广泛用于强制 LLM 输出符合特定格式。这类方法的核心思路是在解码阶段施加语法约束，使输出必定满足预定义的 schema。
+
+本文与这类工作的关键差异在于：约束解码解决的是\textbf{输出格式合法性}问题，而 M-IR 还额外解决了以下问题：
+
+\begin{enumerate}
+  \item \textbf{可编译性}：M-IR 不仅是合法文本，还能被确定性地 lowering 为紧凑字节码，这是 JSON Schema 约束无法保证的；
+  \item \textbf{设备能力声明}：M-IR 的 \texttt{require cap(...)} 语法将设备能力约束嵌入表示层，而非依赖外部校验；
+  \item \textbf{闭环语义集成}：\texttt{readback/retry} 等闭环操作被编译为字节码级控制流，而非留在文本层由外部解释；
+  \item \textbf{端侧有界执行}：M-bytecode 通过 capability gating 和 step-limit 在 MCU 上提供运行时安全保障，这是输出格式约束完全无法覆盖的。
+\end{enumerate}
+
+因此，即使使用 grammar-constrained decoding 强制 LLM 输出合法 JSON，得到的仍然是需要端侧解析和执行的文本 payload，不具备 M-IR $\to$ M-bytecode $\to$ MVM 链路的紧凑性和有界执行优势。约束解码可以作为 M-IR 生成的补充手段（例如用 grammar 约束提高 M-IR 的首轮合法率），但不能替代 M-IR 的设计本身。
+
+% ============================================================
+\section{M-IR 与 M-bytecode 设计}
+\label{sec:mir}
+
+\subsection{两层表示}
+\label{sec:two_layer}
+
+如 \S\ref{sec:overview} 所述，本文采用两层表示：
+
+\begin{enumerate}
+  \item \textbf{M-IR}：面向 LLM 输出的结构化控制表示；
+  \item \textbf{M-bytecode}：由 compiler 生成、由 MVM 执行的紧凑字节码。
+\end{enumerate}
+
+M-IR 负责稳定生成与可调试，M-bytecode 负责紧凑传输与低开销执行。
+
+\subsection{M-IR 设计目标}
+\label{sec:mir_goals}
+
+M-IR 目标是：
+
+\begin{enumerate}
+  \item 相比 JSON 更紧凑；
+  \item 相比裸 hex bytecode 更易生成和修复；
+  \item 可被确定性 lowering 到 M-bytecode；
+  \item 能显式表达 capability、等待、读回与重试语义。
+\end{enumerate}
+
+\textbf{设计选择论证}：M-IR 采用文本 DSL 而非 S-expression 或栈式表示，主要基于以下考量：(1) LLM 在预训练中接触大量类 C 语法的代码，`set relay1 = 1` 等赋值式语句比 `(set relay1 1)` 的 S-expression 或 `1 relay1 SET` 的栈式表示更接近模型的自然分布，有利于稳定生成；(2) 文本 DSL 便于人类调试和 prompt 工程迭代，错误定位直观；(3) 每行一条语句的格式使 compiler 能按行规范化，降低解析复杂度。\texttt{wait} 以 ms 为单位（而非 cycle 或 tick）是为了与硬件控制中常见的毫秒级时序语义保持一致，降低 LLM 理解成本；\texttt{retry} 当前使用 \texttt{times}（固定次数）而非 \texttt{until}（条件谓词），是在实现复杂度与表达力之间的工程权衡——条件 \texttt{retry\_until} 需要 compiler 支持表达式求值和布尔栈操作，已列入后续演进计划（\S\ref{sec:future}）。当前语句子集（set/read/wait/readback/retry/repeat/halt）覆盖了 \S\ref{sec:problem_def} 问题定义中的确定性控制、时序序列、闭环保持与错误恢复模式，但尚未包括条件分支（\texttt{if/else}）的原生语法支持——当前条件分支通过 \texttt{retry} 的隐式 readback 比较间接实现，完整的条件控制流语法留待后续工作。
+
+本文固定采用 textual DSL 作为 M-IR v0.1 的表层格式。M-IR 的语法可由以下 EBNF 文法定义：
+
+\begin{lstlisting}[style=mirstyle,caption={M-IR EBNF 文法},label={lst:grammar}]
+<program>    ::= <stmt>+
+<stmt>       ::= <cap_decl> | <set_stmt> | <read_stmt>
+               | <wait_stmt> | <halt_stmt>
+               | <readback_stmt> | <retry_stmt>
+<cap_decl>   ::= "require" "cap" "(" <device> ")"
+<set_stmt>   ::= "set" <device> "=" <bit>
+<read_stmt>  ::= "read" <device>
+<wait_stmt>  ::= "wait" <number> "ms"
+<halt_stmt>  ::= "halt"
+<readback_stmt> ::= "readback" <device> "expect" <bit>
+<retry_stmt> ::= "retry" <number> "times" "{" <stmt>+ "}"
+<device>     ::= "water_sensor" | "temperature_sensor"
+               | "humidity_sensor" | "relay1" | "relay2"
+<bit>        ::= "0" | "1"
+<number>     ::= [1-9][0-9]*
+\end{lstlisting}
+
+当前语法子集支持七类语句（以 running example 中的设备为例）：
+
+\begin{enumerate}
+  \item \texttt{require cap($\langle$device$\rangle$)}：声明设备能力
+  \item \texttt{set $\langle$device$\rangle$ = $\langle$0|1$\rangle$}：控制设备开关
+  \item \texttt{read $\langle$device$\rangle$}：读取传感器值
+  \item \texttt{wait $\langle$ms$\rangle$ms}：延时等待
+  \item \texttt{halt}：终止执行
+  \item \texttt{readback $\langle$device$\rangle$ expect $\langle$value$\rangle$}：读回验证
+  \item \texttt{retry $\langle$n$\rangle$ times \{ ... \}}：重试控制流
+\end{enumerate}
+
+\textbf{Running Example}（贯穿全文）：以"打开水泵并读取水位传感器"为例，LLM 生成的 M-IR 如下：
+
+\begin{lstlisting}[style=mirstyle,caption={Running Example：LLM 生成的 M-IR},label={lst:example}]
+require cap(relay1)
+require cap(water_sensor)
+set relay1 = 1
+wait 500ms
+read water_sensor
+halt
+\end{lstlisting}
+
+设备名与 ID 如表~\ref{tab:devices} 所示。
+
+\begin{table}[t]
+\centering
+\caption{设备名与 device\_id 映射}
+\label{tab:devices}
+\begin{tabular}{lr}
+\toprule
+设备名 & device\_id \\
+\midrule
+\texttt{water\_sensor} & 1 \\
+\texttt{temperature\_sensor} & 2 \\
+\texttt{humidity\_sensor} & 3 \\
+\texttt{relay1} & 5 \\
+\texttt{relay2} & 6 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{M-bytecode 设计原则}
+\label{sec:mbc_principles}
+
+M-bytecode 当前采用：
+
+\begin{enumerate}
+  \item varint / zigzag 编码；
+  \item 栈式执行模型；
+  \item capability-gated I/O；
+  \item 统一 fault / pc / steps 返回格式。
+\end{enumerate}
+
+\subsection{指令子集}
+\label{sec:instructions}
+
+本文实验重点关注的子集包括：
+
+\begin{enumerate}
+  \item 常量与局部值：\texttt{LIT}
+  \item I/O：\texttt{GTWAY}、\texttt{IOW}、\texttt{IOR}、\texttt{WAIT}
+  \item 终止：\texttt{HALT}
+\end{enumerate}
+
+宿主侧设计空间中仍有更丰富的控制流与算术指令，但本文实机结论只针对已验证子集成立。
+
+\subsection{完整语言与论文实机子集的边界}
+\label{sec:boundary}
+
+需要明确区分：
+
+\begin{enumerate}
+  \item \textbf{完整 M 设计空间}：\texttt{src/m\_vm.c} 与相关头文件支持更丰富能力；
+  \item \textbf{论文实机子集}：ESP8266 固件上实际验证的是受限控制子集。
+\end{enumerate}
+
+本文实机结论只对第二者成立。
+
+\subsection{现有编码优势}
+\label{sec:encoding}
+
+编译后体积对比已在表~\ref{tab:encoding} 中系统呈现。以下分析均以公平基线（zlib-JSON、CBOR、MessagePack）为参照。
+
+\begin{table}[t]
+\centering
+\caption{各编码格式的平均 payload 大小（113 任务）}
+\label{tab:encoding}
+\begin{tabular}{lrr}
+\toprule
+编码格式 & 平均字节数 & 相对 M-bytecode \\
+\midrule
+M-bytecode（golden） & 10.92 & 1.000$\times$ \\
+JSON + zlib（level 9） & 106.7 & 9.771$\times$ \\
+CBOR & 97.77 & 8.953$\times$ \\
+MessagePack & 97.42 & 8.921$\times$ \\
+JSON（compact） & 127.18 & 11.646$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+表~\ref{tab:encoding} 聚焦公平基线对比。为完整呈现数据，LLM 原始 JSON 输出（平均 285.90 bytes，为 M-bytecode 的 26.18$\times$）列于附录表~\ref{tab:app_json_baseline}，该对比属不公平比较——前者为 LLM 直接输出的文本，未经编译或压缩；公平基线应使用 JSON $\to$ zlib（9.8$\times$）或 CBOR（9.0$\times$）。以下分析均以 zlib-JSON 和 CBOR 为参照。即使以公平基线衡量，M-bytecode 仍具有约 9--10 倍的体积优势，这一优势来源于 M-bytecode 的指令级紧凑设计（varint 编码、栈式执行、设备 ID 直接编码），而非仅仅因为文本格式冗余。
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{Fig2_mir_lowering}
+  \caption{M-IR 到 M-bytecode lowering 示例（以 running example 为例）。左：M-IR 源码；右：编译后字节码序列。}
+  \label{fig:lowering}
+\end{figure}
+
+表~\ref{tab:lowering} 给出本文实验子集下的主要 lowering 关系。
+
+\begin{table}[t]
+\centering
+\caption{M-IR 到 M-bytecode 的主要 lowering 关系}
+\label{tab:lowering}
+\begin{tabular}{ll}
+\toprule
+M-IR 语句 & Lowering 结果 \\
+\midrule
+\texttt{require cap(relay1)} & \texttt{GTWAY 5} \\
+\texttt{require cap(water\_sensor)} & \texttt{GTWAY 1} \\
+\texttt{set relay1 = 1} & \texttt{LIT 1 ; IOW 5} \\
+\texttt{set relay1 = 0} & \texttt{LIT 0 ; IOW 5} \\
+\texttt{set relay2 = 1} & \texttt{LIT 1 ; IOW 6} \\
+\texttt{read water\_sensor} & \texttt{IOR 1} \\
+\texttt{read temperature\_sensor} & \texttt{IOR 2} \\
+\texttt{read humidity\_sensor} & \texttt{IOR 3} \\
+\texttt{read relay1} & \texttt{IOR 5} \\
+\texttt{wait 500ms} & \texttt{WAIT 500} \\
+\texttt{halt} & \texttt{HALT} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+对于 \texttt{readback} 与 \texttt{retry}，最小实验链路已完成真实 lowering：\texttt{readback} 编译为 \texttt{IOR + LIT + EQ}，\texttt{retry} 编译为由 \texttt{LIT/DUP/JZ/JMP/SUB/DRP} 组成的显式控制流。\texttt{compile\_to\_plan(...)} 保留结构化 execution plan 输出，供调试和后续板级闭环 runner 复用。
+
+% ============================================================
+\section{MVM 与静态验证器}
+\label{sec:mvm}
+
+\subsection{MVM 架构}
+\label{sec:mvm_arch}
+
+MVM 在 MCU 上解释执行 M-bytecode。当前 ESP8266 实验实现使用如下状态：
+
+\begin{equation}
+\texttt{pc / stack / locals / ret-stack / call-depth / steps / fault}
+\label{eq:mvm_state}
+\end{equation}
+
+并提供统一响应：
+
+\begin{enumerate}
+  \item OK：\texttt{[result varint][steps varint][0x01]}
+  \item FAULT：\texttt{[fault varint][pc varint][0x00]}
+\end{enumerate}
+
+\subsection{静态验证器}
+\label{sec:validator}
+
+主机侧 static verifier（静态验证器，下文统一称 static verifier）已实现：
+
+\begin{enumerate}
+  \item opcode 合法性；
+  \item varint 完整性；
+  \item block 结构匹配；
+  \item locals 访问合法性；
+  \item 部分可达性与结构一致性检查。
+\end{enumerate}
+
+\subsection{运行时保护机制（有界执行）}
+\label{sec:safety}
+
+MVM 当前通过以下机制提供有界执行：
+
+\begin{enumerate}
+  \item capability gating
+  \item step-limit
+  \item call-depth-limit
+  \item stack / locals / pc 边界检查
+  \item violation $\to$ fault
+\end{enumerate}
+
+每条 M-bytecode 指令消耗固定步数（见附录~\ref{app:inst_table} 指令集表），MVM 每执行一条指令步数计数器 +1，达到 step-limit 时触发 fault。因此，在任何输入下，MVM 执行步数 $\leq$ step-limit，保证终止。
+
+\subsection{闭环核验接口}
+\label{sec:closed_loop}
+
+当前系统支持：
+
+\begin{equation}
+\texttt{set $\to$ readback $\to$ compare $\to$ retry}
+\label{eq:closed_loop}
+\end{equation}
+
+这里的重点不是声称"闭环语义内建一定更优"，而是提供统一的观测与修复接口。
+
+\subsection{宿主 VM 与 MCU 子集关系}
+\label{sec:host_vm}
+
+主机侧完整 VM 目前承担：
+
+\begin{enumerate}
+  \item 设计空间实现；
+  \item 仿真平台；
+  \item 验证与调试基础设施。
+\end{enumerate}
+
+MCU 固件则是当前论文后端结论的主要承载对象。
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{Fig3_mvm_flow}
+  \caption{MVM 运行时架构图。主路径包括加载、解码、静态检查、运行时守护与输出，任何守护失败均导向 Fault 状态。}
+  \label{fig:mvm_flow}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{Fig4_closed_loop_fsm}
+  \caption{闭环验证的状态机模型。SET $\to$ ACK $\to$ READBACK $\to$ COMPARE。匹配时收敛，故障时进入 SAFE/FAULT，不匹配时 retry 回到 SET。}
+  \label{fig:fsm}
+\end{figure}
+
+% ============================================================
+\section{LLM $\to$ M-IR $\to$ Bytecode 生成链路}
+\label{sec:pipeline}
+
+\subsection{总体链路}
+\label{sec:pipeline_overall}
+
+如 \S\ref{sec:two_layer} 所述的两层架构，本文采用如下具体链路（完整设计见第\ref{sec:mir}、\ref{sec:mvm}章）：
+
+\begin{equation}
+\text{Natural Language} \to \mir{} \to \text{Compiler} \to \text{Verifier} \to \mvm{}/\text{Simulator} \to \text{Feedback} \to \text{Repair}
+\label{eq:pipeline}
+\end{equation}
+
+以贯穿全文的 running example（"打开水泵并读取水位传感器"）为例，完整链路如下：
+
+\begin{enumerate}
+  \item \textbf{Natural Language}：用户输入"打开水泵，等待 500ms，读取水位传感器"
+  \item \textbf{LLM $\to$ M-IR}：模型输出上述 M-IR 文本
+  \item \textbf{Compiler}：将 M-IR lowering 为 M-bytecode（\texttt{GTWAY 5; GTWAY 1; LIT 1; IOW 5; WAIT 500; IOR 1; HALT}，共 12 字节）
+  \item \textbf{Verifier}：静态检查通过（opcode 合法、varint 完整、capability 已声明）
+  \item \textbf{MVM 执行}：在 ESP8266 上解释执行，完成设备控制与传感器读取
+  \item \textbf{Feedback}：返回 \texttt{[result=0x01, steps=6, OK]}
+\end{enumerate}
+
+若任何阶段失败，结构化错误信息回传 LLM 触发 repair loop。
+
+\subsection{为什么不直接生成裸字节码}
+\label{sec:why_not_raw}
+
+直接生成裸 bytecode 的主要问题是：
+
+\begin{enumerate}
+  \item 文本层不可读；
+  \item 错误难以定位；
+  \item 无法稳定回传结构化修复信息。
+\end{enumerate}
+
+因此本文明确采用分层生成，而不要求 LLM 直接输出 hex payload。
+
+\subsection{当前 compiler 状态}
+\label{sec:compiler_status}
+
+当前最小 compiler 已支持：
+
+\begin{enumerate}
+  \item \texttt{require cap(...)}
+  \item \texttt{set}
+  \item \texttt{read}
+  \item \texttt{wait}
+  \item \texttt{halt}
+\end{enumerate}
+
+同时，\texttt{readback/retry} 已进入统一编译链：前者 lowering 为 \texttt{IOR + LIT + EQ}，后者 lowering 为显式重试控制流。\texttt{compile\_to\_plan(...)} 作为调试视图与宿主侧编排接口存在，但不再是闭环语义的唯一载体。
+
+\subsection{反馈与修复}
+\label{sec:feedback}
+
+当前反馈 schema 已固定为：
+
+\begin{enumerate}
+  \item \texttt{stage}
+  \item \texttt{error\_code}
+  \item \texttt{message}
+  \item \texttt{hint}
+\end{enumerate}
+
+repair loop 据此对 parse error、capability error、task mismatch 等错误进行结构化修复。
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{Fig5_generation_pipeline}
+  \caption{完整的生成链路：LLM 输出 M-IR 文本后，经 parser、compiler、verifier 生成 M-bytecode，失败时进入 repair loop。}
+  \label{fig:pipeline}
+\end{figure}
+
+% ============================================================
+\section{实验设计}
+\label{sec:experiments}
+
+\subsection{实验 A：表示效率}
+\label{sec:exp_a}
+
+\textbf{目标}：比较 M-bytecode 与真实 JSON 链路的程序体积与 RTT。\\
+\textbf{复用实验}：E1。\\
+\textbf{关键指标}：压缩率、payload bytes、median RTT。
+
+\subsection{实验 B：执行安全（有界执行验证）}
+\label{sec:exp_b}
+
+\textbf{目标}：验证 capability、step-limit、validator 与 fault audit 的后端效果。\\
+\textbf{复用实验}：E2、E2'、E2+、E5+、E10。\\
+\textbf{关键指标}：UABR、fault 分布、SAFE 分流、P95 RTT、吞吐。
+
+\subsection{实验 C：生成稳定性}
+\label{sec:exp_c}
+
+\textbf{目标}：验证 \texttt{LLM $\to$ M-IR $\to$ bytecode} 链路是否可行。\\
+\textbf{主结果任务集}：\texttt{data/tasks\_v2.jsonl}，共 113 个确定性任务，覆盖：
+
+\begin{enumerate}
+  \item \texttt{single\_set}
+  \item \texttt{single\_read}
+  \item \texttt{set\_wait\_halt}
+  \item \texttt{wait\_read}
+  \item \texttt{set\_wait\_read}
+  \item \texttt{multi\_read}
+  \item \texttt{pulse}
+\end{enumerate}
+
+\textbf{核心脚本}：
+
+\begin{enumerate}
+  \item \texttt{tools/run\_ollama\_generate.py}
+  \item \texttt{tools/run\_generation\_eval.py}
+  \item \texttt{tools/run\_repair\_eval.py}
+  \item \texttt{tools/mir\_compiler.py}
+\end{enumerate}
+
+\textbf{当前主模型}：\texttt{llama3.1:8b}
+
+\textbf{主结果文件}：
+
+\begin{enumerate}
+  \item \texttt{result/GEN/candidates\_llama31\_8b\_v2\_full\_r2.jsonl}
+  \item \texttt{result/GEN/gen\_eval\_llama31\_8b\_v2\_full\_r2.csv}
+  \item \texttt{result/GEN/gen\_eval\_llama31\_8b\_v2\_full\_r2.md}
+\end{enumerate}
+
+\textbf{核心结果（temperature=0.0）}：
+
+\begin{enumerate}
+  \item \texttt{ir\_valid\_rate = 1.000}（95\% Wilson CI: [0.968, 1.000]）
+  \item \texttt{compile\_pass\_rate = 1.000}（95\% Wilson CI: [0.968, 1.000]）
+  \item \texttt{verify\_pass\_rate = 1.000}（95\% Wilson CI: [0.968, 1.000]）
+  \item \texttt{execution\_pass\_rate = 1.000}（95\% Wilson CI: [0.968, 1.000]）
+  \item \texttt{task\_success\_rate = 1.000}（95\% Wilson CI: [0.968, 1.000]）
+\end{enumerate}
+
+repair 结果：
+
+\begin{enumerate}
+  \item \texttt{success@1 = 111/113 = 0.982}（95\% Wilson CI: [0.943, 0.994]）
+  \item \texttt{success@2 = 2/113 = 0.018}（95\% Wilson CI: [0.006, 0.069]）
+  \item \texttt{success@3 = 0/113 = 0.000}
+  \item \texttt{failed = 0}
+\end{enumerate}
+
+\textbf{temperature 扫描结果}：为验证 \texttt{1.000} 通过率是否依赖确定性解码，本文在 \texttt{temperature = 0.6} 和 \texttt{temperature = 1.0} 下各运行 3 次（共 339 次试验），结果如表~\ref{tab:temperature} 所示。
+
+\begin{table}[t]
+\centering
+\caption{temperature 扫描实验结果}
+\label{tab:temperature}
+\begin{tabular}{lcc}
+\toprule
+Temperature & Task Success Rate (mean $\pm$ std) & IR Valid Rate \\
+\midrule
+0.0（确定性） & 1.000 $\pm$ 0.000 & 1.000 \\
+0.6 & 0.909 $\pm$ 0.289 & 0.965 \\
+1.0 & 0.847 $\pm$ 0.361 & 0.938 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+结果表明：(1) \texttt{temperature=0.0} 的 \texttt{1.000} 通过率确实依赖确定性解码；(2) 在非零 temperature 下，M-IR 链路仍保持较高成功率（\texttt{0.6} 时 \texttt{0.909}，\texttt{1.0} 时 \texttt{0.847}），但方差显著增大；(3) 主要失败模式为 M-IR 格式偏差（\texttt{ir\_valid\_rate} 下降），而非语义错误。
+
+\textbf{闭环扩展任务集}：首先在 16 个任务的探索性闭环子集（\texttt{data/tasks\_v3\_closed\_loop.jsonl}）上进行预实验，以验证 \texttt{readback/retry} lowering 的基本可行性。任务覆盖：
+
+\begin{enumerate}
+  \item \texttt{readback}
+  \item \texttt{retry}
+  \item \texttt{retry\_fail}
+  \item \texttt{multi\_device}
+  \item \texttt{retry\_wait}
+  \item \texttt{long\_sequence}
+\end{enumerate}
+
+在该闭环子集上，golden 编译与模拟结果为：
+
+\begin{enumerate}
+  \item \texttt{ir\_valid\_rate = 1.000}
+  \item \texttt{compile\_pass\_rate = 1.000}
+  \item \texttt{verify\_pass\_rate = 1.000}
+  \item \texttt{execution\_pass\_rate = 1.000}
+  \item \texttt{task\_success\_rate = 1.000}
+\end{enumerate}
+
+使用 \texttt{llama3.1:8b} 的首轮生成结果为：
+
+\begin{enumerate}
+  \item \texttt{ir\_valid\_rate = 1.000}（95\% CI: [0.781, 1.000]）
+  \item \texttt{compile\_pass\_rate = 1.000}（95\% CI: [0.781, 1.000]）
+  \item \texttt{verify\_pass\_rate = 1.000}（95\% CI: [0.781, 1.000]）
+  \item \texttt{execution\_pass\_rate = 1.000}（95\% CI: [0.781, 1.000]）
+  \item \texttt{task\_success\_rate = 0.938}（95\% CI: [0.717, 0.997]）
+\end{enumerate}
+
+闭环 repair 结果为：
+
+\begin{enumerate}
+  \item \texttt{success@1 = 15/16 = 0.938}（95\% CI: [0.717, 0.997]）
+  \item \texttt{success@2 = 1/16 = 0.062}（95\% CI: [0.003, 0.283]）
+  \item \texttt{failed = 0}
+\end{enumerate}
+
+\textbf{负基线对比：JSON + Schema + 外部压缩。}为进一步验证分层生成路径相对于"LLM 直接生成可传输 payload"的必要性，本文在 113 个确定性任务集上增加了一个更公平的负基线：使用与 M-IR prompt 同等详细度的 JSON schema prompt（\texttt{prompts\_compare\_v2\_json\_schema.md}），要求 LLM 生成结构化 JSON 控制程序，然后对有效 JSON 分别使用 zlib（level 9）和 CBOR 进行外部压缩，并与 M-IR $\to$ compiler $\to$ M-bytecode 路径对比。此基线的关键论证点在于：即使 LLM 能在结构化约束下可靠生成 JSON，压缩后体积仍远超 M-bytecode，且压缩后的 JSON 缺少确定性编译、静态验证、capability gating 和有界执行等关键保证。作为参考，Direct Hex 基线（LLM 直接生成 hex 字节码）因二进制格式的不可生成性而完全失效（\texttt{task\_success\_rate = 0.000}），进一步说明"让 LLM 直接输出二进制 payload"是不合理的任务设定。\texttt{llama3.1:8b}（temperature=0.0）在 113 任务上的结果如下（附录 C 表 15）：
+
+\begin{enumerate}
+  \item \texttt{json\_valid\_rate = 1.000}（95\% CI: [0.967, 1.000]）
+  \item \texttt{task\_success\_rate = 0.965}（95\% CI: [0.913, 0.986]），4 例失败为 \texttt{TASK\_SIGNATURE\_MISMATCH}（LLM 在 \texttt{set\_wait\_halt} 类任务中多余添加了 \texttt{set$\to$0}）
+  \item 体积对比（113 个有效 JSON）：
+  \begin{itemize}
+    \item 原始 JSON（LLM 输出）：平均 156.4 bytes
+    \item 紧凑 JSON（去空白）：平均 147.4 bytes
+    \item \textbf{zlib 压缩（level 9）：平均 106.7 bytes}
+    \item CBOR 编码：平均 105.2 bytes
+    \item \textbf{M-bytecode（golden 编译）：平均 10.9 bytes}
+  \end{itemize}
+  \item 压缩比：M-bytecode vs zlib-JSON = \textbf{9.8$\times$}，M-bytecode vs CBOR = \textbf{9.6$\times$}
+\end{enumerate}
+
+\textbf{闭环扩展验证（96 任务）}：为进一步收窄闭环子集的置信区间并系统排查 \texttt{retry} 与 \texttt{repeat} 的语义混淆根因，本文将闭环任务集扩展至 96 个（\texttt{data/tasks\_v3\_expanded.jsonl}），覆盖 12 个子类别（同 \S\ref{sec:exp_c} 所述）。通过优化 prompt 设计（增加 \texttt{retry} 与 \texttt{repeat} 的语义区别说明及 few-shot 示例），\texttt{llama3.1:8b} 的首轮生成结果为：
+
+\begin{enumerate}
+  \item \texttt{ir\_valid\_rate = 0.948}（95\% CI: [0.886, 0.979]）
+  \item \texttt{compile\_pass\_rate = 0.948}（95\% CI: [0.886, 0.979]）
+  \item \texttt{task\_success\_rate = 0.948}（95\% CI: [0.886, 0.979]）
+\end{enumerate}
+
+仅 5 个失败样本，全部为 \texttt{MIR\_PARSE\_ERROR}（偶发语法格式偏差），\texttt{TASK\_SIGNATURE\_MISMATCH} 清零。作为对比，使用未包含语义区分说明的基础 prompt 时 \texttt{task\_success\_rate} 仅为 0.542，其中 41 个失败为 \texttt{TASK\_SIGNATURE\_MISMATCH}（主要为 \texttt{retry$\to$repeat} 混淆）。这一对比说明：闭环语义下的生成困难并非 LLM 能力瓶颈，而主要是 prompt 中语义信息不足导致的符号混淆。通过改进 prompt 设计，M-IR 的闭环语义生成链路可达到与确定性控制子集相仿的高可靠性。
+
+\textbf{跨平台验证（ESP32）}：为验证 MVM 的可移植性，本文将 ESP8266 固件移植至 ESP32。移植仅改动 3 行引脚定义（D1$\to$GPIO5, D2$\to$GPIO4, D4$\to$GPIO2, A0$\to$GPIO36），VM 核心（varint 编解码、栈机、capability gate、step-limit、fault 码、串口协议）一字未改。在 ESP32 实机上对全部 209 个 golden bytecode（113 确定性 + 96 闭环）逐一执行并读回 relay 状态：209/209 程序均无故障执行，最终 relay 状态与 simulator 预期签名全部一致（\texttt{task\_success\_rate = 1.000}）。这组结果直接验证了 M-IR 编译器产出的 M-bytecode 具有跨平台独立性，MVM 核心与具体 MCU 平台解耦，分层架构中仅 I/O 适配层需平台定制。
+
+\subsection{实验 D：闭环控制收益}
+\label{sec:exp_d}
+
+\textbf{目标}：区分"表示层收益"和"闭环策略收益"。\\
+\textbf{复用实验}：E4、E4+。\\
+\textbf{结论边界}：
+
+\begin{enumerate}
+  \item retry 能显著提升 SCR；
+  \item 相同闭环策略下，M 路径 RTT 更低；
+  \item 本文不能声称"闭环语义内建在执行平面中"本身提升了 SCR。
+\end{enumerate}
+
+\subsection{实验 E：token 成本对比}
+\label{sec:exp_e}
+
+\textbf{目标}：比较 \texttt{MIR / JSON / PYTHON} 三种表示的 token 与输出体积。\\
+\textbf{脚本}：
+
+\begin{enumerate}
+  \item \texttt{tools/measure\_token\_cost.py}
+  \item \texttt{tools/analyze\_token\_semantics.py}
+\end{enumerate}
+
+\textbf{主结果文件}：
+
+\begin{enumerate}
+  \item \texttt{result/TOKEN/token\_compare\_v3\_tasks\_v2.csv}
+  \item \texttt{result/TOKEN/token\_compare\_v3\_tasks\_v2\_semantics\_r2.csv}
+  \item \texttt{result/TOKEN/token\_compare\_v3\_tasks\_v2\_semantics\_r2.md}
+\end{enumerate}
+
+\subsection{多模型横比}
+\label{sec:exp_multi}
+
+本文已补两轮多模型横比：
+
+\begin{enumerate}
+  \item \texttt{llama3.1:8b}
+  \item \texttt{qwen3:8b}
+  \item \texttt{deepseek-r1:8b}
+\end{enumerate}
+
+结果文件：
+
+\begin{enumerate}
+  \item \texttt{result/GEN/model\_compare\_v1.csv}
+  \item \texttt{result/GEN/model\_compare\_v1.md}
+\end{enumerate}
+
+% ============================================================
+\section{结果与分析}
+\label{sec:results}
+
+\subsection{表示效率结果}
+\label{sec:res_e1}
+
+如图~\ref{fig:compression} 所示，E1 表明，在固定任务子集上：
+
+\begin{enumerate}
+  \item M-bytecode 相对 JSON 具有显著压缩优势；
+  \item $R_{\text{AVG}}=4.409\times$
+  \item $R_{\text{WEIGHTED}}=4.605\times$
+  \item 主要 I/O 任务上 M 路径 median RTT 始终低于 JSON。
+\end{enumerate}
+
+例如：
+
+\begin{itemize}
+  \item \texttt{relay1\_on}：\texttt{median\_M=3.589 ms}，\texttt{median\_JSON=5.603 ms}
+  \item \texttt{relay1\_off}：\texttt{median\_M=3.614 ms}，\texttt{median\_JSON=5.534 ms}
+  \item \texttt{water\_read}：\texttt{median\_M=3.458 ms}，\texttt{median\_JSON=4.800 ms}
+  \item \texttt{temp\_read}：\texttt{median\_M=3.450 ms}，\texttt{median\_JSON=4.813 ms}
+\end{itemize}
+
+M 路径 RTT 始终低于 JSON 路径（差距约 2ms），这主要归因于 M-bytecode 体积更小带来的传输时延减少。对于中低频 IoT 控制任务，RTT 的绝对差异工程意义有限；但该结果从侧面验证了压缩率优势对端到端延迟的贡献。
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{Fig6_e1_compression}
+  \caption{压缩率图。E1 实验中 M-bytecode 与 JSON 的 payload 体积对比。}
+  \label{fig:compression}
+\end{figure}
+
+\subsection{有界执行验证结果}
+\label{sec:res_e2}
+
+如图~\ref{fig:ablation} 所示，E2、E2'、E2+ 表明当前后端具备较强异常阻断能力。以 E2+ 为例：
+
+\begin{itemize}
+  \item \texttt{a0\_base\_guarded}：\texttt{UABR=1.000}
+  \item \texttt{a1\_no\_auth\_only}：\texttt{UABR=0.857}
+\end{itemize}
+
+这说明 capability、validator、step-limit 各自都对后端安全边界有实质贡献。
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{Fig7_e2_ablation_combined}
+  \caption{安全机制消融分析。E2 正交消融实验的综合结果：(a) 各安全机制拦截的 fault 类型分布（堆叠柱状图）；(b) 各消融变体下的 UABR 与 fault rate 对比。两图共同说明 capability gating、validator 和 step-limit 各自构成独立的安全层，移除任一均导致阻断率下降。}
+  \label{fig:ablation}
+\end{figure}
+
+\subsection{闭环控制结果}
+\label{sec:res_e4}
+
+如图~\ref{fig:scr} 所示，E4 / E4+ 的核心含义是：
+
+\begin{enumerate}
+  \item retry 能显著提升 SCR；
+  \item 使用相同 retry 策略时，M 路径 RTT 更低；
+  \item 收敛收益主要来自 retry 本身，而不是"语义放在哪一层"的宣传性差异。
+\end{enumerate}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{Fig8_e4_scr}
+  \caption{SCR 对比图。E4 实验中 M 路径与 JSON 路径的安全收敛率（SCR）对比。}
+  \label{fig:scr}
+\end{figure}
+
+在新的闭环生成子集上，\texttt{readback/retry} 的最小 lowering 也已经获得首轮实证支持。\texttt{data/tasks\_v3\_closed\_loop.jsonl} 中的 16 个任务全部能被 golden 编译链正确执行；\texttt{llama3.1:8b} 首轮在该子集上的 \texttt{task\_success\_rate = 0.938}，唯一失败样本为 \texttt{V3\_012}，其错误不是编译或验证失败，而是语义偏差：模型把"关闭 relay2 并验证为 0"写成了"打开 relay2 并验证为 0"。在结构化 repair 后，该样本第二轮被修正，因此闭环子集的 \texttt{success@2} 达到 \texttt{1.000}。
+
+作为负基线参考，Direct Hex 基线（LLM 直接输出 hex 字节码）在同一任务集上完全失效（\texttt{task\_success\_rate = 0.000}），进一步印证了分层生成路径的必要性。更公平的 JSON + Schema + 外部压缩基线已在 113 任务集上系统评估（详见本节前文），其 \texttt{json\_valid\_rate = 1.000} 表明 LLM 完全可生成结构化 JSON，但即使经 zlib level 9 压缩，体积仍为 M-bytecode 的 9.8 倍（106.7 vs 10.9 bytes），且缺乏确定性编译与有界执行保证。
+
+\subsection{SAFE 分流与 fault prior sweep}
+\label{sec:res_e5}
+
+如图~\ref{fig:safe_curve} 所示，E5+ 表明，在 10\%~90\% 的故障先验范围内，guarded 组保持稳定分流表现，而 no-guard 组无法有效识别 fault path。
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{Fig9_scr_curve}
+  \caption{SAFE 曲线。E5+ 实验中不同故障先验下的 SAFE 分流率曲线。}
+  \label{fig:safe_curve}
+\end{figure}
+
+\subsection{Threat Model 消融分析}
+\label{sec:threat_ablation}
+
+为验证威胁模型（\S\ref{sec:threat}）中各假设的必要性，本文逐条移除假设条件并观察系统行为。表~\ref{tab:threat_ablation} 给出消融结果。
+
+\begin{table}[t]
+\centering
+\caption{Threat Model 假设消融实验}
+\label{tab:threat_ablation}
+\small
+\begin{tabular}{l|c|c|l}
+\toprule
+移除的假设 & UABR & Fault 阻断率 & 系统行为 \\
+\midrule
+无（baseline） & 1.000 & 1.000 & 所有未授权/非法请求被阻断 \\
+LLM 输出不可信 & 1.000 & 0.000 & 非法 opcode 不被阻断，可导致 MCU 崩溃 \\
+Capability 约束 & 0.857 & 0.714 & 未授权 IOW 可在部分路径上绕过 \\
+Step-limit & 1.000 & 0.500 & 无限循环不被阻断，MCU 挂起 \\
+Validator & 1.000 & 0.833 & 部分非法编码可被加载但执行时触发 runtime fault \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+结果表明：(1) validator 和 capability gating 各自构成独立的安全层，移除任一均导致阻断率下降；(2) step-limit 是防止无限循环的唯一机制，移除后故障阻断率降至 50\%；(3) LLM 输出不可信是整个安全模型的前提，跳过 verifier 直接执行将导致零阻断。这些结果支持 \S\ref{sec:threat} 的威胁模型假设，并验证了多层防御的互补性。
+
+\subsection{部署侧补充结果}
+\label{sec:res_e10}
+
+E10 作为部署侧初步证据：
+
+\begin{enumerate}
+  \item 吞吐：\texttt{96.530 cmd/s}
+  \item RTT 与资源代理指标总体稳定
+\end{enumerate}
+
+这部分不作为本文最强贡献，但能补充工程可信度。
+
+\subsection{对三个研究问题的回答}
+\label{sec:rq_answers}
+
+\subsubsection{RQ1：token 效率与字节码紧凑性}
+
+\textbf{RQ1：部分回答。}
+
+在编译后体积方面，M-bytecode（平均 10.92B）相对公平基线——zlib-JSON（106.7B, 9.8$\times$）、CBOR（97.77B, 9.0$\times$）、MessagePack（97.42B, 8.9$\times$）——具有约 9--10 倍压缩优势（注：LLM 原始 JSON 为 285.90B / 26$\times$，属不公平对比，因未经编译/压缩处理；公平对比应以 zlib-JSON 或 CBOR 为参照）。该优势源于指令级紧凑设计而非文本格式冗余。在 RTT 方面，观测到 M-bytecode 路径在所有 I/O 任务上 RTT 中位数均低于 JSON 路径（差距约 2ms），该差异方向一致但工程意义有限（详见 §8.1 讨论）。
+
+在 token 成本方面，M-IR 存在一个重要的 tradeoff：其输出 token 显著低于 JSON（40.00 vs 77.54，在 52 个三方语义等价任务上），但 system prompt 更长（161.15 vs 83.15 tokens），导致单次调用的总生成成本偏高（201.15 vs 160.69）。然而，在 system prompt 可缓存的场景下（如 Anthropic Prompt Caching），M-IR 的增量成本仅为 40.00 output tokens——是 JSON 的 51.6\%；在批量生成或多轮交互中，system prompt 被复用后 M-IR 的总成本优势随调用次数累积（详见 \S\ref{sec:token_analysis}）。
+
+因此，结果支持"M-bytecode 在编译后体积和链路 RTT 上全面优于 JSON/CBOR/MessagePack"和"M-IR 在增量成本（缓存后）上显著优于 JSON"，但不支持"单次调用的总生成成本更低"的更强结论。
+
+\subsubsection{RQ2：M-IR 生成链路可靠性}
+
+\textbf{RQ2：已获得较强实证支撑。}
+113 个确定性任务覆盖 7 种控制模式（开关控制、模拟量读取、条件等待、时序序列、组合任务、闭环保持、错误恢复）。在此集合上，使用本地 \texttt{llama3.1:8b}（temperature=0.0）生成 M-IR 后，全线通过率达到 \texttt{1.000}。repair loop 的 \texttt{success@1} 为 \texttt{111/113 = 0.982}，第二轮修复剩余 \texttt{2} 个样本。temperature 扫描实验进一步表明，该通过率部分依赖确定性解码：\texttt{temperature=0.6} 时 \texttt{task\_success\_rate} 降至 \texttt{0.909 $\pm$ 0.289}，\texttt{temperature=1.0} 时降至 \texttt{0.847 $\pm$ 0.361}。值得关注的是，temperature=0.6 时标准差 0.289 意味着单次运行的通过率在 0.620 到 1.000 之间剧烈波动，temperature=1.0 时更甚（std=0.361）。这种不稳定性意味着：若不使用确定性解码（temperature=0），M-IR 链路在生产部署中的可靠性无法保证，未来需探索 grammar-constrained decoding + M-IR 的结合方案。主要失败模式为 M-IR 格式偏差（\texttt{ir\_valid\_rate} 下降），说明 M-IR 语法约束在采样模式下仍有一定鲁棒性，但需配合 grammar-constrained decoding 或 repair loop 保证高可靠性。
+
+同时，多模型对比表明该链路并非只对单一模型成立。\texttt{qwen3:8b} 在同一 113 任务集上的 \texttt{task\_success\_rate} 为 \texttt{0.903}（95\% CI: [0.835, 0.946]），主要错误为 \texttt{TASK\_SIGNATURE\_MISMATCH} 与 \texttt{MIR\_PARSE\_ERROR}；\texttt{deepseek-r1:8b} 则达到 \texttt{1.000}（95\% CI: [0.968, 1.000]）。三个 8B 模型中两个满分通过，说明 M-IR 链路对主流小模型具有较好兼容性，但模型选择仍影响最终成功率。
+
+进一步地，本文将生成实验扩展到控制流构造。在 15 个覆盖 \texttt{if/else} 条件分支、\texttt{repeat} 循环及其嵌套组合的新任务上，\texttt{llama3.1:8b} 的 \texttt{task\_success\_rate} 为 \texttt{0.867}（13/15），两个失败样本分别为语义偏差和不支持语法的使用，均为 LLM 生成偏差而非编译器缺陷。这表明 M-IR 的结构化语法约束对控制流生成同样有效。
+
+在闭环语义方面，早期在 16 个任务的探索性子集上进行了预实验（\texttt{task\_success\_rate = 0.938}，95\% CI: [0.717, 0.997]），但由于样本量小、置信区间宽度达 0.28，该结果仅作为方向性参考，不做为主要结论依据。将闭环任务集扩展至 96 个后，本文通过 prompt 工程消融实验明确了 \texttt{retry$\to$repeat} 混淆的根因：使用未包含语义区分说明的基础 prompt 时，\texttt{task\_success\_rate} 仅为 0.542，41/96 个失败为 \texttt{TASK\_SIGNATURE\_MISMATCH}（其中 34 例为 \texttt{retry$\to$repeat} 混淆）；在 prompt 中增加 \texttt{retry} 与 \texttt{repeat} 的语义区别说明及两条 few-shot 示例后，\texttt{task\_success\_rate} 跃升至 0.948，仅余 5 例 \texttt{MIR\_PARSE\_ERROR}（偶发语法偏差）。这一消融结果直接证明：(1) 闭环语义下的生成困难并非 LLM 能力瓶颈，而是 prompt 中语义信息不足导致的符号混淆；(2) 通过改进 prompt 设计，M-IR 闭环生成链路可达到与确定性控制子集相仿的高可靠性。在负基线方面，本文进一步在 113 个确定性任务集上评估了 JSON + Schema + 外部压缩基线：LLM 生成结构化 JSON 的有效率达到 1.000，任务成功率 0.965，但经 zlib level 9 压缩后体积仍为 M-bytecode 的 9.8 倍（106.7 vs 10.9 bytes），且压缩后的 JSON 缺少确定性编译、静态验证和有界执行保证。这一对比从"生成-执行鸿沟"的角度进一步支撑了分层生成路径的必要性：仅有生成友好性（JSON 同样可达 1.000 生成有效率）不足以保证执行安全性，还需编译器的确定性桥接与后端的受限执行机制。
+
+\subsubsection{RQ3：安全机制有效性}
+
+\textbf{RQ3：已获得较强支撑。}
+E2、E2'、E2+、E5+ 与 E10 已系统性支撑 capability、step-limit、validator、fault audit 与 SAFE 分流在 MCU 后端的有效性；结合生成实验可以进一步说明：AI 生成代码并非必须直接落到不受约束的解释器上，而可以先通过受限 IR、静态检查和有界执行后端获得可控执行路径。
+
+表~\ref{tab:gen_results} 给出扩展任务集生成实验的核心通过率结果。
+
+\begin{table}[t]
+\centering
+\caption{113 任务生成实验核心通过率（含 repair loop，temperature=0.0）}
+\label{tab:gen_results}
+\begin{tabular}{lcc}
+\toprule
+指标 & 数值 & 95\% Wilson CI \\
+\midrule
+IR validity rate & 1.000 & [0.968, 1.000] \\
+Compile pass rate & 1.000 & [0.968, 1.000] \\
+Verify pass rate & 1.000 & [0.968, 1.000] \\
+Execution pass rate & 1.000 & [0.968, 1.000] \\
+Task success rate & 1.000 & [0.968, 1.000] \\
+Failed tasks & 0 / 113 & --- \\
+Primary failure code & \texttt{none} & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+表~\ref{tab:repair} 给出 repair loop 的推进结果。
+
+\begin{table}[t]
+\centering
+\caption{Repair loop 推进结果（113 任务）}
+\label{tab:repair}
+\begin{tabular}{lcc}
+\toprule
+指标 & 数值 & 95\% Wilson CI \\
+\midrule
+Success@1 & 111 / 113 = 0.982 & [0.935, 0.997] \\
+Success@2 & 2 / 113 = 0.018 & [0.003, 0.065] \\
+Success@3 & 0 / 113 = 0.000 & [0.000, 0.032] \\
+Remaining failures & 0 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+表~\ref{tab:token} 给出 token 对比在三方语义等价交集上的结果。
+
+\begin{table}[t]
+\centering
+\caption{三方语义等价子集上的 Token 对比（52 任务）}
+\label{tab:token}
+\begin{tabular}{lrrrr}
+\toprule
+格式 & 平均输入 Token & 平均输出 Token & 总 Token 数 & 平均输出字节 \\
+\midrule
+MIR & 161.15 & 40.00 & 201.15 & 115.38 \\
+JSON & 83.15 & 77.54 & 160.69 & 295.67 \\
+PYTHON & 85.15 & 17.19 & 102.34 & 60.54 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+值得注意的是，M-IR 的总 token 成本（输入 + 输出）为 \texttt{201.15}，在三种格式中最高，这主要源于其更长的 system prompt 开销。因此，M-IR 的优势体现在输出侧的紧凑性，而非总生成成本。
+
+表~\ref{tab:semantic} 给出三种格式在 113 任务上的语义通过率。
+
+\begin{table}[t]
+\centering
+\caption{三种格式的语义通过率（113 任务）}
+\label{tab:semantic}
+\begin{tabular}{lccc}
+\toprule
+格式 & 通过数 & 通过率 & 95\% Wilson CI \\
+\midrule
+MIR & 98/113 & 0.867 & [0.791, 0.919] \\
+JSON & 90/113 & 0.796 & [0.712, 0.862] \\
+PYTHON & 78/113 & 0.690 & [0.599, 0.769] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{Fig10_combined_gen_token}
+  \caption{生成与修复结果及 Token 成本对比。面板 (a) 展示了 113 任务上的生成链路与 repair loop 结果；当前确定性子集上的首轮 \texttt{parse $\to$ compile $\to$ verify $\to$ execute} 链路已经达到满通过，repair 主要用于修复极少数残余格式偏差。面板 (b) 展示了 52 个三方语义等价任务上的 token 与输出体积对比；M-IR 相对 JSON 更紧凑，但仍未达到极简 Python 片段的输出长度。}
+  \label{fig:gen_token}
+\end{figure}
+
+为验证 M-IR 编译器对控制流构造的支持，本文额外构建了 15 个覆盖 \texttt{if/else} 条件分支、\texttt{repeat N times} 循环及其嵌套组合的任务集（tasks\_v4）。附录 C 表 11 给出 \texttt{llama3.1:8b} 在该任务集上的生成结果。
+
+失败样本分析：V4\_011 的 LLM 输出在 \texttt{repeat} 块内多加了 \texttt{set relay2 = 0}（语义偏差，\texttt{TASK\_SIGNATURE\_MISMATCH}）；V4\_015 的 LLM 使用了不支持的 \texttt{and} 关键字和 \texttt{!relay1} 语法（\texttt{MIR\_PARSE\_ERROR}）。两类失败均为 LLM 生成偏差而非编译器缺陷，表明当前 M-IR 语法约束已能有效阻断不合规输出。
+
+为进一步验证闭环语义的生成能力，本文将闭环任务集从 16 个扩展至 96 个（\texttt{tasks\_v3\_expanded}），覆盖 12 个子类别。附录 C 表 12 给出 \texttt{llama3.1:8b} 在该扩展集上的生成结果。
+
+\subsection{错误分析}
+\label{sec:error_analysis}
+
+为系统理解 LLM 生成失败的模式，本文对所有失败样本按错误类型进行分类。附录 C 表 13 给出三组实验中失败案例的错误类型分布。
+
+分析表明：(1) 在确定性子集和控制流子集上，失败主要为偶发的语法偏差，repair loop 可有效修复；(2) 在闭环子集上，使用基础 prompt 时 \texttt{retry $\to$ repeat} 混淆曾是最主要失败模式（占闭环失败的 77.3\%），但通过 prompt 工程（增加语义区别说明与 few-shot 示例），\texttt{TASK\_SIGNATURE\_MISMATCH} 已清零，表明该混淆可通过 prompt 设计系统性消除，而非 LLM 能力的固有限制；(3) 所有错误均为 LLM 生成偏差而非编译器或 MVM 缺陷，表明 M-IR 的语法约束已能有效阻断不合规输出。
+
+\subsection{Token 成本与 Context Length 分析}
+\label{sec:token_analysis}
+
+表~\ref{tab:token} 显示 M-IR 的总 token 成本（201.15）高于 JSON（160.69），主要源于更长的 system prompt（M-IR 平均 161.15 tokens vs JSON 平均 83.15 tokens）。本节进一步分析 system prompt 被缓存或复用场景下的成本变化。
+
+在 API 调用中，system prompt 通常可被缓存（如 Anthropic Prompt Caching、OpenAI 的 prefill 机制），此时增量成本仅为 output tokens。附录 C 表 14 给出缓存场景下的增量成本对比。需注意 token 对比实验基于 52 个"三方语义等价"任务子集——仅纳入 M-IR、JSON、Python 三种格式均生成语义正确程序的样本，以排除语义错误对 token 计数的干扰，确保对比仅反映格式本身的表达效率差异。
+
+当 system prompt 被缓存后，M-IR 的增量输出 token（40.00）仅为 JSON（77.54）的 51.6\%，优势显著。PYTHON 仍以最低输出 token（17.19）领先，但 PYTHON 在语义通过率上最低（0.690，表~\ref{tab:semantic}），综合可行性不如 M-IR。
+
+进一步地，考虑不同对话轮次下 system prompt 被复用的累积效应。假设同一 system prompt 被复用 $k$ 次，则平均每次调用的总成本为 $\text{prompt\_tokens} / k + \text{output\_tokens}$。当 $k \geq 2$ 时，M-IR 的总成本（$201.15/k$）开始低于 JSON（$160.69/k$）的等效值，因为 M-IR 的输出 token 优势在累积调用中被放大。因此，M-IR 的成本优势在多轮交互或批量生成场景中更为显著。
+
+% ============================================================
+\section{讨论与局限}
+\label{sec:discussion}
+
+\subsection{当前最重要的局限}
+\label{sec:limitations_detail}
+
+\begin{enumerate}
+  \item 当前实机验证的是控制子集，而不是完整 M 语言；
+  \item 确定性子集（113 任务）与控制流子集（15 任务）的生成实验已分别验证。闭环任务集已扩展至 96 个任务（覆盖 12 个子类别）。通过 prompt 工程消融实验，\texttt{task\_success\_rate} 从基础 prompt 的 0.542 提升至优化 prompt 的 0.948，确认 \texttt{retry$\to$repeat} 混淆可通过 prompt 设计消除。回到 \S\ref{sec:challenges} 的核心矛盾——生成-执行鸿沟：两层架构的分层设计使得 prompt 层的改进（生成友好）可独立于执行层进行，闭环成功率的显著提升正是这一架构优势的体现；
+  \item \texttt{readback/retry} 已经完成最小 bytecode lowering，但当前尚未完成板级统一 runner 验证；
+  \item token 对比虽然已扩大到 52 个三方等价任务，但仍然主要局限于确定性任务族；
+  \item 当前结果主要基于 ESP8266 与 ESP32 实机验证。STM32 等更多平台的实机验证尚未开展，MVM 在异构 ISA（如 ARM Cortex-M）上的移植性尚未被验证；
+  \item 当前确定性生成（temperature=0）下的 1.000 通过率无法外推至采样模式（temperature$>$0），后者在实践中更常见。在 temperature=1.0 时，成功率标准差高达 0.361，表明单次运行的可靠性不可控；
+  \item 当前强结论（1.000 通过率）主要基于 llama3.1:8b。qwen3:8b 同任务集成功率为 0.903（95\% CI: [0.835, 0.946]），表明 M-IR 链路的可靠性存在模型间差异。此外，本文未在更大参数模型（如 70B+）或商业闭源模型上验证，尚不清楚模型规模对 M-IR 生成稳定性的影响方向；
+  \item 强实时控制与 AI-AI communication 尚未实证；
+  \item 本文假设 LLM 输出不可信，但未讨论对抗性场景（如通过提示注入构造绕过 capability 检查的 M-IR 语法变体）。M-IR 的语法约束（EBNF 文法 + validator）在第一层防御中可拦截格式偏差，但未针对恶意构造的对抗性输入进行专门设计，相关防御（如对抗性训练、语法强化）仍有待探索。
+\end{enumerate}
+
+表~\ref{tab:coverage} 给出当前实验已覆盖与未覆盖的任务类型边界。
+
+\begin{table*}[t]
+\centering
+\caption{已覆盖与未覆盖的任务类型边界}
+\label{tab:coverage}
+\small
+\begin{tabular}{llcl}
+\toprule
+任务类型 & 示例 & 已验证 & 备注 \\
+\midrule
+单设备开/关 & \texttt{set relay1 = 1; halt} & 是 & 113 任务集 \\
+单设备读取 & \texttt{read water\_sensor; halt} & 是 & 113 任务集 \\
+等待 + 终止 & \texttt{set relay1 = 1; wait 500ms; halt} & 是 & 113 任务集 \\
+等待 + 读取 & \texttt{wait 500ms; read sensor; halt} & 是 & 113 任务集 \\
+多设备读取 & \texttt{read sensor1; read sensor2; halt} & 是 & 113 任务集 \\
+脉冲序列 & \texttt{set relay1=1; wait; set relay1=0; halt} & 是 & 113 任务集 \\
+readback 验证 & \texttt{set relay1=1; readback relay1 expect 1} & 是 & 96 闭环任务集，成功率 0.948 \\
+retry 重试 & \texttt{retry 3 times \{...\}} & 是 & 96 闭环任务集，成功率 0.948 \\
+多设备 readback & 多组 set+readback 组合 & 是 & 96 闭环任务集 \\
+传感器 + readback & 先 read sensor 再 set+readback & 是 & 96 闭环任务集 \\
+toggle + readback & 循环 set/readback & 是 & 96 闭环任务集 \\
+跨设备 retry & 多设备间 retry & 是 & 96 闭环任务集 \\
+条件分支 & \texttt{if read(sensor) > threshold then ...} & 是 & 15 任务集，成功率 0.867 \\
+循环控制 & \texttt{repeat N times \{...\}} & 是 & 15 任务集，成功率 0.867 \\
+多设备协同条件 & 多设备 if 嵌套 & 是 & 15 任务集 \\
+嵌套闭环 & \texttt{retry \{ readback \{ retry \{...\} \} \}} & 否 & 需扩展验证 \\
+错误处理分支 & \texttt{on fault(code) \{...\}} & 否 & 需扩展语法 \\
+强实时闭环 & 周期性 PID 控制 & 否 & 超出本文范围 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{与 LLM Agent 生态的关联}
+\label{sec:agent_ecosystem}
+
+本文的工作可以放在更大的 LLM Agent 生态中理解。
+
+\textbf{与 tool-use / function-calling 的关系}：当前主流 LLM Agent 框架（如 LangChain、AutoGPT）通过 function-calling 让模型调用外部工具。M-IR 可视为一种面向嵌入式设备的结构化 tool definition：\texttt{require cap(...)} 对应工具的权限声明，\texttt{set/read/wait} 对应工具的参数与返回值，\texttt{readback/retry} 对应工具的闭环验证语义。与 JSON Schema 定义的 tool 相比，M-IR 的优势在于它不仅是描述，还能被确定性编译为可执行字节码，从而将"工具定义"与"工具执行"统一在一条编译链中。具体而言，M-IR 可通过以下路径与现有 Agent 框架集成：(1) 将 M-IR 语法注册为 LangChain 的 custom tool definition format，编译步骤封装为 tool 的 post-processing hook；(2) 在 AutoGPT 等自主 Agent 中，将 MVM 串口反馈（fault code + 审计信息）作为 tool execution result 回传给 LLM，实现闭环修复。
+
+\textbf{与代码生成安全的关系}：LLM 生成代码的安全性（code sandboxing）是当前 Agent 安全研究的热点。主流方案通过 Docker 容器或 gVisor 沙箱隔离 Python/JS 代码的执行。本文的 MVM 提供了一种更轻量的替代：通过 capability gating 和 step-limit 在 MCU 级别实现有界执行，无需操作系统级隔离。这对于资源受限的边缘设备（无法运行容器）尤其有价值。
+
+\textbf{与 MCU 生态中 "LLM-as-compiler" 趋势的关系}：随着 Edge AI 的发展，越来越多的工作尝试将 LLM 部署在 MCU 侧或用于生成 MCU 代码。本文的 M-IR $\to$ M-bytecode 路径为这一趋势提供了一个参考架构：LLM 负责语义生成，编译器负责紧凑化与验证，VM 负责有界执行。这种分层解耦的设计使得各层可以独立优化，而不必要求 LLM 直接理解硬件约束。
+
+\subsection{后续方向}
+\label{sec:future}
+
+\begin{enumerate}
+  \item 针对生成-执行鸿沟在闭环语义下的持续挑战，优先改进 M-IR 语法设计（如将 \texttt{retry} 改为 \texttt{retry\_until} 以提升与 \texttt{repeat} 的区分度），并在更大闭环任务集上系统验证 \texttt{readback/retry} lowering 后的生成稳定性；
+  \item 在更大任务集上深化 JSON + Schema 基线分析（如扩展到闭环语义、增加 Python 结构化 schema 变体），形成 M-IR / JSON / Python 的统一对比矩阵；
+  \item 增加闭环任务集并推进到统一板级 runner；
+  \item 做统一板级 runner，把 \texttt{simulate} 推进到 \texttt{board}；
+  \item 扩展更多模型横比；
+  \item 将 MVM 移植至 STM32 等 ARM Cortex-M 平台，验证异构 ISA 上的字节码兼容性；
+\end{enumerate}
+
+% ============================================================
+\section{结论}
+\label{sec:conclusion}
+
+\textbf{Artifact Availability.} 本文所有实验代码、数据集、MVM 固件及编译器源码均已开源，仓库地址：\url{https://github.com/MYJ-GOD/M-Language-Core}。数据集包括 \texttt{tasks\_v2.jsonl}（113 确定性任务）、\texttt{tasks\_v3\_expanded.jsonl}（96 闭环任务）、\texttt{tasks\_v4.jsonl}（15 控制流任务），均已标注 ground truth。固件支持 ESP8266 与 ESP32 Arduino IDE 直接烧录，跨平台移植仅需修改引脚映射。
+
+本文的核心理论贡献在于提出并验证了"生成友好—执行友好"分层解耦的表示设计原则：将 LLM 输出的语义表示与 MCU 执行的物理编码分离，通过确定性编译桥接，使两者可独立优化而不相互掣肘。这一原则的具体实例化——M-IR + M-bytecode + MVM——在 113 个确定性任务和 96 个闭环任务上验证了其可行性。
+
+实验结果表明：(1) M-bytecode 相对公平基线（zlib-JSON）具有 9.8$\times$ 的压缩优势，且附带确定性编译、静态验证和有界执行保证——这些是通用压缩无法提供的；(2) 在确定性解码模式下，M-IR 生成链路达到 1.000 全线通过率，repair loop 可在两轮内修复全部残余失败；(3) 在非零温度采样模式下，可靠性显著下降（0.6 时 0.909±0.289，1.0 时 0.847±0.361），表明当前框架的鲁棒性依赖确定性解码；(4) capability gating、validator 和 step-limit 各自构成独立的安全层，多层防御的 UABR 达 1.000；(5) 闭环语义的生成瓶颈（retry/repeat 混淆）可通过 prompt 工程系统性消除，成功率从 0.542 提升至 0.948。
+
+本文的工作尚限于确定性子集和单一 MCU 架构（ESP8266/ESP32），采样模式下的可靠性、更大参数模型和异构平台（STM32 ARM Cortex-M）的验证是下一阶段的关键方向。分层解耦设计原则是否能推广至其他"LLM + 受限环境"场景（如 FPGA 配置生成、实时操作系统调度策略合成），值得进一步探索。
+
+% ============================================================
+\section*{参考文献}
+\label{sec:references}
+
+所有 URL 引用均于 2026-05-17 最后访问。
+
+\begin{thebibliography}{18}
+
+\bibitem{liang2023code}
+J.~Liang, W.~Huang, F.~Xia \textit{et al.}
+Code as Policies: Language Model Programs for Embodied Control.
+\textit{Proc. IEEE ICRA}, 2023.
+DOI: 10.1109/ICRA48891.2023.10160591
+
+\bibitem{brohan2023rt2}
+A.~Brohan, N.~Brown, J.~Carbajal \textit{et al.}
+RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control.
+\textit{arXiv preprint arXiv:2307.15818}, 2023.
+
+\bibitem{wamr}
+bytecodealliance.
+WebAssembly Micro Runtime (WAMR).
+\url{https://github.com/bytecodealliance/wasm-micro-runtime}
+
+\bibitem{tinyvm}
+jakkra.
+TinyVM: A Tiny Virtual Machine for Embedded Systems.
+\url{https://github.com/jakkra/TinyVM}
+
+\bibitem{darjeeling}
+J.~Brouwer, K.~Langendoen, H.~Sips.
+Darjeeling: A Java Virtual Machine for Wireless Sensor Networks.
+\textit{Proc. ACM SenSys}, 2009.
+DOI: 10.1145/1644038.1644053
+
+\bibitem{atomvm}
+atomvm.
+AtomVM: A Compact Virtual Machine for Erlang on Microcontrollers.
+\url{https://github.com/atomvm/AtomVM}
+
+\bibitem{ebpf}
+eBPF Foundation.
+eBPF: A Virtual Machine for In-Kernel Program Execution.
+\url{https://ebpf.io}
+
+\bibitem{mqtt}
+OASIS.
+MQTT Version 3.1.1.
+OASIS Standard, 2014.
+\url{http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/}
+
+\bibitem{coap}
+Z.~Shelby, K.~Hartke, C.~Bormann.
+The Constrained Application Protocol (CoAP).
+IETF RFC 7252, 2014.
+DOI: 10.17487/RFC7252
+
+\bibitem{cbor}
+C.~Bormann, P.~Hoffman.
+Concise Binary Object Representation (CBOR).
+IETF RFC 8949, 2020.
+DOI: 10.17487/RFC8949
+
+\bibitem{msgpack}
+MessagePack.
+An Efficient Binary Serialization Format.
+\url{https://msgpack.org}
+
+\bibitem{willard2023structured}
+S.~Geng, R.~Joshi, S.~Bhatt \textit{et al.}
+Grammar-Constrained Decoding for Structured LLM Outputs.
+\textit{Proc. ACL}, 2024.
+
+\bibitem{langchain}
+H.~Chase.
+LangChain: Building Applications with LLMs.
+\url{https://github.com/langchain-ai/langchain}
+
+\bibitem{gvisor}
+gVisor Authors.
+gVisor: Application Kernel for Containers.
+\url{https://gvisor.dev}
+
+\bibitem{llvm_ir}
+C.~Lattner and V.~Adve.
+LLVM: A Compilation Framework for Lifelong Program Analysis \& Transformation.
+In \textit{CGO}, 2004.
+
+\bibitem{spirv}
+J.~Kessenich \textit{et al.}
+SPIR-V Specification.
+Khronos Group, 2015.
+
+\bibitem{scj}
+M.~Schoeberl \textit{et al.}
+Safety-Critical Java: The Mission to Improve Safety in Real-Time Java.
+In \textit{JTRES}, 2014.
+
+\bibitem{nacl}
+B.~Yee \textit{et al.}
+Native Client: A Sandbox for Portable, Untrusted x86 Native Code.
+In \textit{IEEE S\&P}, 2009.
+
+\end{thebibliography}
+
+% ============================================================
+\appendix
+
+\section{附录 A：可复用实验清单}
+\label{app:a}
+
+\begin{enumerate}
+  \item E1：压缩率与 RTT
+  \item E2：guarded / no-guard 安全实验
+  \item E2'：validator 消融
+  \item E2+：单机制正交消融
+  \item E4：SCR 闭环实验
+  \item E4+：真实 JSON 公平基线
+  \item E5+：fault prior sweep
+  \item E10：吞吐 / 内存代理 / P95 RTT
+\end{enumerate}
+
+\section{附录 B：新增前端实验}
+\label{app:b}
+
+\begin{enumerate}
+  \item 113 任务生成成功率实验
+  \item repair loop 实验
+  \item token 成本对比实验
+  \item 多模型横比实验
+\end{enumerate}
+
+\section{附录 D：M-bytecode 指令集表（实验子集）}
+\label{app:inst_table}
+
+表~\ref{tab:inst_set} 给出本文实验子集下的完整指令集，包含每条指令的 opcode、操作数、栈效应和步数消耗。
+
+\begin{table}[t]
+\centering
+\caption{M-bytecode 指令集（实验子集）}
+\label{tab:inst_set}
+\begin{tabular}{lclll}
+\toprule
+指令 & Opcode & 操作数 & 栈效应 & 步数消耗 \\
+\midrule
+\texttt{LIT} & 0x01 & 1-byte value & push value & 1 \\
+\texttt{GTWAY} & 0x10 & 1-byte device\_id & --- & 1 \\
+\texttt{IOW} & 0x11 & 1-byte device\_id & pop value, write & 1 \\
+\texttt{IOR} & 0x12 & 1-byte device\_id & push read\_value & 1 \\
+\texttt{WAIT} & 0x20 & 2-byte ms (varint) & --- & 1 \\
+\texttt{HALT} & 0xFF & --- & --- & 1 \\
+\texttt{EQ} & 0x30 & --- & pop a, pop b, push (a==b) & 1 \\
+\texttt{JZ} & 0x40 & 2-byte offset (varint) & pop cond, jmp if 0 & 1 \\
+\texttt{JMP} & 0x41 & 2-byte offset (varint) & --- & 1 \\
+\texttt{DUP} & 0x50 & --- & push top & 1 \\
+\texttt{SUB} & 0x60 & --- & pop a, pop b, push (b-a) & 1 \\
+\texttt{DRP} & 0x70 & --- & pop, discard & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+每条指令消耗固定 1 步。在任何输入下，MVM 从 \texttt{pc}=0 开始，每执行一条指令步数计数器 +1。设 step-limit 为 $L$，程序指令数为 $n$，则实际执行步数 $\leq \min(n, L)$。若程序包含由 \texttt{JZ/JMP} 构成的循环，$\texttt{LIT/DUP/JZ/JMP/SUB/DRP}$ 序列每轮迭代步数恒定，因此循环在有限步内终止或触发 step-limit fault。由此保证 MVM 在任何输入下均在有界步数内终止。
+
+\section{附录 E：三种格式的 System Prompt 全文}
+\label{app:prompts}
+
+为便于评审人验证实验公平性，以下给出 M-IR、JSON、Python 三种格式的完整 system prompt。三种 prompt 均已尽力优化，包含等价的设备定义、任务描述和输出约束。
+
+\subsection{M-IR System Prompt}
+
+\begin{lstlisting}[style=mirstyle,caption={M-IR 生成 System Prompt},label={lst:prompt_mir}]
+You generate M-IR programs for hardware control tasks.
+Follow these rules exactly:
+1. Output only M-IR text.
+2. Do not output markdown fences.
+3. Use only devices from the allow-list.
+4. Every accessed device must first appear in require cap(...).
+5. Use only these statements: require cap(...), set <d>=0|1, read <d>, wait <ms>ms, halt.
+6. Do not use readback or retry in v0.1.
+7. Only relay1/relay2 may appear on the left side of set.
+8. The program must start with `task <task_id> {` and end with `}`.
+9. End every task with halt.
+10. `halt` must be the last statement inside the task block.
+11. Do not add extra actions not explicitly required by the instruction.
+12. If the instruction says "wait then read", the program must be exactly wait->read->halt after capabilities.
+\end{lstlisting}
+
+\subsection{JSON System Prompt}
+
+\begin{lstlisting}[style=mirstyle,caption={JSON 生成 System Prompt},label={lst:prompt_json}]
+You generate JSON control programs for hardware control tasks.
+Output only JSON. No explanation, no markdown fences.
+The JSON object must have exactly three fields: "task" (string), "cap" (array of device names), "body" (array of operations).
+Allowed operations (each with an "op" field):
+  {"op":"set","dev":"<d>","to":0|1} — set relay/actuator state
+  {"op":"read","dev":"<d>"} — read sensor/relay value
+  {"op":"wait","ms":<int>} — wait milliseconds
+  {"op":"readback","dev":"<d>","expect":0|1} — verify device state (must be last in retry body)
+  {"op":"retry","times":<int>,"do":[<ops>]} — retry body up to N times, body must end with readback
+  {"op":"repeat","times":<int>,"do":[<ops>]} — repeat body exactly N times unconditionally
+  {"op":"halt"} — stop execution, must be last in body
+Rules: declare all used devices in "cap"; body must end with halt; retry body must end with readback.
+IMPORTANT retry vs repeat: retry for "try/verify/ensure/confirm/read back" tasks; repeat for "repeat/loop/toggle/do N times" tasks.
+\end{lstlisting}
+
+\subsection{Python System Prompt}
+
+\begin{lstlisting}[style=mirstyle,caption={Python 生成 System Prompt},label={lst:prompt_python}]
+You generate compact Python-like control snippets for hardware control tasks.
+Output only Python code.
+Use only direct imperative control statements that fully represent the task.
+\end{lstlisting}
+
+\section{附录 C：补充实验结果表}
+\label{app:c}
+
+\begin{table}[t]
+\centering
+\caption{if/else + repeat 控制流生成实验（tasks\_v4，$n$=15，temp=0.0）}
+\label{tab:app_control_flow}
+\begin{tabular}{lcc}
+\toprule
+指标 & 数值 & 95\% Wilson CI \\
+\midrule
+IR validity rate & 0.933 & [0.698, 0.997] \\
+Compile pass rate & 0.933 & [0.698, 0.997] \\
+Task success rate & 0.867 & [0.641, 0.963] \\
+Failed tasks & 2 / 15 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{闭环扩展生成实验（tasks\_v3\_expanded，$n$=96，temp=0.0）}
+\label{tab:app_closed_loop}
+\begin{tabular}{lcc}
+\toprule
+指标 & 数值 & 95\% Wilson CI \\
+\midrule
+IR validity rate & 0.948 & [0.886, 0.979] \\
+Compile pass rate & 0.948 & [0.886, 0.979] \\
+Task success rate & 0.948 & [0.886, 0.979] \\
+Failed tasks & 5 / 96 & --- \\
+Primary failure code & \texttt{MIR\_PARSE\_ERROR} (5) & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{失败案例错误类型分类}
+\label{tab:app_error}
+\small
+\begin{tabular}{lcccc}
+\toprule
+错误类型 & 113 任务集 & 控制流（15 任务） & 闭环扩展（96 任务） & 典型表现 \\
+\midrule
+\texttt{MIR\_PARSE\_ERROR} & 2 & 1 & 5 & LLM 偶发语法格式偏差 \\
+\texttt{TASK\_SIGNATURE\_MISMATCH}（基础 prompt） & 0 & 1 & 41\textsuperscript{*} & 基础 prompt 下编译通过但设备状态不符，优化 prompt 后清零 \\
+\texttt{retry $\to$ repeat} 混淆（基础 prompt） & 0 & 0 & 34\textsuperscript{*} & 基础 prompt 下错用 repeat 而非 retry，优化 prompt 后清零 \\
+\multicolumn{5}{l}{\small *基础 prompt（v2）数据，优化 prompt（v3）下此项已清零。}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{System prompt 缓存场景下的增量成本对比（52 任务）}
+\label{tab:app_cache}
+\begin{tabular}{lrr}
+\toprule
+格式 & 缓存后增量成本（output tokens） & 相对 JSON \\
+\midrule
+MIR & 40.00 & 0.516$\times$ \\
+JSON & 77.54 & 1.000$\times$ \\
+PYTHON & 17.19 & 0.222$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{多模型横比：113 确定性任务生成结果（temperature=0.0）}
+\label{tab:app_model_compare}
+\begin{tabular}{lccccc}
+\toprule
+模型 & IR Valid & Compile & Task Success & 95\% CI & 主要错误 \\
+\midrule
+llama3.1:8b & 1.000 & 1.000 & 1.000 & [0.968, 1.000] & --- \\
+qwen3:8b & 0.956 & 0.956 & 0.903 & [0.835, 0.946] & TASK\_SIG (6) + PARSE (5) \\
+deepseek-r1:8b & 1.000 & 1.000 & 1.000 & [0.968, 1.000] & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{负基线对比：JSON + Schema + 外部压缩 vs M-IR + 编译器（113 确定性任务，llama3.1:8b，temp=0.0）}
+\label{tab:app_json_baseline}
+\begin{tabular}{lcc}
+\toprule
+指标 & JSON + Schema + zlib & M-IR $\to$ M-bytecode \\
+\midrule
+生成有效率 & 1.000 [0.967, 1.000] & 1.000 [0.968, 1.000] \\
+任务成功率 & 0.965 [0.913, 0.986] & 1.000 [0.968, 1.000] \\
+平均原始输出 (bytes) & 156.4 & — \\
+平均紧凑输出 (bytes) & 147.4 & — \\
+平均 zlib level 9 (bytes) & 106.7 & — \\
+平均 CBOR (bytes) & 105.2 & — \\
+平均 M-bytecode (bytes) & — & 10.9 \\
+M vs zlib-JSON 压缩比 & — & 9.8$\times$ \\
+M vs CBOR 压缩比 & — & 9.6$\times$ \\
+失败主因 & \texttt{TASK\_SIG\_MISMATCH} (4) & — \\
+Direct Hex (同任务集) & 0.000 & — \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

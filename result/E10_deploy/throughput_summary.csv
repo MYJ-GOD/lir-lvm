@@ -1,0 +1,2 @@
+variant,n,ok_count,fault_count,timeout_count,io_error_count,elapsed_s,throughput_cmd_s,rtt_mean_ms,rtt_std_ms,rtt_p95_ms
+guarded,1000,995,0,0,5,10.307710,96.529687,3.546,0.322,4.056

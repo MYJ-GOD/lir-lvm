@@ -1,0 +1,158 @@
+﻿task_id,category,attempt,ir_valid,compile_pass,verify_pass,execution_pass,task_success,payload_hex,error_stage,error_code,hint,candidate_mir
+V4_001,if_else_basic,1,1,1,1,1,1,5001500547011e3c2965061e02460564041e00460552,,,,"task v4_001 {
+  require cap(water_sensor)
+  require cap(relay1)
+  if read(water_sensor) > 30 then {
+    set relay1 = 1
+  } else {
+    set relay1 = 0
+  }
+  halt
+}"
+V4_002,if_else_basic,1,1,1,1,1,1,5001500647011e642865061e02460664041e00460652,,,,"task v4_002 {
+  require cap(water_sensor)
+  require cap(relay2)
+  if read(water_sensor) < 50 then {
+    set relay2 = 1
+  } else {
+    set relay2 = 0
+  }
+  halt
+}"
+V4_003,if_else_basic,1,1,1,1,1,1,5002500547021e322b65061e02460564041e00460552,,,,"task v4_003 {
+  require cap(temperature_sensor)
+  require cap(relay1)
+  if read(temperature_sensor) >= 25 then {
+    set relay1 = 1
+  } else {
+    set relay1 = 0
+  }
+  halt
+}"
+V4_004,if_else_basic,1,1,1,1,1,1,5003500647031e782a65061e02460664041e00460652,,,,"task v4_004 {
+  require cap(humidity_sensor)
+  require cap(relay2)
+  if read(humidity_sensor) <= 60 then {
+    set relay2 = 1
+  } else {
+    set relay2 = 0
+  }
+  halt
+}"
+V4_005,if_no_else,1,1,1,1,1,1,5001500547011e502965041e02460552,,,,"task v4_005 {
+  require cap(water_sensor)
+  require cap(relay1)
+  if read(water_sensor) > 40 then {
+    set relay1 = 1
+  }
+  halt
+}"
+V4_006,if_no_else,1,1,1,1,1,1,5002500647021e3c2965041e02460652,,,,"task v4_006 {
+  require cap(temperature_sensor)
+  require cap(relay2)
+  if read(temperature_sensor) > 30 then {
+    set relay2 = 1
+  }
+  halt
+}"
+V4_007,repeat_basic,1,1,1,1,1,1,50051e064065121e02460551641e00460551641e023364154152,,,,"task v4_007 {
+  require cap(relay1)
+  repeat 3 times {
+    set relay1 = 1
+    wait 100ms
+    set relay1 = 0
+    wait 100ms
+  }
+  halt
+}"
+V4_008,repeat_basic,1,1,1,1,1,1,50061e044065121e02460651c8011e00460651c8011e023364154152,,,,"task v4_008 {
+  require cap(relay2)
+  repeat 2 times {
+    set relay2 = 1
+    wait 200ms
+    set relay2 = 0
+    wait 200ms
+  }
+  halt
+}"
+V4_009,repeat_basic,1,1,1,1,1,1,50051e0a40650c1e02460551321e0233640f4152,,,,"task v4_009 {
+  require cap(relay1)
+  repeat 5 times {
+    set relay1 = 1
+    wait 50ms
+  }
+  halt
+}"
+V4_010,if_repeat_combined,1,1,1,1,1,1,5001500547011e4629651a1e044065121e02460551641e00460551641e023364154152,,,,"task v4_010 {
+  require cap(water_sensor)
+  require cap(relay1)
+  if read(water_sensor) > 35 then {
+    repeat 2 times {
+      set relay1 = 1
+      wait 100ms
+      set relay1 = 0
+      wait 100ms
+    }
+  }
+  halt
+}"
+V4_011,if_repeat_combined,1,1,1,1,1,1,5002500647021e282965161e0640650c1e02460651321e0233640f4164041e00460652,,,,"task v4_011 {
+  require cap(temperature_sensor)
+  require cap(relay2)
+  if read(temperature_sensor) > 20 then {
+    repeat 3 times {
+      set relay2 = 1
+      wait 50ms
+    }
+  } else {
+    set relay2 = 0
+  }
+  halt
+}"
+V4_012,if_comparison_ops,1,1,1,1,1,1,5001500547011e542c65041e02460552,,,,"task v4_012 {
+  require cap(water_sensor)
+  require cap(relay1)
+  if read(water_sensor) == 42 then {
+    set relay1 = 1
+  }
+  halt
+}"
+V4_013,if_comparison_ops,1,1,1,1,1,1,5003500647031e6e2c1e002c65041e02460652,,,,"task v4_013 {
+  require cap(humidity_sensor)
+  require cap(relay2)
+  if read(humidity_sensor) != 55 then {
+    set relay2 = 1
+  }
+  halt
+}"
+V4_014,multi_device_if,1,1,1,1,1,1,500150025005500647011e3c2965041e02460547021e322965041e02460652,,,,"task v4_014 {
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  require cap(relay1)
+  require cap(relay2)
+  if read(water_sensor) > 30 then {
+    set relay1 = 1
+  }
+  if read(temperature_sensor) > 25 then {
+    set relay2 = 1
+  }
+  halt
+}"
+V4_015,multi_device_if,1,1,1,1,1,1,50015002500547011e5029652447021e2829651a1e044065121e02460551641e00460551641e023364154164041e00460552,,,,"task v4_015 {
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  require cap(relay1)
+  if read(water_sensor) > 40 then {
+    if read(temperature_sensor) > 20 then {
+      repeat 2 times {
+        set relay1 = 1
+        wait 100ms
+        set relay1 = 0
+        wait 100ms
+      }
+    }
+  } else {
+    set relay1 = 0
+  }
+  halt
+}"

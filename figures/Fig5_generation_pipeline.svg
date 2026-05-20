@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="430" viewBox="0 0 1400 430">
+  <defs>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #111; }
+      .label { font: 600 18px Arial, sans-serif; fill: #111; }
+      .small { font: 14px Arial, sans-serif; fill: #444; }
+      .box1 { fill: #eef6ff; stroke: #1f78d1; stroke-width: 2; rx: 12; ry: 12; }
+      .box2 { fill: #f7f8fb; stroke: #2c3e50; stroke-width: 2; rx: 12; ry: 12; }
+      .box3 { fill: #f5fff1; stroke: #2f8f2f; stroke-width: 2; rx: 12; ry: 12; }
+      .warn { fill: #fff9e8; stroke: #c28a00; stroke-width: 2; rx: 12; ry: 12; }
+      .arrow { stroke: #333; stroke-width: 3; fill: none; marker-end: url(#m); }
+      .back { stroke: #c0392b; stroke-width: 3; fill: none; stroke-dasharray: 8 6; marker-end: url(#r); }
+    </style>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#333"/>
+    </marker>
+    <marker id="r" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#c0392b"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="45" class="title">Fig.5  LLM to M-bytecode Generation and Repair Pipeline</text>
+
+  <rect x="40" y="120" width="170" height="90" class="box1"/>
+  <text x="70" y="160" class="label">Task Prompt</text>
+  <text x="55" y="188" class="small">natural language goal,</text>
+  <text x="55" y="206" class="small">device schema, constraints</text>
+
+  <rect x="260" y="120" width="170" height="90" class="box1"/>
+  <text x="312" y="160" class="label">LLM</text>
+  <text x="285" y="188" class="small">structured generation</text>
+  <text x="302" y="206" class="small">to M-IR</text>
+
+  <rect x="480" y="120" width="170" height="90" class="box2"/>
+  <text x="530" y="160" class="label">M-IR</text>
+  <text x="500" y="188" class="small">textual / AST-like</text>
+  <text x="515" y="206" class="small">control program</text>
+
+  <rect x="700" y="120" width="170" height="90" class="box2"/>
+  <text x="733" y="160" class="label">Compiler</text>
+  <text x="723" y="188" class="small">IR lowering +</text>
+  <text x="715" y="206" class="small">bytecode encoding</text>
+
+  <rect x="920" y="120" width="170" height="90" class="box3"/>
+  <text x="956" y="160" class="label">Verifier</text>
+  <text x="948" y="188" class="small">opcode / varint /</text>
+  <text x="945" y="206" class="small">bounds / capability</text>
+
+  <rect x="1140" y="120" width="170" height="90" class="box3"/>
+  <text x="1194" y="160" class="label">MVM</text>
+  <text x="1160" y="188" class="small">bounded execution</text>
+  <text x="1164" y="206" class="small">on MCU hardware</text>
+
+  <path d="M210 165 L250 165" class="arrow"/>
+  <path d="M430 165 L470 165" class="arrow"/>
+  <path d="M650 165 L690 165" class="arrow"/>
+  <path d="M870 165 L910 165" class="arrow"/>
+  <path d="M1090 165 L1130 165" class="arrow"/>
+
+  <rect x="930" y="280" width="220" height="85" class="warn"/>
+  <text x="973" y="317" class="label">Feedback</text>
+  <text x="952" y="340" class="small">verify error / fault code /</text>
+  <text x="958" y="358" class="small">readback mismatch / timeout</text>
+
+  <path d="M1140 220 C1140 260, 1080 285, 1060 285" class="arrow"/>
+  <path d="M930 322 C760 395, 470 395, 345 220" class="back"/>
+  <text x="620" y="386" class="small">structured repair loop</text>
+</svg>

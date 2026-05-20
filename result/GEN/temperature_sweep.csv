@@ -1,0 +1,5176 @@
+﻿task_id,temperature,run,ir_valid,compile_pass,verify_pass,execution_pass,task_success,mir
+V2_001,0.6,1,True,True,True,True,True,"task V2_001 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+V2_002,0.6,1,True,True,True,True,True,"task V2_002 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+V2_003,0.6,1,True,True,True,True,True,"task V2_003 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}"
+V2_004,0.6,1,True,True,True,True,True,"task V2_004 {
+  require cap(relay2)
+  set relay2 = 0
+  halt
+}"
+V2_005,0.6,1,True,True,True,True,True,"task V2_005 {
+    require cap(relay1)
+    read relay1
+    halt
+}"
+V2_006,0.6,1,True,True,True,True,True,"task V2_006 {
+  require cap(relay2)
+  read relay2
+  halt
+}"
+V2_007,0.6,1,True,True,True,True,True,"task V2_007 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_008,0.6,1,True,True,True,True,True,"task V2_008 {
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_009,0.6,1,True,True,True,True,True,"task V2_009 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_010,0.6,1,True,True,True,True,False,"task V2_010 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 50ms
+    set relay1 = 0
+    halt
+}"
+V2_011,0.6,1,True,True,True,True,False,"task V2_011 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    set relay1 = 0
+    halt
+}"
+V2_012,0.6,1,True,True,True,True,True,"task V2_012 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 200ms
+    halt
+}"
+V2_013,0.6,1,True,True,True,True,True,"task V2_013 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 500ms
+  halt
+}"
+V2_014,0.6,1,True,True,True,True,True,"task V2_014 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 50ms
+    halt
+}"
+V2_015,0.6,1,True,True,True,True,True,"task V2_015 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 100ms
+    halt
+}"
+V2_016,0.6,1,True,True,True,True,True,"task V2_016 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  halt
+}"
+V2_017,0.6,1,True,True,True,True,True,"task V2_017 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 500ms
+    halt
+}"
+V2_018,0.6,1,True,True,True,True,True,"task V2_018 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  halt
+}"
+V2_019,0.6,1,True,True,True,True,True,"task V2_019 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    halt
+}"
+V2_020,0.6,1,True,True,True,True,True,"task V2_020 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 200ms
+  halt
+}"
+V2_021,0.6,1,True,True,True,True,True,"task V2_021 {
+require cap(relay2)
+set relay2 = 1
+wait 500ms
+halt
+}"
+V2_022,0.6,1,True,True,True,True,True,"task V2_022 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 50ms
+  halt
+}"
+V2_023,0.6,1,True,True,True,True,True,"task V2_023 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 100ms
+    halt
+}"
+V2_024,0.6,1,True,True,True,True,False,"task V2_024 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    halt
+}"
+V2_025,0.6,1,True,True,True,True,True,"task V2_025 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 500ms
+    halt
+}"
+V2_026,0.6,1,True,True,True,True,True,"task V2_026 {
+    require cap(water_sensor)
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_027,0.6,1,True,True,True,True,True,"task V2_027 {
+    require cap(water_sensor)
+    wait 200ms
+    read water_sensor
+    halt
+}"
+V2_028,0.6,1,True,True,True,True,True,"task V2_028 {
+    require cap(water_sensor)
+    wait 500ms
+    read water_sensor
+    halt
+}"
+V2_029,0.6,1,True,True,True,True,True,"task V2_029 {
+    require cap(water_sensor)
+    wait 1000ms
+    read water_sensor
+    halt
+}"
+V2_030,0.6,1,True,True,True,True,True,"task V2_030 {
+  require cap(temperature_sensor)
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+V2_031,0.6,1,True,True,True,True,True,"task V2_031 {
+    require cap(temperature_sensor)
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+V2_032,0.6,1,True,True,True,True,True,"task V2_032 {
+    require cap(temperature_sensor)
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_033,0.6,1,True,True,True,True,True,"task V2_033 {
+    require cap(temperature_sensor)
+    wait 1000ms
+    read temperature_sensor
+    halt
+}"
+V2_034,0.6,1,True,True,True,True,True,"task V2_034 {
+    require cap(humidity_sensor)
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_035,0.6,1,True,True,True,True,True,"task V2_035 {
+  require cap(humidity_sensor)
+  wait 200ms
+  read humidity_sensor
+  halt
+}"
+V2_036,0.6,1,True,True,True,True,True,"task V2_036 {
+    require cap(humidity_sensor)
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_037,0.6,1,True,True,True,True,True,"task V2_037 {
+    require cap(humidity_sensor)
+    wait 1000ms
+    read humidity_sensor
+    halt
+}"
+V2_038,0.6,1,True,True,True,True,True,"task V2_038 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 50ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_039,0.6,1,True,True,True,True,True,"task V2_039 {
+    require cap(relay1)
+    require cap(water_sensor)
+
+    set relay1 = 1
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_040,0.6,1,True,True,True,True,True,"task V2_040 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  set relay1 = 1
+  wait 200ms
+  read water_sensor
+  halt
+}"
+V2_041,0.6,1,True,True,True,True,True,"task V2_041 { 
+require cap(relay1) 
+require cap(water_sensor) 
+
+set relay1 = 1 
+wait 500ms 
+read water_sensor 
+halt 
+}"
+V2_042,0.6,1,True,True,True,True,True,"task V2_042 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 50ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_043,0.6,1,True,True,True,True,True,"task V2_043 {
+    require cap(relay1)
+    require cap(water_sensor)
+
+    set relay1 = 0
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_044,0.6,1,True,True,True,True,True,"task V2_044 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_045,0.6,1,True,True,True,True,True,"task V2_045 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  set relay1 = 0
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_046,0.6,1,True,True,True,True,True,"task V2_046 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 1
+
+    wait 50ms
+
+    read temperature_sensor
+
+    halt
+}"
+V2_047,0.6,1,True,True,True,True,True,"task V2_047 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 1
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+V2_048,0.6,1,True,True,True,True,True,"task V2_048 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_049,0.6,1,True,True,True,True,True,"task V2_049 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    
+    set relay1 = 1
+    
+    wait 500ms
+    
+    read temperature_sensor
+    
+    halt
+}"
+V2_050,0.6,1,True,True,True,True,True,"task V2_050 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+V2_051,0.6,1,True,True,True,True,True,"task V2_051 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    
+    set relay1 = 0
+    wait 100ms
+    
+    read temperature_sensor
+    
+    halt
+}"
+V2_052,0.6,1,True,True,True,True,True,"task V2_052 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_053,0.6,1,True,True,True,True,True,"task V2_053 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_054,0.6,1,True,True,True,True,True,"task V2_054 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 1
+
+    wait 50ms
+
+    read humidity_sensor
+
+    halt
+}"
+V2_055,0.6,1,True,True,True,True,True,"task V2_055 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_056,0.6,1,True,True,True,True,True,"task V2_056 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 1
+    wait 200ms
+    read humidity_sensor
+
+    halt
+}"
+V2_057,0.6,1,True,True,True,True,True,"task V2_057 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 1
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_058,0.6,1,True,True,True,True,True,"task V2_058 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 50ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_059,0.6,1,True,True,True,True,True,"task V2_059 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 100ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_060,0.6,1,True,True,True,True,True,"task V2_060 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 200ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_061,0.6,1,True,True,True,True,True,"task V2_061 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 0
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_062,0.6,1,True,True,True,True,True,"task V2_062 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 50ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_063,0.6,1,True,True,True,True,True,"task V2_063 {
+  require cap(relay2)
+  require cap(water_sensor)
+
+  set relay2 = 1
+  wait 100ms
+  read water_sensor
+  halt
+}"
+V2_064,0.6,1,True,True,True,True,True,"task V2_064 {
+    require cap(relay2)
+    require cap(water_sensor)
+    
+    set relay2 = 1
+    
+    wait 200ms
+    
+    read water_sensor
+    
+    halt
+}"
+V2_065,0.6,1,True,True,True,True,True,"task V2_065 {
+  require cap(relay2)
+  require cap(water_sensor)
+
+  set relay2 = 1
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_066,0.6,1,True,True,True,True,True,"task V2_066 {
+    require cap(relay2)
+    require cap(water_sensor)
+
+    set relay2 = 0
+
+    wait 50ms
+
+    read water_sensor
+
+    halt
+}"
+V2_067,0.6,1,True,True,True,True,True,"task V2_067 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 100ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_068,0.6,1,True,True,True,True,True,"task V2_068 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 200ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_069,0.6,1,True,False,False,False,False,"task V2_069 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_070,0.6,1,True,True,True,True,True,"task V2_070 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_071,0.6,1,True,True,True,True,True,"task V2_071 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_072,0.6,1,True,False,False,False,False,"task V2_072 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 200ms
+  read temperature_sensor
+  halt
+}"
+V2_073,0.6,1,True,True,True,True,True,"task V2_073 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+
+    set relay2 = 1
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_074,0.6,1,True,True,True,True,True,"task V2_074 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+
+    set relay2 = 0
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+V2_075,0.6,1,True,True,True,True,True,"task V2_075 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+
+  set relay2 = 0
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+V2_076,0.6,1,True,False,False,False,False,"task V2_076 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 200ms
+  read temperature_sensor
+  halt
+}"
+V2_077,0.6,1,True,True,True,True,True,"task V2_077 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+
+  set relay2 = 0
+  wait 500ms
+  read temperature_sensor
+  halt
+}"
+V2_078,0.6,1,True,True,True,True,True,"task V2_078 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_079,0.6,1,True,False,False,False,False,"task V2_079 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+V2_080,0.6,1,True,True,True,True,True,"task V2_080 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_081,0.6,1,True,True,True,True,True,"task V2_081 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 500ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_082,0.6,1,True,True,True,True,True,"task V2_082 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+
+  set relay2 = 0
+
+  wait 50ms
+
+  read humidity_sensor
+
+  halt
+}"
+V2_083,0.6,1,True,True,True,True,True,"task V2_083 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+
+    set relay2 = 0
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_084,0.6,1,True,True,True,True,True,"task V2_084 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+
+    set relay2 = 0
+    wait 200ms
+    read humidity_sensor
+    halt
+}"
+V2_085,0.6,1,True,False,False,False,False,"task V2_085 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_086,0.6,1,True,True,True,True,True,"task V2_086 {
+  require cap(relay1)
+  require cap(relay2)
+
+  read relay1
+  wait 100ms
+  read relay2
+  halt
+}"
+V2_087,0.6,1,True,True,True,True,True,"task V2_087 {
+    require cap(relay1)
+    require cap(water_sensor)
+    
+    read relay1
+    
+    wait 0ms
+    
+    read water_sensor
+    
+    halt
+}"
+V2_088,0.6,1,True,True,True,True,True,"task V2_088 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+
+  read relay1
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+V2_089,0.6,1,True,True,True,True,True,"task V2_089 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+
+  read relay1
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+V2_090,0.6,1,True,True,True,True,True,"task V2_090 {
+  require cap(relay2)
+  require cap(relay1)
+
+  read relay2
+  read relay1
+  halt
+}"
+V2_091,0.6,1,True,True,True,True,True,"task V2_091 {
+  require cap(relay2)
+  require cap(water_sensor)
+
+  read relay2
+  wait 100ms
+  read water_sensor
+  halt
+}"
+V2_092,0.6,1,False,False,False,False,False,"task V2_092 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+
+  read relay2
+  wait -> read temperature_sensor
+  halt
+}"
+V2_093,0.6,1,True,True,True,True,True,"task V2_093 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+
+  read relay2
+  wait 10ms
+  read humidity_sensor
+  halt
+}"
+V2_094,0.6,1,False,False,False,False,False,"task V2_094 {
+  require cap(water_sensor)
+  require cap(relay1)
+
+  read water_sensor
+  wait -> read relay1 -> halt
+}"
+V2_095,0.6,1,False,False,False,False,False,"task V2_095 {
+  require cap(water_sensor)
+  read water_sensor
+  wait -> read water_sensor
+  require cap(relay2)
+  read relay2
+}"
+V2_096,0.6,1,True,True,True,True,True,"task V2_096 {
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+
+  read water_sensor
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+V2_097,0.6,1,True,True,True,True,True,"task V2_097 {
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+
+  read water_sensor
+  wait 500ms
+  read humidity_sensor
+  halt
+}"
+V2_098,0.6,1,True,True,True,True,True,"task V2_098 {
+  require cap(temperature_sensor)
+  require cap(relay1)
+
+  read temperature_sensor
+  read relay1
+  halt
+}"
+V2_099,0.6,1,True,True,True,True,True,"task V2_099 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  wait 10ms
+  require cap(relay2)
+  read relay2
+  halt
+}"
+V2_100,0.6,1,False,False,False,False,False,"task V2_100 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  wait -> read temperature_sensor -> halt
+  
+  require cap(water_sensor)
+  read water_sensor
+  wait -> read water_sensor -> halt
+}"
+V2_101,0.6,1,True,True,True,True,True,"task V2_101 {
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+
+  read temperature_sensor
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+V2_102,0.6,1,True,True,True,True,True,"task V2_102 {
+  require cap(humidity_sensor)
+  require cap(relay1)
+  read humidity_sensor
+  wait 1000ms
+  read relay1
+  halt
+}"
+V2_103,0.6,1,False,False,False,False,False,"task V2_103 {
+  require cap(humidity_sensor)
+  require cap(relay2)
+  read humidity_sensor
+  wait -> read relay2
+  halt
+}"
+V2_104,0.6,1,True,True,True,True,True,"task V2_104 {
+  require cap(humidity_sensor)
+  require cap(water_sensor)
+
+  read humidity_sensor
+  wait 100ms
+  read water_sensor
+  halt
+}"
+V2_105,0.6,1,True,True,True,True,True,"task V2_105 {
+  require cap(humidity_sensor)
+  require cap(temperature_sensor)
+
+  read humidity_sensor
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+V2_106,0.6,1,True,True,True,True,True,"task V2_106 {
+    require cap(relay1)
+    
+    set relay1 = 1
+    
+    wait 50ms
+    
+    set relay1 = 0
+    
+    halt
+}"
+V2_107,0.6,1,True,True,True,True,True,"task V2_107 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  set relay1 = 0
+  halt
+}"
+V2_108,0.6,1,True,True,True,True,True,"task V2_108 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 200ms
+    set relay1 = 0
+    halt
+}"
+V2_109,0.6,1,True,True,True,True,True,"task V2_109 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    set relay1 = 0
+    halt
+}"
+V2_110,0.6,1,True,True,True,True,True,"task V2_110 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  set relay2 = 0
+  halt
+}"
+V2_111,0.6,1,True,True,True,True,True,"task V2_111 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    set relay2 = 0
+    halt
+}"
+V2_112,0.6,1,True,True,True,True,True,"task V2_112 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    set relay2 = 0
+    halt
+}"
+V2_113,0.6,1,True,True,True,True,True,"task V2_113 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 500ms
+    set relay2 = 0
+    halt
+}"
+V2_001,0.6,2,True,True,True,True,True,"task V2_001 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+V2_002,0.6,2,True,True,True,True,True,"task V2_002 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+V2_003,0.6,2,True,True,True,True,True,"task V2_003 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}"
+V2_004,0.6,2,True,True,True,True,True,"task V2_004 {
+  require cap(relay2)
+  set relay2 = 0
+  halt
+}"
+V2_005,0.6,2,True,True,True,True,True,"task V2_005 {
+  require cap(relay1)
+  read relay1
+  halt
+}"
+V2_006,0.6,2,True,True,True,True,True,"task V2_006 {
+    require cap(relay2)
+    read relay2
+    halt
+}"
+V2_007,0.6,2,True,True,True,True,True,"task V2_007 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_008,0.6,2,True,True,True,True,True,"task V2_008 {
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_009,0.6,2,True,True,True,True,True,"task V2_009 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_010,0.6,2,True,True,True,True,False,"task V2_010 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 50ms
+    set relay1 = 0
+    halt
+}"
+V2_011,0.6,2,True,True,True,True,True,"task V2_011 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  halt
+}"
+V2_012,0.6,2,True,True,True,True,True,"task V2_012 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 200ms
+    halt
+}"
+V2_013,0.6,2,True,True,True,True,True,"task V2_013 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    halt
+}"
+V2_014,0.6,2,True,True,True,True,True,"task V2_014 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 50ms
+  halt
+}"
+V2_015,0.6,2,True,True,True,True,True,"task V2_015 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  halt
+}"
+V2_016,0.6,2,False,False,False,False,False,"task V2_016 {
+  require cap(relay1)
+  set relay1 = 0
+  wait -> read 
+  halt
+}"
+V2_017,0.6,2,True,True,True,True,True,"task V2_017 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 500ms
+    halt
+}"
+V2_018,0.6,2,True,True,True,True,False,"task V2_018 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  set relay2 = 0
+  halt
+}"
+V2_019,0.6,2,True,True,True,True,True,"task V2_019 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    halt
+}"
+V2_020,0.6,2,True,True,True,True,True,"task V2_020 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 200ms
+  halt
+}"
+V2_021,0.6,2,True,True,True,True,False,"task V2_021 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  halt
+}"
+V2_022,0.6,2,True,True,True,True,True,"task V2_022 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    halt
+}"
+V2_023,0.6,2,True,True,True,True,True,"task V2_023 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 100ms
+  halt
+}"
+V2_024,0.6,2,True,True,True,True,True,"task V2_024 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 200ms
+  halt
+}"
+V2_025,0.6,2,True,True,True,True,True,"task V2_025 {
+require cap(relay2)
+set relay2 = 0
+wait 500ms
+halt
+}"
+V2_026,0.6,2,True,True,True,True,True,"task V2_026 {
+    require cap(water_sensor)
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_027,0.6,2,True,True,True,True,True,"task V2_027 {
+    require cap(water_sensor)
+    wait 200ms
+    read water_sensor
+    halt
+}"
+V2_028,0.6,2,True,True,True,True,True,"task V2_028 {
+    require cap(water_sensor)
+    wait 500ms
+    read water_sensor
+    halt
+}"
+V2_029,0.6,2,True,True,True,True,True,"task V2_029 {
+  require cap(water_sensor)
+  wait 1000ms
+  read water_sensor
+  halt
+}"
+V2_030,0.6,2,True,True,True,True,True,"task V2_030 {
+    require cap(temperature_sensor)
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+V2_031,0.6,2,True,True,True,True,True,"task V2_031 {
+  require cap(temperature_sensor)
+  wait 200ms
+  read temperature_sensor
+  halt
+}"
+V2_032,0.6,2,True,True,True,True,True,"task V2_032 {
+  require cap(temperature_sensor)
+  wait 500ms
+  read temperature_sensor
+  halt
+}"
+V2_033,0.6,2,True,True,True,True,True,"task V2_033 {
+    require cap(temperature_sensor)
+    wait 1000ms
+    read temperature_sensor
+    halt
+}"
+V2_034,0.6,2,True,True,True,True,True,"task V2_034 {
+  require cap(humidity_sensor)
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+V2_035,0.6,2,True,True,True,True,True,"task V2_035 {
+    require cap(humidity_sensor)
+    wait 200ms
+    read humidity_sensor
+    halt
+}"
+V2_036,0.6,2,True,True,True,True,True,"task V2_036 {
+    require cap(humidity_sensor)
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_037,0.6,2,True,True,True,True,True,"task V2_037 {
+    require cap(humidity_sensor)
+    wait 1000ms
+    read humidity_sensor
+    halt
+}"
+V2_038,0.6,2,True,True,True,True,True,"task V2_038 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 50ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_039,0.6,2,True,True,True,True,True,"task V2_039 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 1
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_040,0.6,2,True,True,True,True,True,"task V2_040 {
+    require cap(relay1)
+    require cap(water_sensor)
+
+    set relay1 = 1
+    wait 200ms
+    read water_sensor
+    halt
+}"
+V2_041,0.6,2,True,True,True,True,True,"task V2_041 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_042,0.6,2,True,True,True,True,True,"task V2_042 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  set relay1 = 0
+
+  wait 50ms
+  read water_sensor
+  halt
+}"
+V2_043,0.6,2,True,True,True,True,True,"task V2_043 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  set relay1 = 0
+  wait 100ms
+  read water_sensor
+  halt
+}"
+V2_044,0.6,2,True,True,True,True,True,"task V2_044 {
+require cap(relay1)
+set relay1 = 0
+wait 200ms
+require cap(water_sensor)
+read water_sensor
+halt
+}"
+V2_045,0.6,2,True,False,False,False,False,"task V2_045 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_046,0.6,2,True,True,True,True,True,"task V2_046 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_047,0.6,2,True,True,True,True,True,"task V2_047 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_048,0.6,2,True,True,True,True,True,"task V2_048 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 1
+    wait 200ms
+    read temperature_sensor
+
+    halt
+}"
+V2_049,0.6,2,True,True,True,True,True,"task V2_049 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 1
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_050,0.6,2,True,True,True,True,True,"task V2_050 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 50ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_051,0.6,2,True,True,True,True,True,"task V2_051 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+V2_052,0.6,2,True,True,True,True,True,"task V2_052 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+V2_053,0.6,2,True,True,True,True,True,"task V2_053 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+
+    wait 500ms
+    read temperature_sensor
+
+    halt
+}"
+V2_054,0.6,2,True,True,True,True,True,"task V2_054 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+
+  set relay1 = 1
+  wait 50ms
+  read humidity_sensor
+  halt
+}"
+V2_055,0.6,2,True,True,True,True,True,"task V2_055 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 1
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_056,0.6,2,True,True,True,True,True,"task V2_056 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 1
+    wait 200ms
+    read humidity_sensor
+    halt
+}"
+V2_057,0.6,2,True,True,True,True,True,"task V2_057 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 1
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_058,0.6,2,True,True,True,True,True,"task V2_058 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 50ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_059,0.6,2,True,True,True,True,True,"task V2_059 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+
+  set relay1 = 0
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+V2_060,0.6,2,True,True,True,True,True,"task V2_060 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 0
+    wait 200ms
+    read humidity_sensor
+
+    halt
+}"
+V2_061,0.6,2,True,True,True,True,True,"task V2_061 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 0
+  wait 500ms
+  read humidity_sensor
+  halt
+}"
+V2_062,0.6,2,True,True,True,True,True,"task V2_062 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_063,0.6,2,True,True,True,True,True,"task V2_063 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_064,0.6,2,True,True,True,True,True,"task V2_064 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_065,0.6,2,True,True,True,True,True,"task V2_065 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_066,0.6,2,True,True,True,True,True,"task V2_066 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_067,0.6,2,True,True,True,True,True,"task V2_067 {
+  require cap(relay2)
+  require cap(water_sensor)
+
+  set relay2 = 0
+  wait 100ms
+  read water_sensor
+  halt
+}"
+V2_068,0.6,2,True,False,False,False,False,"task V2_068 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 200ms
+    read water_sensor
+    halt
+}"
+V2_069,0.6,2,True,True,True,True,True,"task V2_069 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 500ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_070,0.6,2,True,False,False,False,False,"task V2_070 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+V2_071,0.6,2,True,True,True,True,True,"task V2_071 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  set relay2 = 1
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+V2_072,0.6,2,True,True,True,True,True,"task V2_072 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_073,0.6,2,True,True,True,True,True,"task V2_073 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+
+  set relay2 = 1
+  wait 500ms
+  read temperature_sensor
+  halt
+}"
+V2_074,0.6,2,True,True,True,True,True,"task V2_074 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_075,0.6,2,True,True,True,True,True,"task V2_075 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+
+    set relay2 = 0
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+V2_076,0.6,2,True,True,True,True,True,"task V2_076 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 200ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_077,0.6,2,True,True,True,True,True,"task V2_077 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+
+    set relay2 = 0
+    wait 500ms
+    read temperature_sensor
+
+    halt
+}"
+V2_078,0.6,2,True,True,True,True,True,"task V2_078 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 50ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_079,0.6,2,True,True,True,True,True,"task V2_079 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+
+    set relay2 = 1
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_080,0.6,2,True,True,True,True,True,"task V2_080 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+
+  set relay2 = 1
+  wait 200ms
+  read humidity_sensor
+  halt
+}"
+V2_081,0.6,2,True,True,True,True,True,"task V2_081 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 500ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_082,0.6,2,True,True,True,True,True,"task V2_082 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+
+    set relay2 = 0
+    wait 50ms
+    read humidity_sensor
+    halt
+}"
+V2_083,0.6,2,True,True,True,True,True,"task V2_083 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+
+    set relay2 = 0
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_084,0.6,2,True,True,True,True,True,"task V2_084 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 200ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_085,0.6,2,True,True,True,True,True,"task V2_085 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 500ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_086,0.6,2,True,True,True,True,True,"task V2_086 {
+  require cap(relay1)
+  require cap(relay2)
+  read relay1
+  wait 0ms
+  read relay2
+  halt
+}"
+V2_087,0.6,2,True,True,True,True,True,"task V2_087 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  read relay1
+  wait 100ms
+  read water_sensor
+  halt
+}"
+V2_088,0.6,2,False,False,False,False,False,"task V2_088 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+
+  read relay1
+  wait -> 
+  read temperature_sensor
+  halt
+}"
+V2_089,0.6,2,True,True,True,True,True,"task V2_089 {
+  require cap(relay1)
+  read relay1
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_090,0.6,2,True,True,True,True,True,"task V2_090 {
+  require cap(relay2)
+  require cap(relay1)
+
+  read relay2
+  wait 100ms
+  read relay1
+  halt
+}"
+V2_091,0.6,2,True,True,True,True,True,"task V2_091 {
+  require cap(relay2)
+  require cap(water_sensor)
+  read relay2
+  wait 1000ms
+  read water_sensor
+  halt
+}"
+V2_092,0.6,2,True,True,True,True,True,"task V2_092 {
+  require cap(relay2)
+  read relay2
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_093,0.6,2,True,True,True,True,True,"task V2_093 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+
+  read relay2
+  wait 1000ms
+  read humidity_sensor
+  halt
+}"
+V2_094,0.6,2,True,True,True,True,True,"task V2_094 {
+  require cap(water_sensor)
+  require cap(relay1)
+  read water_sensor
+  wait 500ms
+  read relay1
+  halt
+}"
+V2_095,0.6,2,True,True,True,True,True,"task V2_095 {
+  require cap(water_sensor)
+  read water_sensor
+  require cap(relay2)
+  read relay2
+  halt
+}"
+V2_096,0.6,2,True,True,True,True,True,"task V2_096 {
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+
+  read water_sensor
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+V2_097,0.6,2,True,True,True,True,True,"task V2_097 {
+  require cap(water_sensor)
+  read water_sensor
+  wait 1000ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_098,0.6,2,True,True,True,True,True,"task V2_098 {
+  require cap(temperature_sensor)
+  require cap(relay1)
+  
+  read temperature_sensor
+  wait 0ms
+  read relay1
+  
+  halt
+}"
+V2_099,0.6,2,True,True,True,True,True,"task V2_099 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  require cap(relay2)
+  read relay2
+  halt
+}"
+V2_100,0.6,2,True,True,True,True,True,"task V2_100 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  wait 10ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_101,0.6,2,True,True,True,True,True,"task V2_101 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_102,0.6,2,True,True,True,True,True,"task V2_102 {
+  require cap(humidity_sensor)
+  require cap(relay1)
+  read humidity_sensor
+  read relay1
+  halt
+}"
+V2_103,0.6,2,False,False,False,False,False,"task V2_103 {
+  require cap(humidity_sensor)
+  require cap(relay2)
+
+  read humidity_sensor
+  wait -> 
+  read relay2
+  halt
+}"
+V2_104,0.6,2,True,True,True,True,True,"task V2_104 {
+  require cap(humidity_sensor)
+  require cap(water_sensor)
+
+  read humidity_sensor
+  wait 10ms
+  read water_sensor
+  halt
+}"
+V2_105,0.6,2,True,True,True,True,True,"task V2_105 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  wait 500ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_106,0.6,2,True,True,True,True,True,"task V2_106 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 50ms
+    set relay1 = 0
+    halt
+}"
+V2_107,0.6,2,True,True,True,True,True,"task V2_107 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    set relay1 = 0
+    halt
+}"
+V2_108,0.6,2,True,True,True,True,True,"task V2_108 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 200ms
+    set relay1 = 0
+    halt
+}"
+V2_109,0.6,2,True,True,True,True,True,"task V2_109 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    set relay1 = 0
+    halt
+}"
+V2_110,0.6,2,True,True,True,True,True,"task V2_110 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  set relay2 = 0
+  halt
+}"
+V2_111,0.6,2,True,True,True,True,True,"task V2_111 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    set relay2 = 0
+    halt
+}"
+V2_112,0.6,2,True,True,True,True,True,"task V2_112 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    set relay2 = 0
+    halt
+}"
+V2_113,0.6,2,True,True,True,True,True,"task V2_113 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  halt
+}"
+V2_001,0.6,3,True,True,True,True,True,"task V2_001 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+V2_002,0.6,3,True,True,True,True,True,"task V2_002 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+V2_003,0.6,3,True,True,True,True,True,"task V2_003 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}"
+V2_004,0.6,3,True,True,True,True,True,"task V2_004 {
+  require cap(relay2)
+  set relay2 = 0
+  halt
+}"
+V2_005,0.6,3,True,True,True,True,True,"task V2_005 {
+    require cap(relay1)
+    read relay1
+    halt
+}"
+V2_006,0.6,3,True,True,True,True,True,"task V2_006 {
+  require cap(relay2)
+  read relay2
+  halt
+}"
+V2_007,0.6,3,True,True,True,True,True,"task V2_007 {
+    require cap(water_sensor)
+    read water_sensor
+}"
+V2_008,0.6,3,True,True,True,True,True,"task V2_008 {
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_009,0.6,3,True,True,True,True,True,"task V2_009 {
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_010,0.6,3,True,True,True,True,True,"task V2_010 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  halt
+}"
+V2_011,0.6,3,True,True,True,True,True,"task V2_011 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    halt
+}"
+V2_012,0.6,3,True,True,True,True,True,"task V2_012 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 200ms
+    halt
+}"
+V2_013,0.6,3,True,True,True,True,True,"task V2_013 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 500ms
+  halt
+}"
+V2_014,0.6,3,True,True,True,True,True,"task V2_014 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 50ms
+    halt
+}"
+V2_015,0.6,3,True,True,True,True,True,"task V2_015 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 100ms
+    halt
+}"
+V2_016,0.6,3,True,True,True,True,True,"task V2_016 {
+require cap(relay1)
+
+set relay1 = 0
+wait 200ms
+halt
+}"
+V2_017,0.6,3,True,True,True,True,True,"task V2_017 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 500ms
+    halt
+}"
+V2_018,0.6,3,True,True,True,True,False,"task V2_018 {
+require cap(relay2)
+set relay2 = 1
+wait 50ms
+set relay2 = 0
+halt
+}"
+V2_019,0.6,3,True,True,True,True,True,"task V2_019 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    halt
+}"
+V2_020,0.6,3,True,True,True,True,True,"task V2_020 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 200ms
+  halt
+}"
+V2_021,0.6,3,True,True,True,True,True,"task V2_021 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  halt
+}"
+V2_022,0.6,3,True,True,True,True,True,"task V2_022 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    halt
+}"
+V2_023,0.6,3,True,True,True,True,False,"task V2_023 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  halt
+}"
+V2_024,0.6,3,True,True,True,True,True,"task V2_024 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 200ms
+  halt
+}"
+V2_025,0.6,3,True,True,True,True,True,"task V2_025 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 500ms
+    halt
+}"
+V2_026,0.6,3,True,True,True,True,True,"task V2_026 {
+    require cap(water_sensor)
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_027,0.6,3,True,True,True,True,True,"task V2_027 {
+  require cap(water_sensor)
+  wait 200ms
+  read water_sensor
+  halt
+}"
+V2_028,0.6,3,True,True,True,True,True,"task V2_028 {
+  require cap(water_sensor)
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_029,0.6,3,True,True,True,True,True,"task V2_029 {
+    require cap(water_sensor)
+    wait 1000ms
+    read water_sensor
+    halt
+}"
+V2_030,0.6,3,True,True,True,True,True,"task V2_030 {
+    require cap(temperature_sensor)
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+V2_031,0.6,3,True,True,True,True,True,"task V2_031 {
+  require cap(temperature_sensor)
+  wait 200ms
+  read temperature_sensor
+  halt
+}"
+V2_032,0.6,3,True,True,True,True,True,"task V2_032 {
+    require cap(temperature_sensor)
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_033,0.6,3,True,True,True,True,True,"task V2_033 {
+    require cap(temperature_sensor)
+    wait 1000ms
+    read temperature_sensor
+    halt
+}"
+V2_034,0.6,3,True,True,True,True,True,"task V2_034 {
+  require cap(humidity_sensor)
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+V2_035,0.6,3,True,True,True,True,True,"task V2_035 {
+    require cap(humidity_sensor)
+    wait 200ms
+    read humidity_sensor
+    halt
+}"
+V2_036,0.6,3,True,True,True,True,True,"task V2_036 {
+    require cap(humidity_sensor)
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_037,0.6,3,True,True,True,True,True,"task V2_037 {
+require cap(humidity_sensor)
+wait 1000ms
+read humidity_sensor
+halt
+}"
+V2_038,0.6,3,True,True,True,True,True,"task V2_038 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 50ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_039,0.6,3,True,True,True,True,True,"task V2_039 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  set relay1 = 1
+  wait 100ms
+  read water_sensor
+  halt
+}"
+V2_040,0.6,3,True,True,True,True,True,"task V2_040 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  set relay1 = 1
+  wait 200ms
+  read water_sensor
+  halt
+}"
+V2_041,0.6,3,True,True,True,True,True,"task V2_041 {
+    require cap(relay1)
+    require cap(water_sensor)
+
+    set relay1 = 1
+    wait 500ms
+    read water_sensor
+    halt
+}"
+V2_042,0.6,3,True,True,True,True,True,"task V2_042 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 50ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_043,0.6,3,True,True,True,True,True,"task V2_043 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 0
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_044,0.6,3,True,True,True,True,True,"task V2_044 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_045,0.6,3,True,True,True,True,True,"task V2_045 {
+    require cap(relay1)
+    require cap(water_sensor)
+
+    set relay1 = 0
+    wait 500ms
+    read water_sensor
+    halt
+}"
+V2_046,0.6,3,True,True,True,True,True,"task V2_046 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 1
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+V2_047,0.6,3,True,True,True,True,True,"task V2_047 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 1
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+V2_048,0.6,3,True,True,True,True,True,"task V2_048 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 1
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+V2_049,0.6,3,True,True,True,True,True,"task V2_049 {
+require cap(relay1)
+require cap(temperature_sensor)
+
+set relay1 = 1
+
+wait 500ms
+
+read temperature_sensor
+
+halt
+}"
+V2_050,0.6,3,True,True,True,True,True,"task V2_050 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+
+    wait 50ms
+
+    read temperature_sensor
+
+    halt
+}"
+V2_051,0.6,3,True,True,True,True,True,"task V2_051 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_052,0.6,3,True,True,True,True,True,"task V2_052 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+V2_053,0.6,3,True,True,True,True,True,"task V2_053 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_054,0.6,3,True,True,True,True,True,"task V2_054 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_055,0.6,3,True,True,True,True,True,"task V2_055 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    set relay1 = 1
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_056,0.6,3,True,True,True,True,True,"task V2_056 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+
+  set relay1 = 1
+  wait 200ms
+  read humidity_sensor
+  halt
+}"
+V2_057,0.6,3,True,True,True,True,True,"task V2_057 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    
+    set relay1 = 1
+    
+    wait 500ms
+    
+    read humidity_sensor
+    
+    halt
+}"
+V2_058,0.6,3,True,True,True,True,True,"task V2_058 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 50ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_059,0.6,3,True,True,True,True,True,"task V2_059 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 0
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_060,0.6,3,True,True,True,True,True,"task V2_060 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+
+  set relay1 = 0
+
+  wait 200ms
+  read humidity_sensor
+
+  halt
+}"
+V2_061,0.6,3,True,True,True,True,True,"task V2_061 {
+require cap(relay1)
+require cap(humidity_sensor)
+
+set relay1 = 0
+wait 500ms
+read humidity_sensor
+halt
+}"
+V2_062,0.6,3,True,True,True,True,True,"task V2_062 {
+    require cap(relay2)
+    require cap(water_sensor)
+
+    set relay2 = 1
+    wait 50ms
+    read water_sensor
+    halt
+}"
+V2_063,0.6,3,True,True,True,True,True,"task V2_063 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_064,0.6,3,True,False,False,False,False,"task V2_064 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    read water_sensor
+    halt
+}"
+V2_065,0.6,3,True,True,True,True,True,"task V2_065 {
+  require cap(relay2)
+  require cap(water_sensor)
+
+  set relay2 = 1
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_066,0.6,3,True,True,True,True,True,"task V2_066 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_067,0.6,3,True,True,True,True,True,"task V2_067 {
+    require cap(relay2)
+    require cap(water_sensor)
+
+    set relay2 = 0
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_068,0.6,3,True,False,False,False,False,"task V2_068 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 200ms
+  read water_sensor
+  halt
+}"
+V2_069,0.6,3,True,True,True,True,True,"task V2_069 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 500ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_070,0.6,3,True,True,True,True,True,"task V2_070 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_071,0.6,3,True,False,False,False,False,"task V2_071 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+V2_072,0.6,3,True,True,True,True,True,"task V2_072 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+
+    set relay2 = 1
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+V2_073,0.6,3,True,True,True,True,True,"task V2_073 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 500ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_074,0.6,3,True,True,True,True,True,"task V2_074 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_075,0.6,3,True,True,True,True,True,"task V2_075 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 100ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_076,0.6,3,True,True,True,True,True,"task V2_076 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 200ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_077,0.6,3,True,True,True,True,True,"task V2_077 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 500ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_078,0.6,3,True,True,True,True,True,"task V2_078 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 50ms
+    read humidity_sensor
+    halt
+}"
+V2_079,0.6,3,True,True,True,True,True,"task V2_079 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_080,0.6,3,True,True,True,True,True,"task V2_080 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_081,0.6,3,True,True,True,True,True,"task V2_081 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+
+    set relay2 = 1
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_082,0.6,3,True,True,True,True,True,"task V2_082 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+
+    set relay2 = 0
+    wait 50ms
+    read humidity_sensor
+    halt
+}"
+V2_083,0.6,3,True,True,True,True,True,"task V2_083 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+
+    set relay2 = 0
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_084,0.6,3,False,False,False,False,False,"task V2_084 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    
+    set relay2 = 0
+    
+    wait 200ms
+    
+    read humidity_sensor
+}
+
+halt"
+V2_085,0.6,3,True,True,True,True,True,"task V2_085 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 500ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_086,0.6,3,True,True,True,True,True,"task V2_086 {
+  require cap(relay1)
+  require cap(relay2)
+
+  read relay1
+  wait 0ms
+  halt
+}
+
+task V2_086 {
+  require cap(relay1)
+  require cap(relay2)
+
+  read relay2
+  wait 0ms
+  halt
+}"
+V2_087,0.6,3,True,True,True,True,True,"task V2_087 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  read relay1
+  wait 10ms
+  read water_sensor
+  halt
+}"
+V2_088,0.6,3,True,True,True,True,True,"task V2_088 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+
+  read relay1
+  wait 10ms
+  read temperature_sensor
+  halt
+}"
+V2_089,0.6,3,True,True,True,True,True,"task V2_089 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  
+  read relay1
+  read humidity_sensor
+  
+  halt
+}"
+V2_090,0.6,3,False,False,False,False,False,"task V2_090 {
+  require cap(relay2)
+  require cap(relay1)
+
+  read relay2
+  wait -> read relay1 -> halt
+}"
+V2_091,0.6,3,True,True,True,True,True,"task V2_091 {
+  require cap(relay2)
+  require cap(water_sensor)
+
+  read relay2
+  wait 0ms
+  read water_sensor
+  halt
+}"
+V2_092,0.6,3,True,True,True,True,True,"task V2_092 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+
+  read relay2
+  wait 10ms
+  read temperature_sensor
+  halt
+}"
+V2_093,0.6,3,True,True,True,True,True,"task V2_093 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  read relay2
+  wait 1000ms
+  read humidity_sensor
+  halt
+}"
+V2_094,0.6,3,True,True,True,True,True,"task V2_094 {
+  require cap(water_sensor)
+  require cap(relay1)
+
+  read water_sensor
+  wait 1000ms
+  read relay1
+  halt
+}"
+V2_095,0.6,3,True,True,True,True,True,"task V2_095 {
+  require cap(water_sensor)
+  require cap(relay2)
+
+  read water_sensor
+  wait 0ms
+  read relay2
+  halt
+}"
+V2_096,0.6,3,False,False,False,False,False,"task V2_096 {
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+
+  read water_sensor
+  wait -> read temperature_sensor
+  halt
+}"
+V2_097,0.6,3,True,True,True,True,True,"task V2_097 {
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+
+  read water_sensor
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+V2_098,0.6,3,True,True,True,True,True,"task V2_098 {
+  require cap(temperature_sensor)
+  require cap(relay1)
+
+  read temperature_sensor
+  wait 10ms
+  read relay1
+  halt
+}"
+V2_099,0.6,3,False,False,False,False,False,"task V2_099 {
+  require cap(temperature_sensor)
+  require cap(relay2)
+
+  read temperature_sensor
+  wait -> read temperature_sensor
+  read relay2
+  halt
+}"
+V2_100,0.6,3,True,True,True,True,True,"task V2_100 {
+  require cap(temperature_sensor)
+  require cap(water_sensor)
+
+  read temperature_sensor
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_101,0.6,3,True,True,True,True,True,"task V2_101 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  wait 100ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_102,0.6,3,True,True,True,True,True,"task V2_102 {
+  require cap(humidity_sensor)
+  require cap(relay1)
+
+  read humidity_sensor
+  wait 10ms
+  read relay1
+  halt
+}"
+V2_103,0.6,3,True,True,True,True,True,"task V2_103 {
+  require cap(humidity_sensor)
+  require cap(relay2)
+
+  read humidity_sensor
+  wait 100ms
+  read relay2
+  halt
+}"
+V2_104,0.6,3,True,True,True,True,True,"task V2_104 {
+  require cap(humidity_sensor)
+  require cap(water_sensor)
+
+  read humidity_sensor
+  wait 100ms
+  read water_sensor
+
+  halt
+}"
+V2_105,0.6,3,True,True,True,True,True,"task V2_105 {
+  require cap(humidity_sensor)
+  require cap(temperature_sensor)
+
+  read humidity_sensor
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+V2_106,0.6,3,True,True,True,True,True,"task V2_106 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 50ms
+    set relay1 = 0
+    halt
+}"
+V2_107,0.6,3,True,True,True,True,True,"task V2_107 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  set relay1 = 0
+  halt
+}"
+V2_108,0.6,3,True,True,True,True,True,"task V2_108 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 200ms
+    set relay1 = 0
+    halt
+}"
+V2_109,0.6,3,True,True,True,True,True,"task V2_109 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 500ms
+  set relay1 = 0
+  halt
+}"
+V2_110,0.6,3,True,True,True,True,True,"task V2_110 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  set relay2 = 0
+  halt
+}"
+V2_111,0.6,3,True,True,True,True,True,"task V2_111 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  set relay2 = 0
+  halt
+}"
+V2_112,0.6,3,True,True,True,True,True,"task V2_112 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    set relay2 = 0
+    halt
+}"
+V2_113,0.6,3,True,True,True,True,True,"task V2_113 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  halt
+}"
+V2_001,1.0,1,True,True,True,True,True,"task V2_001 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+V2_002,1.0,1,True,True,True,True,True,"task V2_002 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+V2_003,1.0,1,True,True,True,True,True,"task V2_003 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    halt
+}"
+V2_004,1.0,1,True,True,True,True,True,"task V2_004 {
+  require cap(relay2)
+  set relay2 = 0
+  halt
+}"
+V2_005,1.0,1,True,True,True,True,True,"task V2_005 {
+  require cap(relay1)
+  read relay1
+  halt
+}"
+V2_006,1.0,1,True,True,True,True,True,"task V2_006 {
+  require cap(relay2)
+  read relay2
+}"
+V2_007,1.0,1,True,True,True,True,True,"task V2_007 {
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_008,1.0,1,True,True,True,True,True,"task V2_008 {
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_009,1.0,1,True,True,True,True,True,"task V2_009 {
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_010,1.0,1,True,True,True,True,True,"task V2_010 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  halt
+}"
+V2_011,1.0,1,True,True,True,True,False,"task V2_011 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    set relay1 = 0
+    halt
+}"
+V2_012,1.0,1,True,True,True,True,True,"task V2_012 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  halt
+}"
+V2_013,1.0,1,True,True,True,True,True,"task V2_013 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    halt
+}"
+V2_014,1.0,1,True,True,True,True,True,"task V2_014 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 50ms
+  halt
+}"
+V2_015,1.0,1,True,True,True,True,True,"task V2_015 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  halt
+}"
+V2_016,1.0,1,True,True,True,True,True,"task V2_016 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  halt
+}"
+V2_017,1.0,1,True,True,True,True,True,"task V2_017 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 500ms
+  halt
+}"
+V2_018,1.0,1,True,True,True,True,False,"task V2_018 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 50ms
+    set relay2 = 0
+    halt
+}"
+V2_019,1.0,1,True,True,True,True,True,"task V2_019 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    halt
+}"
+V2_020,1.0,1,True,True,True,True,True,"task V2_020 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    halt
+}"
+V2_021,1.0,1,True,True,True,True,False,"task V2_021 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  halt
+}"
+V2_022,1.0,1,True,True,True,True,True,"task V2_022 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    halt
+}"
+V2_023,1.0,1,True,True,True,True,True,"task V2_023 {
+require cap(relay2)
+set relay2 = 0
+wait 100ms
+halt
+}"
+V2_024,1.0,1,True,True,True,True,True,"task V2_024 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 200ms
+    halt
+}"
+V2_025,1.0,1,True,True,True,True,True,"task V2_025 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 500ms
+  halt
+}"
+V2_026,1.0,1,True,True,True,True,True,"task V2_026 {
+require cap(water_sensor)
+wait 100ms
+read water_sensor
+halt
+}"
+V2_027,1.0,1,True,True,True,True,True,"task V2_027 {
+  require cap(water_sensor)
+  wait 200ms
+  read water_sensor
+  halt
+}"
+V2_028,1.0,1,True,True,True,True,True,"task V2_028 {
+  require cap(water_sensor)
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_029,1.0,1,True,True,True,True,True,"task V2_029 {
+    require cap(water_sensor)
+    wait 1000ms
+    read water_sensor
+    halt
+}"
+V2_030,1.0,1,True,True,True,True,True,"task V2_030 {
+  require cap(temperature_sensor)
+  
+  wait 100ms
+  read temperature_sensor
+  
+  halt
+}"
+V2_031,1.0,1,True,True,True,True,True,"task V2_031 {
+  require cap(temperature_sensor)
+  wait 200ms
+  read temperature_sensor
+  halt
+}"
+V2_032,1.0,1,True,True,True,True,True,"task V2_032 {
+  require cap(temperature_sensor)
+  wait 500ms
+  read temperature_sensor
+  halt
+}"
+V2_033,1.0,1,True,True,True,True,True,"task V2_033 {
+    require cap(temperature_sensor)
+    wait 1000ms
+    read temperature_sensor
+    halt
+}"
+V2_034,1.0,1,True,True,True,True,True,"task V2_034 {
+  require cap(humidity_sensor)
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+V2_035,1.0,1,True,True,True,True,True,"task V2_035 {
+    require cap(humidity_sensor)
+    wait 200ms
+    read humidity_sensor
+    halt
+}"
+V2_036,1.0,1,True,True,True,True,True,"task V2_036 {
+    require cap(humidity_sensor)
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_037,1.0,1,True,True,True,True,True,"task V2_037 {
+    require cap(humidity_sensor)
+    wait 1000ms
+    read humidity_sensor
+}"
+V2_038,1.0,1,True,True,True,True,True,"task V2_038 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 50ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_039,1.0,1,True,True,True,True,True,"task V2_039 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_040,1.0,1,True,True,True,True,True,"task V2_040 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 200ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_041,1.0,1,True,True,True,True,True,"task V2_041 {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 1
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_042,1.0,1,True,False,False,False,False,"task V2_042 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 50ms
+  read water_sensor
+}"
+V2_043,1.0,1,True,True,True,True,True,"task V2_043 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  require cap(water_sensor)
+  read water_sensor
+}"
+V2_044,1.0,1,True,True,True,True,True,"task V2_044 {
+require cap(relay1)
+set relay1 = 0
+wait 200ms
+require cap(water_sensor)
+read water_sensor
+halt
+}"
+V2_045,1.0,1,False,False,False,False,False,"task V2_045 { 
+require cap(relay1) 
+require cap(water_sensor) 
+
+set relay1 = 0 
+wait 500ms 
+read water_sensor 
+halt }"
+V2_046,1.0,1,True,True,True,True,True,"task V2_046 {
+require cap(relay1)
+require cap(temperature_sensor)
+
+set relay1 = 1
+wait 50ms
+read temperature_sensor
+
+halt
+}"
+V2_047,1.0,1,True,False,False,False,False,"task V2_047 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+V2_048,1.0,1,True,True,True,True,True,"task V2_048 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_049,1.0,1,True,True,True,True,True,"task V2_049 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 1
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_050,1.0,1,True,True,True,True,True,"task V2_050 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+
+  set relay1 = 0
+  wait 50ms
+  read temperature_sensor
+  halt
+}"
+V2_051,1.0,1,True,True,True,True,True,"task V2_051 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+    wait 100ms
+    read temperature_sensor
+
+    halt
+}"
+V2_052,1.0,1,True,True,True,True,True,"task V2_052 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+
+  set relay1 = 0
+  wait 200ms
+  read temperature_sensor
+  halt
+}"
+V2_053,1.0,1,True,False,False,False,False,"task V2_053 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_054,1.0,1,True,True,True,True,True,"task V2_054 {
+require cap(relay1)
+require cap(humidity_sensor)
+
+set relay1 = 1
+wait 50ms
+read humidity_sensor
+halt
+}"
+V2_055,1.0,1,True,True,True,True,True,"task V2_055 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 1
+    wait 100ms
+    read humidity_sensor
+
+    halt
+}"
+V2_056,1.0,1,False,False,False,False,False,"task V2_056 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 1
+
+    wait 200ms
+
+    read humidity_sensor
+}
+
+halt"
+V2_057,1.0,1,True,True,True,True,True,"task V2_057 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_058,1.0,1,True,True,True,True,True,"task V2_058 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 0
+    wait 50ms
+    read humidity_sensor
+    halt
+}"
+V2_059,1.0,1,True,True,True,True,True,"task V2_059 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 0
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_060,1.0,1,True,True,True,True,True,"task V2_060 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 0
+  wait 200ms
+  read humidity_sensor
+  halt
+}"
+V2_061,1.0,1,True,True,True,True,True,"task V2_061 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 0
+
+    wait 500ms
+
+    read humidity_sensor
+
+    halt
+}"
+V2_062,1.0,1,True,True,True,True,True,"task V2_062 {
+  require cap(relay2)
+  require cap(water_sensor)
+
+  set relay2 = 1
+  wait 50ms
+  read water_sensor
+  halt
+}"
+V2_063,1.0,1,True,True,True,True,True,"task V2_063 {
+require cap(relay2)
+require cap(water_sensor)
+
+set relay2 = 1
+wait 100ms
+read water_sensor
+halt
+}"
+V2_064,1.0,1,True,True,True,True,True,"task V2_064 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_065,1.0,1,True,False,False,False,False,"task V2_065 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_066,1.0,1,True,False,False,False,False,"task V2_066 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    read water_sensor
+    halt
+}"
+V2_067,1.0,1,True,True,True,True,True,"task V2_067 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  wait 100ms
+  read water_sensor
+  halt
+}"
+V2_068,1.0,1,False,False,False,False,False,"task V2_068 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    read water_sensor
+}
+
+halt"
+V2_069,1.0,1,True,True,True,True,False,"task V2_069 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 500ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_070,1.0,1,True,True,True,True,True,"task V2_070 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+
+  set relay2 = 1
+
+  wait 50ms
+
+  read temperature_sensor
+
+  halt
+}"
+V2_071,1.0,1,True,True,True,True,True,"task V2_071 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_072,1.0,1,True,True,True,True,True,"task V2_072 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+
+    set relay2 = 1
+
+    wait 200ms
+
+    read temperature_sensor
+
+    halt
+}"
+V2_073,1.0,1,True,False,False,False,False,"task V2_073 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_074,1.0,1,True,True,True,True,True,"task V2_074 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+
+  set relay2 = 0
+  wait 50ms
+  read temperature_sensor
+  halt
+}"
+V2_075,1.0,1,True,True,True,True,True,"task V2_075 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+
+    set relay2 = 0
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+V2_076,1.0,1,True,True,True,True,True,"task V2_076 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+
+  set relay2 = 0
+  wait 200ms
+  read temperature_sensor
+  halt
+}"
+V2_077,1.0,1,True,True,True,True,True,"task V2_077 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+
+    set relay2 = 0
+
+    wait 500ms
+    read temperature_sensor
+
+    halt
+}"
+V2_078,1.0,1,True,False,False,False,False,"task V2_078 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 50ms
+    read humidity_sensor
+    halt
+}"
+V2_079,1.0,1,True,True,True,True,True,"task V2_079 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+
+    set relay2 = 1
+    wait 100ms
+    read humidity_sensor
+
+    halt
+}"
+V2_080,1.0,1,True,False,False,False,False,"task V2_080 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    read humidity_sensor
+    halt
+}"
+V2_081,1.0,1,True,True,True,True,True,"task V2_081 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+
+  set relay2 = 1
+  wait 500ms
+  read humidity_sensor
+
+  halt
+}"
+V2_082,1.0,1,True,True,True,True,True,"task V2_082 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_083,1.0,1,True,True,True,True,True,"task V2_083 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 0
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_084,1.0,1,True,True,True,True,True,"task V2_084 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+
+  set relay2 = 0
+  wait 200ms
+  read humidity_sensor
+  halt
+}"
+V2_085,1.0,1,False,False,False,False,False,"task V2_085 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+
+    set relay2 = 0
+    wait 500ms
+    read humidity_sensor
+}
+
+halt"
+V2_086,1.0,1,True,True,True,True,True,"task V2_086 {
+  require cap(relay1)
+  read relay1
+  wait 10ms
+  require cap(relay2)
+  read relay2
+}"
+V2_087,1.0,1,True,True,True,True,True,"task V2_087 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  read relay1
+  read water_sensor
+  halt
+}"
+V2_088,1.0,1,True,True,True,True,True,"task V2_088 {
+  require cap(relay1)
+  read relay1
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_089,1.0,1,False,False,False,False,False,"task V2_089 {
+  require cap(relay1)
+  read relay1
+  wait -> read humidity_sensor
+  halt
+}"
+V2_090,1.0,1,True,True,True,True,True,"task V2_090 {
+  require cap(relay1)
+  require cap(relay2)
+  
+  read relay2
+  
+  wait 0ms
+  read relay1
+  
+  halt
+}"
+V2_091,1.0,1,True,True,True,True,True,"task V2_091 {
+  require cap(relay2)
+  require cap(water_sensor)
+  
+  read relay2
+  
+  wait 100ms
+  
+  read water_sensor
+  
+  halt
+}"
+V2_092,1.0,1,True,True,True,True,True,"task V2_092 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    read relay2
+    read temperature_sensor
+    halt
+}"
+V2_093,1.0,1,True,True,True,True,True,"task V2_093 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+
+  read relay2
+  wait 10ms
+  read humidity_sensor
+  halt
+}"
+V2_094,1.0,1,True,True,True,True,True,"task V2_094 {
+  require cap(water_sensor)
+  require cap(relay1)
+
+  read water_sensor
+  wait 100ms
+  read relay1
+  halt
+}"
+V2_095,1.0,1,True,True,True,True,True,"task V2_095 {
+  require cap(water_sensor)
+  require cap(relay2)
+  
+  read water_sensor
+  
+  read relay2
+  
+  halt
+}"
+V2_096,1.0,1,False,False,False,False,False,"task V2_096 {
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+
+  read water_sensor
+  wait -> read temperature_sensor
+  halt
+}"
+V2_097,1.0,1,True,True,True,True,True,"task V2_097 {
+  require cap(water_sensor)
+  read water_sensor
+  wait 500ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+}"
+V2_098,1.0,1,True,False,False,False,False,"task V2_098 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  wait 10ms
+  read relay1
+  halt
+}"
+V2_099,1.0,1,True,True,True,True,True,"task V2_099 {
+  require cap(temperature_sensor)
+  require cap(relay2)
+
+  read temperature_sensor
+  wait 100ms
+  read relay2
+
+  halt
+}"
+V2_100,1.0,1,True,True,True,True,True,"task V2_100 {
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+
+    read temperature_sensor
+    wait 10ms
+    read water_sensor
+    halt
+}"
+V2_101,1.0,1,True,True,True,True,True,"task V2_101 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  wait 0ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+}"
+V2_102,1.0,1,False,False,False,False,False,"task V2_102 {
+  require cap(humidity_sensor)
+  require cap(relay1)
+  read humidity_sensor
+  wait -> read relay1 -> halt
+}"
+V2_103,1.0,1,False,False,False,False,False,"task V2_103 {
+  require cap(humidity_sensor)
+  require cap(relay2)
+
+  read humidity_sensor -> wait 10ms -> read humidity_sensor -> halt
+
+  read relay2
+}"
+V2_104,1.0,1,True,True,True,True,True,"task V2_104 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_105,1.0,1,False,False,False,False,False,"task V2_105 {
+  require cap(humidity_sensor)
+  require cap(temperature_sensor)
+
+  read humidity_sensor
+  wait -> 
+  read temperature_sensor
+  halt
+}"
+V2_106,1.0,1,True,True,True,True,True,"task V2_106 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  set relay1 = 0
+  halt
+}"
+V2_107,1.0,1,True,True,True,True,True,"task V2_107 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    set relay1 = 0
+    halt
+}"
+V2_108,1.0,1,True,True,True,True,True,"task V2_108 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 200ms
+    set relay1 = 0
+    halt
+}"
+V2_109,1.0,1,True,True,True,True,True,"task V2_109 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    set relay1 = 0
+    halt
+}"
+V2_110,1.0,1,True,True,True,True,True,"task V2_110 {
+require cap(relay2)
+set relay2 = 1
+wait 50ms
+set relay2 = 0
+halt
+}"
+V2_111,1.0,1,True,True,True,True,True,"task V2_111 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    set relay2 = 0
+    halt
+}"
+V2_112,1.0,1,True,True,True,True,True,"task V2_112 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    set relay2 = 0
+    halt
+}"
+V2_113,1.0,1,True,True,True,True,True,"task V2_113 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 500ms
+    set relay2 = 0
+    halt
+}"
+V2_001,1.0,2,True,True,True,True,True,"task V2_001 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+V2_002,1.0,2,True,True,True,True,True,"task V2_002 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+V2_003,1.0,2,True,True,True,True,True,"task V2_003 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}"
+V2_004,1.0,2,True,True,True,True,True,"task V2_004 {
+  require cap(relay2)
+  set relay2 = 0
+  halt
+}"
+V2_005,1.0,2,True,True,True,True,True,"task V2_005 {
+  require cap(relay1)
+  read relay1
+  halt
+}"
+V2_006,1.0,2,True,True,True,True,True,"task V2_006 {
+    require cap(relay2)
+    read relay2
+    halt
+}"
+V2_007,1.0,2,True,True,True,True,True,"task V2_007 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_008,1.0,2,True,True,True,True,True,"task V2_008 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_009,1.0,2,True,True,True,True,True,"task V2_009 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_010,1.0,2,True,True,True,True,True,"task V2_010 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  halt
+}"
+V2_011,1.0,2,True,True,True,True,True,"task V2_011 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    halt
+}"
+V2_012,1.0,2,True,True,True,True,True,"task V2_012 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  halt
+}"
+V2_013,1.0,2,True,True,True,True,True,"task V2_013 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    halt
+}"
+V2_014,1.0,2,True,True,True,True,True,"task V2_014 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 50ms
+  halt
+}"
+V2_015,1.0,2,True,True,True,True,True,"task V2_015 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  halt
+}"
+V2_016,1.0,2,True,True,True,True,True,"task V2_016 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 200ms
+    halt
+}"
+V2_017,1.0,2,True,True,True,True,True,"task V2_017 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 500ms
+    halt
+}"
+V2_018,1.0,2,True,True,True,True,True,"task V2_018 {
+require cap(relay2)
+set relay2 = 1
+wait 50ms
+halt
+}"
+V2_019,1.0,2,True,True,True,True,False,"task V2_019 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    set relay2 = 0
+    halt
+}"
+V2_020,1.0,2,True,True,True,True,True,"task V2_020 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    halt
+}"
+V2_021,1.0,2,True,True,True,True,True,"task V2_021 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  halt
+}"
+V2_022,1.0,2,True,True,True,True,True,"task V2_022 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 50ms
+  halt
+}"
+V2_023,1.0,2,True,True,True,True,True,"task V2_023 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 100ms
+  halt
+}"
+V2_024,1.0,2,True,True,True,True,True,"task V2_024 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 200ms
+    halt
+}"
+V2_025,1.0,2,True,True,True,True,True,"task V2_025 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 500ms
+    halt
+}"
+V2_026,1.0,2,True,True,True,True,True,"task V2_026 {
+  require cap(water_sensor)
+  wait 100ms
+  read water_sensor
+  halt
+}"
+V2_027,1.0,2,True,True,True,True,True,"task V2_027 {
+  require cap(water_sensor)
+  wait 200ms
+  read water_sensor
+  halt
+}"
+V2_028,1.0,2,True,True,True,True,True,"task V2_028 {
+require cap(water_sensor)
+
+wait 500ms
+read water_sensor
+halt
+}"
+V2_029,1.0,2,True,True,True,True,True,"task V2_029 {
+  require cap(water_sensor)
+  wait 1000ms
+  read water_sensor
+  halt
+}"
+V2_030,1.0,2,True,True,True,True,True,"task V2_030 {
+  require cap(temperature_sensor)
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+V2_031,1.0,2,True,True,True,True,True,"task V2_031 {
+  require cap(temperature_sensor)
+  wait 200ms
+  read temperature_sensor
+  halt
+}"
+V2_032,1.0,2,True,True,True,True,True,"task V2_032 {
+    require cap(temperature_sensor)
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_033,1.0,2,True,True,True,True,True,"task V2_033 {
+  require cap(temperature_sensor)
+  
+  wait 1000ms
+  
+  read temperature_sensor
+  
+  halt
+}"
+V2_034,1.0,2,True,True,True,True,True,"task V2_034 {
+  require cap(humidity_sensor)
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+V2_035,1.0,2,True,True,True,True,True,"task V2_035 {
+  require cap(humidity_sensor)
+  wait 200ms
+  read humidity_sensor
+  halt
+}"
+V2_036,1.0,2,True,True,True,True,True,"task V2_036 {
+    require cap(humidity_sensor)
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_037,1.0,2,True,True,True,True,True,"task V2_037 {
+  require cap(humidity_sensor)
+  wait 1000ms
+  read humidity_sensor
+  halt
+}"
+V2_038,1.0,2,True,True,True,True,True,"task V2_038 {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 1
+  wait 50ms
+  read water_sensor
+  halt
+}"
+V2_039,1.0,2,True,True,True,True,True,"task V2_039 {
+require cap(relay1)
+require cap(water_sensor)
+
+set relay1 = 1
+wait 100ms
+read water_sensor
+halt
+}"
+V2_040,1.0,2,True,True,True,True,True,"task V2_040 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_041,1.0,2,True,True,True,True,True,"task V2_041 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  set relay1 = 1
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_042,1.0,2,True,False,False,False,False,"task V2_042 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 50ms
+    read water_sensor
+    halt
+}"
+V2_043,1.0,2,True,True,True,True,True,"task V2_043 {
+  require cap(relay1)
+  require cap(water_sensor)
+  
+  set relay1 = 0
+  wait 100ms
+  read water_sensor
+  
+  halt
+}"
+V2_044,1.0,2,True,True,True,True,True,"task V2_044 {
+    require cap(relay1)
+    require cap(water_sensor)
+
+    set relay1 = 0
+    wait 200ms
+    read water_sensor
+    halt
+}"
+V2_045,1.0,2,True,True,True,True,True,"task V2_045 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 500ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_046,1.0,2,True,True,True,True,True,"task V2_046 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_047,1.0,2,True,True,True,True,True,"task V2_047 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_048,1.0,2,True,False,False,False,False,"task V2_048 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+V2_049,1.0,2,True,True,True,True,True,"task V2_049 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 1
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_050,1.0,2,True,True,True,True,True,"task V2_050 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+V2_051,1.0,2,True,True,True,True,True,"task V2_051 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+
+  set relay1 = 0
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+V2_052,1.0,2,False,False,False,False,False,"task V2_052 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 200ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+}
+
+halt"
+V2_053,1.0,2,True,True,True,True,True,"task V2_053 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+
+    wait 500ms
+
+    read temperature_sensor
+
+    halt
+}"
+V2_054,1.0,2,True,True,True,True,True,"task V2_054 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 1
+    wait 50ms
+    read humidity_sensor
+
+    halt
+}"
+V2_055,1.0,2,True,True,True,True,True,"task V2_055 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 1
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_056,1.0,2,True,False,False,False,False,"task V2_056 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 200ms
+    read humidity_sensor
+    halt
+}"
+V2_057,1.0,2,True,True,True,True,True,"task V2_057 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_058,1.0,2,True,True,True,True,True,"task V2_058 {
+require cap(relay1)
+set relay1 = 0
+wait 50ms
+require cap(humidity_sensor)
+read humidity_sensor
+halt
+}"
+V2_059,1.0,2,True,True,True,True,True,"task V2_059 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_060,1.0,2,True,False,False,False,False,"task V2_060 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  read humidity_sensor
+}"
+V2_061,1.0,2,True,True,True,True,True,"task V2_061 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+
+  set relay1 = 0
+  wait 500ms
+  read humidity_sensor
+  halt
+}"
+V2_062,1.0,2,True,True,True,True,True,"task V2_062 {
+require cap(relay2)
+set relay2 = 1
+wait 50ms
+require cap(water_sensor)
+read water_sensor
+halt
+}"
+V2_063,1.0,2,True,True,True,True,True,"task V2_063 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_064,1.0,2,True,True,True,True,True,"task V2_064 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 200ms
+  read water_sensor
+  halt
+}"
+V2_065,1.0,2,True,True,True,True,True,"task V2_065 {
+require cap(relay2)
+require cap(water_sensor)
+
+set relay2 = 1
+
+wait 500ms
+
+read water_sensor
+halt
+}"
+V2_066,1.0,2,True,False,False,False,False,"task V2_066 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    read water_sensor
+    halt
+}"
+V2_067,1.0,2,True,True,True,True,True,"task V2_067 {
+  require cap(relay2)
+  require cap(water_sensor)
+
+  set relay2 = 0
+  wait 100ms
+  read water_sensor
+  halt
+}"
+V2_068,1.0,2,True,False,False,False,False,"task V2_068 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 200ms
+    read water_sensor
+}"
+V2_069,1.0,2,True,True,True,True,True,"task V2_069 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_070,1.0,2,True,True,True,True,True,"task V2_070 {
+require cap(relay2)
+require cap(temperature_sensor)
+
+set relay2 = 1
+wait 50ms
+read temperature_sensor
+halt
+}"
+V2_071,1.0,2,True,True,True,True,True,"task V2_071 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_072,1.0,2,True,True,True,True,True,"task V2_072 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_073,1.0,2,True,False,False,False,False,"task V2_073 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_074,1.0,2,True,False,False,False,False,"task V2_074 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+V2_075,1.0,2,True,True,True,True,True,"task V2_075 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+
+  set relay2 = 0
+
+  wait 100ms
+
+  read temperature_sensor
+
+  halt
+}"
+V2_076,1.0,2,True,True,True,True,True,"task V2_076 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 200ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_077,1.0,2,True,True,True,True,True,"task V2_077 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+
+    set relay2 = 0
+    wait 500ms
+    read temperature_sensor
+
+    halt
+}"
+V2_078,1.0,2,True,True,True,True,True,"task V2_078 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_079,1.0,2,True,True,True,True,True,"task V2_079 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+
+  set relay2 = 1
+
+  wait 100ms
+
+  read humidity_sensor
+  halt
+}"
+V2_080,1.0,2,True,True,True,True,True,"task V2_080 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+
+  set relay2 = 1
+
+  wait 200ms
+
+  read humidity_sensor
+
+  halt
+}"
+V2_081,1.0,2,True,True,True,True,True,"task V2_081 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 500ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_082,1.0,2,True,True,True,True,True,"task V2_082 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_083,1.0,2,True,True,True,True,True,"task V2_083 { 
+require cap(relay2) 
+require cap(humidity_sensor) 
+
+set relay2 = 0 
+wait 100ms 
+read humidity_sensor 
+
+halt 
+}"
+V2_084,1.0,2,True,True,True,True,True,"task V2_084 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 200ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_085,1.0,2,True,True,True,True,True,"task V2_085 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+
+  set relay2 = 0
+
+  wait 500ms
+
+  read humidity_sensor
+  halt
+}"
+V2_086,1.0,2,True,True,True,True,True,"task V2_086 {
+    require cap(relay1)
+    require cap(relay2)
+    
+    read relay1
+    
+    wait 0ms
+    read relay2
+    
+    halt
+}"
+V2_087,1.0,2,True,True,True,True,True,"task V2_087 {
+  require cap(relay1)
+  read relay1
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_088,1.0,2,True,False,False,False,False,"task V2_088 {
+    require cap(temperature_sensor)
+    read relay1
+    read temperature_sensor
+    halt
+}"
+V2_089,1.0,2,True,True,True,True,True,"task V2_089 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+
+  read relay1
+  wait 10ms
+  read humidity_sensor
+
+  halt
+}"
+V2_090,1.0,2,True,True,True,True,True,"task V2_090 {
+  require cap(relay2)
+  require cap(relay1)
+  read relay2
+  read relay1
+  halt
+}"
+V2_091,1.0,2,True,True,True,True,True,"task V2_091 {
+  require cap(relay2)
+  read relay2
+  wait 100ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_092,1.0,2,False,False,False,False,False,"task V2_092 {
+  require cap(temperature_sensor)
+  require cap(relay2)
+  
+  read relay2
+  wait 0msms
+  read temperature_sensor
+  halt
+}"
+V2_093,1.0,2,True,True,True,True,True,"task V2_093 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+
+  read relay2
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+V2_094,1.0,2,True,True,True,True,True,"task V2_094 {
+    require cap(water_sensor)
+    require cap(relay1)
+    read water_sensor
+    wait 0ms
+    read relay1
+    halt
+}"
+V2_095,1.0,2,False,False,False,False,False,"task V2_095 {
+  require cap(water_sensor)
+  require cap(relay2)
+
+  read water_sensor
+  wait -> read relay2 -> halt
+}"
+V2_096,1.0,2,True,True,True,True,True,"task V2_096 {
+  require cap(water_sensor)
+  read water_sensor
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_097,1.0,2,False,False,False,False,False,"task V2_097 {
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  read water_sensor
+  wait -> 
+  read humidity_sensor
+  halt
+}"
+V2_098,1.0,2,False,False,False,False,False,"task V2_098 {
+  require cap(temperature_sensor)
+  require cap(relay1)
+
+  read temperature_sensor
+  wait -> 
+  read relay1
+  halt
+}"
+V2_099,1.0,2,True,True,True,True,False,"task V2_099 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  wait 10ms
+  halt
+  
+  require cap(relay2)
+  read relay2
+  halt
+}"
+V2_100,1.0,2,False,False,False,False,False,"task V2_100 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  wait 500ms
+  require cap(water_sensor)
+  read water_sensor
+}
+
+halt"
+V2_101,1.0,2,True,True,True,True,True,"task V2_101 {
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+
+    read temperature_sensor
+    wait 1000ms
+    read humidity_sensor
+    halt
+}"
+V2_102,1.0,2,True,True,True,True,True,"task V2_102 {
+  require cap(humidity_sensor)
+  require cap(relay1)
+
+  read humidity_sensor
+  wait 100ms
+  read relay1
+  halt
+}"
+V2_103,1.0,2,True,True,True,True,True,"task V2_103 {
+  require cap(humidity_sensor)
+  require cap(relay2)
+  read humidity_sensor
+  wait 100ms
+  read relay2
+  halt
+}"
+V2_104,1.0,2,True,True,True,True,True,"task V2_104 {
+    require cap(humidity_sensor)
+    require cap(water_sensor)
+
+    read humidity_sensor
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_105,1.0,2,True,True,True,True,True,"task V2_105 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  wait 10ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_106,1.0,2,True,True,True,True,True,"task V2_106 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 50ms
+    set relay1 = 0
+    halt
+}"
+V2_107,1.0,2,True,True,True,True,True,"task V2_107 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  set relay1 = 0
+  halt
+}"
+V2_108,1.0,2,True,True,True,True,True,"task V2_108 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  set relay1 = 0
+  halt
+}"
+V2_109,1.0,2,True,True,True,True,True,"task V2_109 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    set relay1 = 0
+    halt
+}"
+V2_110,1.0,2,True,True,True,True,True,"task V2_110 {
+require cap(relay2)
+set relay2 = 1
+wait 50ms
+set relay2 = 0
+halt
+}"
+V2_111,1.0,2,True,True,True,True,True,"task V2_111 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  set relay2 = 0
+  halt
+}"
+V2_112,1.0,2,True,True,True,True,True,"task V2_112 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    set relay2 = 0
+    halt
+}"
+V2_113,1.0,2,True,True,True,True,True,"task V2_113 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  halt
+}"
+V2_001,1.0,3,True,True,True,True,True,"task V2_001 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+V2_002,1.0,3,True,True,True,True,True,"task V2_002 {
+    require cap(relay1)
+    set relay1 = 0
+    halt
+}"
+V2_003,1.0,3,True,True,True,True,True,"task V2_003 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}"
+V2_004,1.0,3,True,True,True,True,True,"task V2_004 {
+  require cap(relay2)
+  set relay2 = 0
+  halt
+}"
+V2_005,1.0,3,True,True,True,True,True,"task V2_005 {
+  require cap(relay1)
+  read relay1
+  halt
+}"
+V2_006,1.0,3,True,True,True,True,True,"task V2_006 {
+    require cap(relay2)
+    read relay2
+    halt
+}"
+V2_007,1.0,3,True,True,True,True,True,"task V2_007 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_008,1.0,3,True,True,True,True,True,"task V2_008 {
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_009,1.0,3,True,True,True,True,True,"task V2_009 {
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_010,1.0,3,True,True,True,True,False,"task V2_010 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  set relay1 = 0
+  halt
+}"
+V2_011,1.0,3,True,True,True,True,True,"task V2_011 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  halt
+}"
+V2_012,1.0,3,True,True,True,True,True,"task V2_012 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  halt
+}"
+V2_013,1.0,3,True,True,True,True,True,"task V2_013 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 500ms
+  halt
+}"
+V2_014,1.0,3,True,True,True,True,True,"task V2_014 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 50ms
+  halt
+}"
+V2_015,1.0,3,True,True,True,True,True,"task V2_015 {
+require cap(relay1)
+set relay1 = 0
+wait 100ms
+halt
+}"
+V2_016,1.0,3,True,True,True,True,True,"task V2_016 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  halt
+}"
+V2_017,1.0,3,True,True,True,True,True,"task V2_017 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 500ms
+    halt
+}"
+V2_018,1.0,3,True,True,True,True,True,"task V2_018 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  halt
+}"
+V2_019,1.0,3,True,True,True,True,True,"task V2_019 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    halt
+}"
+V2_020,1.0,3,True,True,True,True,True,"task V2_020 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    halt
+}"
+V2_021,1.0,3,True,True,True,True,True,"task V2_021 {
+require cap(relay2)
+
+set relay2 = 1
+wait 500ms
+halt
+}"
+V2_022,1.0,3,True,True,True,True,True,"task V2_022 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 50ms
+  halt
+}"
+V2_023,1.0,3,True,True,True,True,True,"task V2_023 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 100ms
+    halt
+}"
+V2_024,1.0,3,False,False,False,False,False,"task V2_024 {
+    require cap(relay2)
+    set relay2 = 0
+    wait -> 200ms
+    halt
+}"
+V2_025,1.0,3,False,False,False,False,False,"task V2_025 {
+  require cap(relay2)
+  set relay2 = 0
+  wait -> 500ms
+  read relay2
+  halt
+}"
+V2_026,1.0,3,True,True,True,True,True,"task V2_026 {
+    require cap(water_sensor)
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_027,1.0,3,True,True,True,True,True,"task V2_027 {
+    require cap(water_sensor)
+    wait 200ms
+    read water_sensor
+    halt
+}"
+V2_028,1.0,3,True,True,True,True,True,"task V2_028 {
+  require cap(water_sensor)
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_029,1.0,3,True,True,True,True,True,"task V2_029 {
+  require cap(water_sensor)
+  
+  wait 1000ms
+  
+  read water_sensor
+  
+  halt
+}"
+V2_030,1.0,3,True,True,True,True,True,"task V2_030 {
+    require cap(temperature_sensor)
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+V2_031,1.0,3,True,True,True,True,True,"task V2_031 {
+    require cap(temperature_sensor)
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+V2_032,1.0,3,True,True,True,True,True,"task V2_032 {
+    require cap(temperature_sensor)
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+V2_033,1.0,3,True,True,True,True,True,"task V2_033 {
+    require cap(temperature_sensor)
+    wait 1000ms
+    read temperature_sensor
+    halt
+}"
+V2_034,1.0,3,True,True,True,True,True,"task V2_034 {
+    require cap(humidity_sensor)
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_035,1.0,3,True,True,True,True,True,"task V2_035 {
+    require cap(humidity_sensor)
+    wait 200ms
+    read humidity_sensor
+    halt
+}"
+V2_036,1.0,3,True,True,True,True,True,"task V2_036 {
+    require cap(humidity_sensor)
+    wait 500ms
+    read humidity_sensor
+}"
+V2_037,1.0,3,True,True,True,True,True,"task V2_037 {
+    require cap(humidity_sensor)
+    wait 1000ms
+    read humidity_sensor
+    halt
+}"
+V2_038,1.0,3,True,False,False,False,False,"task V2_038 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 50ms
+    read water_sensor
+    halt
+}"
+V2_039,1.0,3,True,True,True,True,True,"task V2_039 {
+  require cap(relay1)
+  require cap(water_sensor)
+  
+  set relay1 = 1
+  wait 100ms
+  
+  read water_sensor
+  
+  halt
+}"
+V2_040,1.0,3,True,True,True,True,True,"task V2_040 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  set relay1 = 1
+  wait 200ms
+  read water_sensor
+  halt
+}"
+V2_041,1.0,3,True,True,True,True,True,"task V2_041 {
+    require cap(relay1)
+    require cap(water_sensor)
+
+    set relay1 = 1
+    wait 500ms
+    read water_sensor
+    halt
+}"
+V2_042,1.0,3,True,True,True,True,True,"task V2_042 {
+    require cap(relay1)
+    require cap(water_sensor)
+
+    set relay1 = 0
+    wait 50ms
+    read water_sensor
+    halt
+}"
+V2_043,1.0,3,True,True,True,True,True,"task V2_043 {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 0
+  wait 100ms
+  read water_sensor
+  halt
+}"
+V2_044,1.0,3,True,True,True,True,True,"task V2_044 {
+  require cap(relay1)
+  require cap(water_sensor)
+  
+  set relay1 = 0
+  
+  wait 200ms
+  
+  read water_sensor
+  
+  halt
+}"
+V2_045,1.0,3,True,True,True,True,True,"task V2_045 {
+require cap(relay1)
+require cap(water_sensor)
+
+set relay1 = 0
+wait 500ms
+read water_sensor
+halt
+}"
+V2_046,1.0,3,True,True,True,True,True,"task V2_046 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 1
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+V2_047,1.0,3,True,True,True,True,True,"task V2_047 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+
+  set relay1 = 1
+
+  wait 100ms
+
+  read temperature_sensor
+
+  halt
+}"
+V2_048,1.0,3,True,True,True,True,True,"task V2_048 {
+require cap(relay1)
+require cap(temperature_sensor)
+
+set relay1 = 1
+wait 200ms
+read temperature_sensor
+halt
+}"
+V2_049,1.0,3,True,True,True,True,True,"task V2_049 {
+require cap(relay1)
+require cap(temperature_sensor)
+
+set relay1 = 1
+wait 500ms
+read temperature_sensor
+halt
+}"
+V2_050,1.0,3,True,True,True,True,True,"task V2_050 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 50ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_051,1.0,3,True,True,True,True,True,"task V2_051 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+    wait 100ms
+    read temperature_sensor
+
+    halt
+}"
+V2_052,1.0,3,True,True,True,True,True,"task V2_052 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+
+  set relay1 = 0
+  wait 200ms
+  read temperature_sensor
+
+  halt
+}"
+V2_053,1.0,3,True,True,True,True,True,"task V2_053 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+
+    set relay1 = 0
+
+    wait 500ms
+
+    read temperature_sensor
+
+    halt
+}"
+V2_054,1.0,3,True,True,True,True,True,"task V2_054 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+
+  set relay1 = 1
+  wait 50ms
+  read humidity_sensor
+  halt
+}"
+V2_055,1.0,3,True,False,False,False,False,"task V2_055 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_056,1.0,3,True,True,True,True,True,"task V2_056 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+
+  set relay1 = 1
+
+  wait 200ms
+
+  read humidity_sensor
+
+  halt
+}"
+V2_057,1.0,3,True,True,True,True,True,"task V2_057 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 1
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_058,1.0,3,True,True,True,True,True,"task V2_058 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 50ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_059,1.0,3,True,True,True,True,True,"task V2_059 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    set relay1 = 0
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+V2_060,1.0,3,True,True,True,True,True,"task V2_060 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+
+    set relay1 = 0
+
+    wait 200ms
+
+    read humidity_sensor
+
+    halt
+}"
+V2_061,1.0,3,True,True,True,True,True,"task V2_061 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+
+  set relay1 = 0
+  wait 500ms
+  read humidity_sensor
+  halt
+}"
+V2_062,1.0,3,True,True,True,True,True,"task V2_062 {
+    require cap(relay2)
+    require cap(water_sensor)
+
+    set relay2 = 1
+    wait 50ms
+    read water_sensor
+    halt
+}"
+V2_063,1.0,3,True,True,True,True,True,"task V2_063 {
+    require cap(relay2)
+    require cap(water_sensor)
+
+    set relay2 = 1
+    wait 100ms
+    read water_sensor
+    halt
+}"
+V2_064,1.0,3,True,True,True,True,True,"task V2_064 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_065,1.0,3,True,False,False,False,False,"task V2_065 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  read water_sensor
+  halt
+}"
+V2_066,1.0,3,True,False,False,False,False,"task V2_066 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    read water_sensor
+    halt
+}"
+V2_067,1.0,3,True,True,True,True,True,"task V2_067 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 100ms
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+V2_068,1.0,3,True,True,True,True,True,"task V2_068 {
+  require cap(relay2)
+  require cap(water_sensor)
+  
+  set relay2 = 0
+  
+  wait 200ms
+  read water_sensor
+  
+  halt
+}"
+V2_069,1.0,3,True,True,True,True,True,"task V2_069 {
+    require cap(relay2)
+    require cap(water_sensor)
+
+    set relay2 = 0
+    wait 500ms
+    read water_sensor
+    halt
+}"
+V2_070,1.0,3,True,False,False,False,False,"task V2_070 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+V2_071,1.0,3,True,True,True,True,True,"task V2_071 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_072,1.0,3,True,True,True,True,True,"task V2_072 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_073,1.0,3,True,True,True,True,True,"task V2_073 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 500ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_074,1.0,3,True,True,True,True,True,"task V2_074 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 50ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_075,1.0,3,True,True,True,True,True,"task V2_075 {
+require cap(relay2)
+require cap(temperature_sensor)
+
+set relay2 = 0
+wait 100ms
+read temperature_sensor
+halt
+}"
+V2_076,1.0,3,True,True,True,True,True,"task V2_076 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+
+  set relay2 = 0
+  wait 200ms
+  read temperature_sensor
+  halt
+}"
+V2_077,1.0,3,True,True,True,True,True,"task V2_077 {
+require cap(relay2)
+require cap(temperature_sensor)
+
+set relay2 = 0
+wait 500ms
+read temperature_sensor
+halt
+}"
+V2_078,1.0,3,True,True,True,True,True,"task V2_078 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+
+  set relay2 = 1
+  wait 50ms
+  read humidity_sensor
+  halt
+}"
+V2_079,1.0,3,True,True,True,True,True,"task V2_079 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_080,1.0,3,True,True,True,True,True,"task V2_080 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+V2_081,1.0,3,True,True,True,True,True,"task V2_081 {
+require cap(relay2)
+require cap(humidity_sensor)
+
+set relay2 = 1
+wait 500ms
+read humidity_sensor
+halt
+}"
+V2_082,1.0,3,True,True,True,True,True,"task V2_082 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  set relay2 = 0
+  wait 50ms
+  read humidity_sensor
+  halt
+}"
+V2_083,1.0,3,True,True,True,True,True,"task V2_083 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 100ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V2_084,1.0,3,False,False,False,False,False,"task V2_084 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 200ms
+    require cap(humidity_sensor)
+    read humidity_sensor
+}
+
+halt"
+V2_085,1.0,3,True,False,False,False,False,"task V2_085 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+V2_086,1.0,3,True,True,True,True,True,"task V2_086 {
+    require cap(relay1)
+    read relay1
+    require cap(relay2)
+    read relay2
+    halt
+}"
+V2_087,1.0,3,True,True,True,True,True,"task V2_087 {
+  require cap(relay1)
+  require cap(water_sensor)
+  
+  read relay1
+  read water_sensor
+  
+  halt
+}"
+V2_088,1.0,3,True,True,True,True,True,"task V2_088 {
+    require cap(relay1)
+    read relay1
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+V2_089,1.0,3,True,True,True,True,True,"task V2_089 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  read relay1
+  wait 10ms
+  read humidity_sensor
+  halt
+}"
+V2_090,1.0,3,True,True,True,True,True,"task V2_090 {
+  require cap(relay2)
+  require cap(relay1)
+  read relay2
+  wait 10ms
+  read relay1
+  halt
+}"
+V2_091,1.0,3,True,True,True,True,True,"task V2_091 {
+  require cap(relay2)
+  require cap(water_sensor)
+  
+  read relay2
+  wait 1ms
+  read water_sensor
+  
+  halt
+}"
+V2_092,1.0,3,True,True,True,True,True,"task V2_092 {
+  require cap(relay2)
+  read relay2
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_093,1.0,3,True,True,True,True,True,"task V2_093 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+
+    read relay2
+    wait 10ms
+    read humidity_sensor
+    halt
+}"
+V2_094,1.0,3,False,False,False,False,False,"task V2_094 {
+  require cap(water_sensor)
+  require cap(relay1)
+
+  read water_sensor
+  wait -> 
+  read relay1
+  halt
+}"
+V2_095,1.0,3,True,True,True,True,True,"task V2_095 {
+  require cap(water_sensor)
+  require cap(relay2)
+
+  read water_sensor
+  wait 10ms
+  read relay2
+  halt
+}"
+V2_096,1.0,3,True,True,True,True,True,"task V2_096 {
+  require cap(water_sensor)
+  read water_sensor
+  wait 100ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V2_097,1.0,3,True,True,True,True,True,"task V2_097 {
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+
+  read water_sensor
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+V2_098,1.0,3,True,True,True,True,True,"task V2_098 {
+  require cap(temperature_sensor)
+  require cap(relay1)
+
+  read temperature_sensor
+  read relay1
+
+  halt
+}"
+V2_099,1.0,3,False,False,False,False,False,"task V2_099 {
+  require cap(temperature_sensor)
+  require cap(relay2)
+
+  read temperature_sensor
+  wait -> read relay2
+  halt
+}"
+V2_100,1.0,3,True,True,True,True,True,"task V2_100 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  wait 1ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V2_101,1.0,3,True,True,True,True,True,"task V2_101 {
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+
+  read temperature_sensor
+  wait 500ms
+  read humidity_sensor
+
+  halt
+}"
+V2_102,1.0,3,True,True,True,True,True,"task V2_102 {
+    require cap(humidity_sensor)
+    require cap(relay1)
+
+    read humidity_sensor
+    wait 1000ms
+    read relay1
+    halt
+}"
+V2_103,1.0,3,True,True,True,True,True,"task V2_103 {
+  require cap(humidity_sensor)
+  require cap(relay2)
+  
+  read humidity_sensor
+  wait 0ms
+  
+  read relay2
+  halt
+}"
+V2_104,1.0,3,True,True,True,True,True,"task V2_104 {
+  require cap(humidity_sensor)
+  require cap(water_sensor)
+
+  read humidity_sensor
+  wait 1000ms
+  read water_sensor
+  halt
+}"
+V2_105,1.0,3,False,False,False,False,False,"task V2_105 {
+    require cap(humidity_sensor)
+    read humidity_sensor
+    wait 100ms
+    require cap(temperature_sensor)
+    read temperature_sensor
+}
+
+halt"
+V2_106,1.0,3,True,True,True,True,True,"task V2_106 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  set relay1 = 0
+  halt
+}"
+V2_107,1.0,3,True,True,True,True,True,"task V2_107 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    set relay1 = 0
+    halt
+}"
+V2_108,1.0,3,True,True,True,True,True,"task V2_108 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  set relay1 = 0
+  halt
+}"
+V2_109,1.0,3,True,True,True,True,True,"task V2_109 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 500ms
+  set relay1 = 0
+  halt
+}"
+V2_110,1.0,3,True,True,True,True,True,"task V2_110 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 50ms
+    set relay2 = 0
+    halt
+}"
+V2_111,1.0,3,True,True,True,True,True,"task V2_111 {
+require cap(relay2)
+
+set relay2 = 1
+wait 100ms
+set relay2 = 0
+halt
+}"
+V2_112,1.0,3,True,True,True,True,True,"task V2_112 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    set relay2 = 0
+    halt
+}"
+V2_113,1.0,3,True,True,True,True,True,"task V2_113 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  halt
+}"

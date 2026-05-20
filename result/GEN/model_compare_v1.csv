@@ -1,0 +1,3 @@
+model,total,ir_valid_rate,compile_pass_rate,verify_pass_rate,execution_pass_rate,task_success_rate,primary_errors
+llama3.1:8b,113,1.000,1.000,1.000,1.000,1.000,none
+qwen3:8b,113,0.956,0.956,0.956,0.956,0.903,"TASK_SIGNATURE_MISMATCH(6); MIR_PARSE_ERROR(5)"

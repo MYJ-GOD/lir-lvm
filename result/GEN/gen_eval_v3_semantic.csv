@@ -1,0 +1,912 @@
+﻿task_id,category,attempt,ir_valid,compile_pass,verify_pass,execution_pass,task_success,payload_hex,error_stage,error_code,hint,candidate_mir
+V3E_001,readback_basic,1,1,1,1,1,1,50051e02460547051e022c52,,,,"task V3E_001 {
+  require cap(relay1)
+  set relay1 = 1
+  readback relay1 expect 1
+  halt
+}"
+V3E_002,readback_basic,1,1,1,1,1,1,50051e00460547051e002c52,,,,"task V3E_002 {
+  require cap(relay1)
+  set relay1 = 0
+  readback relay1 expect 0
+  halt
+}"
+V3E_003,readback_basic,1,1,1,1,1,1,50061e02460647061e022c52,,,,"task V3E_003 {
+  require cap(relay2)
+  set relay2 = 1
+  readback relay2 expect 1
+  halt
+}"
+V3E_004,readback_basic,1,1,1,1,1,1,50061e00460647061e002c52,,,,"task V3E_004 {
+  require cap(relay2)
+  set relay2 = 0
+  readback relay2 expect 0
+  halt
+}"
+V3E_005,readback_sensor_context,1,1,1,1,1,1,5001500547011e0246051e0640651a47051e022c6502640a1e02334065086417411e026404411e0052,,,,"task V3E_005 {
+  require cap(water_sensor)
+  read water_sensor
+  require cap(relay1)
+  set relay1 = 1
+  retry 3 times {
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_006,readback_sensor_context,1,1,1,1,1,1,5001500547011e0046051e0640651a47051e002c6502640a1e02334065086417411e026404411e0052,,,,"task V3E_006 {
+  require cap(water_sensor)
+  require cap(relay1)
+
+  read water_sensor
+  set relay1 = 0
+  retry 3 times {
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_007,readback_sensor_context,1,1,1,1,1,1,5001500647011e0246061e0640651a47061e022c6502640a1e02334065086417411e026404411e0052,,,,"task V3E_007 {
+  require cap(water_sensor)
+  read water_sensor
+  require cap(relay2)
+  set relay2 = 1
+  retry 3 times {
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_008,readback_sensor_context,1,1,1,1,1,1,5001500647011e004606516447061e002c52,,,,"task V3E_008 {
+  require cap(water_sensor)
+  require cap(relay2)
+  
+  read water_sensor
+  
+  set relay2 = 0
+  wait 100ms
+  readback relay2 expect 0
+  
+  halt
+}"
+V3E_009,readback_sensor_context,1,1,1,1,1,1,5002500547021e0246051e0640651a47051e022c6502640a1e02334065086417411e026404411e0052,,,,"task V3E_009 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  require cap(relay1)
+  set relay1 = 1
+  retry 3 times {
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_010,readback_sensor_context,1,1,1,1,1,1,5002500547021e0046051e0640651a47051e002c6502640a1e02334065086417411e026404411e0052,,,,"task V3E_010 {
+  require cap(temperature_sensor)
+  require cap(relay1)
+
+  read temperature_sensor
+  set relay1 = 0
+  retry 3 times {
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_011,readback_sensor_context,1,1,1,1,1,1,5002500647021e0246061e0640651a47061e022c6502640a1e02334065086417411e026404411e0052,,,,"task V3E_011 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  require cap(relay2)
+  set relay2 = 1
+  retry 3 times {
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_012,readback_sensor_context,1,1,1,1,1,1,5002500647021e0046061e0240651a47061e002c6502640a1e02334065086417411e026404411e0052,,,,"task V3E_012 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  require cap(relay2)
+  set relay2 = 0
+  retry 1 times {
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_013,readback_sensor_context,1,1,1,1,1,1,5003500547031e0246051e0640651c516447051e022c6502640a1e02334065086419411e026404411e0052,,,,"task V3E_013 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  require cap(relay1)
+  set relay1 = 1
+  retry 3 times {
+    wait 100ms
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_014,readback_sensor_context,1,1,1,1,1,1,5003500547031e0046051e0640651c516447051e002c6502640a1e02334065086419411e026404411e0052,,,,"task V3E_014 {
+  require cap(humidity_sensor)
+  require cap(relay1)
+  
+  read humidity_sensor
+  
+  set relay1 = 0
+  retry 3 times {
+    wait 100ms
+    readback relay1 expect 0
+  }
+  
+  halt
+}"
+V3E_015,readback_sensor_context,1,1,1,1,1,1,5003500647031e0246061e0640651a47061e022c6502640a1e02334065086417411e026404411e0052,,,,"task V3E_015 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  require cap(relay2)
+  set relay2 = 1
+  retry 3 times {
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_016,readback_sensor_context,1,1,1,1,1,1,5003500647031e0046061e0240651a47061e002c6502640a1e02334065086417411e026404411e0052,,,,"task V3E_016 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  require cap(relay2)
+  set relay2 = 0
+  retry 1 times {
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_017,retry_varying_count,1,1,1,1,1,1,50051e0240651e1e02460547051e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_017 {
+  require cap(relay1)
+  retry 1 times {
+    set relay1 = 1
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_018,retry_varying_count,1,1,1,1,1,1,50051e0240651e1e00460547051e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_018 {
+  require cap(relay1)
+  retry 1 times {
+    set relay1 = 0
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_019,retry_varying_count,1,1,1,1,1,1,50051e0440651e1e02460547051e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_019 {
+  require cap(relay1)
+  retry 2 times {
+    set relay1 = 1
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_020,retry_varying_count,1,1,1,1,1,1,50051e0440651e1e00460547051e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_020 {
+  require cap(relay1)
+  retry 2 times {
+    set relay1 = 0
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_021,retry_varying_count,1,1,1,1,1,1,50051e0640651e1e02460547051e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_021 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 1
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_022,retry_varying_count,1,1,1,1,1,1,50051e0640651e1e00460547051e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_022 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 0
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_023,retry_varying_count,1,1,1,1,1,1,50051e0840651e1e02460547051e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_023 {
+  require cap(relay1)
+  retry 4 times {
+    set relay1 = 1
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_024,retry_varying_count,1,1,1,1,1,1,50051e0840651e1e00460547051e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_024 {
+  require cap(relay1)
+  retry 4 times {
+    set relay1 = 0
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_025,retry_varying_count,1,1,1,1,1,1,50051e0a40651e1e02460547051e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_025 {
+  require cap(relay1)
+  retry 5 times {
+    set relay1 = 1
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_026,retry_varying_count,1,1,1,1,1,1,50051e0a40651e1e00460547051e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_026 {
+  require cap(relay1)
+  retry 5 times {
+    set relay1 = 0
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_027,retry_varying_count,1,1,1,1,1,1,50061e0240651e1e02460647061e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_027 {
+  require cap(relay2)
+  retry 1 times {
+    set relay2 = 1
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_028,retry_varying_count,1,1,1,1,1,1,50061e0240651e1e00460647061e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_028 {
+  require cap(relay2)
+  retry 1 times {
+    set relay2 = 0
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_029,retry_varying_count,1,1,1,1,1,1,50061e0440651e1e02460647061e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_029 {
+  require cap(relay2)
+  retry 2 times {
+    set relay2 = 1
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_030,retry_varying_count,1,1,1,1,1,1,50061e0440651e1e00460647061e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_030 {
+  require cap(relay2)
+  retry 2 times {
+    set relay2 = 0
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_031,retry_varying_count,1,1,1,1,1,1,50061e0640651e1e02460647061e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_031 {
+  require cap(relay2)
+  retry 3 times {
+    set relay2 = 1
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_032,retry_varying_count,1,1,1,1,1,1,50061e0640651e1e00460647061e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_032 {
+  require cap(relay2)
+  retry 3 times {
+    set relay2 = 0
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_033,retry_varying_count,1,1,1,1,1,1,50061e0840651e1e02460647061e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_033 {
+  require cap(relay2)
+  retry 4 times {
+    set relay2 = 1
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_034,retry_varying_count,1,1,1,1,1,1,50061e0840651e1e00460647061e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_034 {
+  require cap(relay2)
+  retry 4 times {
+    set relay2 = 0
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_035,retry_varying_count,1,1,1,1,1,1,50061e0a40651e1e02460647061e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_035 {
+  require cap(relay2)
+  retry 5 times {
+    set relay2 = 1
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_036,retry_varying_count,1,1,1,1,1,1,50061e0a40651e1e00460647061e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_036 {
+  require cap(relay2)
+  retry 5 times {
+    set relay2 = 0
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_037,retry_fail,1,1,1,1,1,1,50051e0440651e1e02460547051e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_037 {
+  require cap(relay1)
+  retry 2 times {
+    set relay1 = 1
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_038,retry_fail,1,1,1,1,1,1,50051e0440651e1e00460547051e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_038 {
+  require cap(relay1)
+  retry 2 times {
+    set relay1 = 0
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_039,retry_fail,1,1,1,1,1,1,50051e0640651e1e02460547051e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_039 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 1
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_040,retry_fail,1,1,1,1,1,1,50051e0640651e1e00460547051e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_040 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 0
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_041,retry_fail,1,1,1,1,1,1,50061e0440651e1e02460647061e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_041 {
+  require cap(relay2)
+  retry 2 times {
+    set relay2 = 1
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_042,retry_fail,1,1,1,1,1,1,50061e0440651e1e00460647061e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_042 {
+  require cap(relay2)
+  retry 2 times {
+    set relay2 = 0
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_043,retry_fail,1,1,1,1,1,1,50061e0640651e1e02460647061e002c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_043 {
+  require cap(relay2)
+  retry 3 times {
+    set relay2 = 1
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_044,retry_fail,1,1,1,1,1,1,50061e0640651e1e00460647061e022c6502640a1e0233406508641b411e026404411e0052,,,,"task V3E_044 {
+  require cap(relay2)
+  retry 3 times {
+    set relay2 = 0
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_045,retry_wait,1,1,1,1,1,1,50051e064065201e024605513247051e022c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_045 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 1
+    wait 50ms
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_046,retry_wait,1,1,1,1,1,1,50051e064065201e004605513247051e002c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_046 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 0
+    wait 50ms
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_047,retry_wait,1,1,1,1,1,1,50051e064065201e024605516447051e022c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_047 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 1
+    wait 100ms
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_048,retry_wait,1,1,1,1,1,1,50051e064065201e004605516447051e002c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_048 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 0
+    wait 100ms
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_049,retry_wait,1,1,1,1,1,1,50051e064065201e02460551c80147051e022c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_049 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 1
+    wait 200ms
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_050,retry_wait,1,1,1,1,1,1,50051e064065201e00460551c80147051e002c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_050 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 0
+    wait 200ms
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_051,retry_wait,1,1,1,1,1,1,50051e064065201e02460551f40347051e022c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_051 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 1
+    wait 500ms
+    readback relay1 expect 1
+  }
+  halt
+}"
+V3E_052,retry_wait,1,1,1,1,1,1,50051e064065201e00460551f40347051e002c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_052 {
+  require cap(relay1)
+  retry 3 times {
+    set relay1 = 0
+    wait 500ms
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_053,retry_wait,1,1,1,1,1,1,50061e064065201e024606513247061e022c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_053 {
+  require cap(relay2)
+  retry 3 times {
+    set relay2 = 1
+    wait 50ms
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_054,retry_wait,1,1,1,1,1,1,50061e064065201e004606513247061e002c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_054 {
+  require cap(relay2)
+  retry 3 times {
+    set relay2 = 0
+    wait 50ms
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_055,retry_wait,1,1,1,1,1,1,50061e064065201e024606516447061e022c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_055 {
+  require cap(relay2)
+  retry 3 times {
+    set relay2 = 1
+    wait 100ms
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_056,retry_wait,1,1,1,1,1,1,50061e064065201e004606516447061e002c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_056 {
+  require cap(relay2)
+  retry 3 times {
+    set relay2 = 0
+    wait 100ms
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_057,retry_wait,1,1,1,1,1,1,50061e064065201e02460651c80147061e022c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_057 {
+  require cap(relay2)
+  retry 3 times {
+    set relay2 = 1
+    wait 200ms
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_058,retry_wait,1,1,1,1,1,1,50061e064065201e00460651c80147061e002c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_058 {
+  require cap(relay2)
+  retry 3 times {
+    set relay2 = 0
+    wait 200ms
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_059,retry_wait,1,1,1,1,1,1,50061e064065201e02460651f40347061e022c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_059 {
+  require cap(relay2)
+  retry 3 times {
+    set relay2 = 1
+    wait 500ms
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_060,retry_wait,1,1,1,1,1,1,50061e064065201e00460651f40347061e002c6502640a1e0233406508641d411e026404411e0052,,,,"task V3E_060 {
+  require cap(relay2)
+  retry 3 times {
+    set relay2 = 0
+    wait 500ms
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_061,multi_device_readback,1,1,1,1,1,1,500550061e0640651e1e02460547051e022c6502640a1e0233406508641b411e026404411e001e02460647061e022c52,,,,"task V3E_061 {
+  require cap(relay1)
+  require cap(relay2)
+
+  retry 3 times {
+    set relay1 = 1
+    readback relay1 expect 1
+  }
+
+  set relay2 = 1
+  readback relay2 expect 1
+
+  halt
+}"
+V3E_062,multi_device_readback,1,1,1,1,1,1,500550061e0640651e1e02460547051e022c6502640a1e0233406508641b411e026404411e001e004606516447061e002c52,,,,"task V3E_062 {
+  require cap(relay1)
+  require cap(relay2)
+
+  retry 3 times {
+    set relay1 = 1
+    readback relay1 expect 1
+  }
+
+  set relay2 = 0
+  wait 100ms
+  readback relay2 expect 0
+
+  halt
+}"
+V3E_063,multi_device_readback,1,1,1,1,1,1,500550061e00460547051e002c1e02460647061e022c52,,,,"task V3E_063 {
+  require cap(relay1)
+  require cap(relay2)
+
+  set relay1 = 0
+  readback relay1 expect 0
+
+  set relay2 = 1
+  readback relay2 expect 1
+
+  halt
+}"
+V3E_064,multi_device_readback,1,1,1,1,1,1,500550061e00460547051e002c1e00460647061e002c52,,,,"task V3E_064 {
+  require cap(relay1)
+  require cap(relay2)
+
+  set relay1 = 0
+  readback relay1 expect 0
+
+  set relay2 = 0
+  readback relay2 expect 0
+
+  halt
+}"
+V3E_065,multi_device_sensor_relay,1,1,1,1,1,1,500550011e0246051e0640651a47051e022c6502640a1e02334065086417411e026404411e00470152,,,,"task V3E_065 {
+  require cap(relay1)
+  set relay1 = 1
+  retry 3 times {
+    readback relay1 expect 1
+  }
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V3E_066,multi_device_sensor_relay,1,1,1,1,1,1,500550011e0046051e0640651a47051e002c6502640a1e02334065086417411e026404411e00470152,,,,"task V3E_066 {
+  require cap(relay1)
+  set relay1 = 0
+  retry 3 times {
+    readback relay1 expect 0
+  }
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V3E_067,multi_device_sensor_relay,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task V3E_067 {
+  require cap(relay2)
+  set relay2 = 1
+  retry 3 times {
+    readback relay2 expect 1
+    break
+  }
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V3E_068,multi_device_sensor_relay,1,1,1,1,1,1,500650011e0046061e0640651a47061e002c6502640a1e02334065086417411e026404411e00470152,,,,"task V3E_068 {
+  require cap(relay2)
+  set relay2 = 0
+  retry 3 times {
+    readback relay2 expect 0
+  }
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+V3E_069,multi_device_sensor_relay,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task V3E_069 {
+  require cap(relay1)
+  set relay1 = 1
+  retry 3 times {
+    readback relay1 expect 1
+    break
+  }
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V3E_070,multi_device_sensor_relay,1,1,1,1,1,1,500550021e0046051e0640651a47051e002c6502640a1e02334065086417411e026404411e00470252,,,,"task V3E_070 {
+  require cap(relay1)
+  set relay1 = 0
+  retry 3 times {
+    readback relay1 expect 0
+  }
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V3E_071,multi_device_sensor_relay,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task V3E_071 {
+  require cap(relay2)
+  set relay2 = 1
+  retry 3 times {
+    readback relay2 expect 1
+    break
+  }
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V3E_072,multi_device_sensor_relay,1,1,1,1,1,1,500650021e0046061e0640651a47061e002c6502640a1e02334065086417411e026404411e00470252,,,,"task V3E_072 {
+  require cap(relay2)
+  set relay2 = 0
+  retry 3 times {
+    readback relay2 expect 0
+  }
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+V3E_073,multi_device_sensor_relay,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task V3E_073 {
+  require cap(relay1)
+  set relay1 = 1
+  retry 3 times {
+    readback relay1 expect 1
+    break
+  }
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V3E_074,multi_device_sensor_relay,1,1,1,1,1,1,500550031e0046051e0640651a47051e002c6502640a1e02334065086417411e026404411e00470352,,,,"task V3E_074 {
+  require cap(relay1)
+  set relay1 = 0
+  retry 3 times {
+    readback relay1 expect 0
+  }
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V3E_075,multi_device_sensor_relay,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task V3E_075 {
+  require cap(relay2)
+  set relay2 = 1
+  retry 3 times {
+    readback relay2 expect 1
+    break
+  }
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V3E_076,multi_device_sensor_relay,1,1,1,1,1,1,500650031e0046061e0640651a47061e002c6502640a1e02334065086417411e026404411e00470352,,,,"task V3E_076 {
+  require cap(relay2)
+  set relay2 = 0
+  retry 3 times {
+    readback relay2 expect 0
+  }
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+V3E_077,long_sequence,1,1,1,1,1,1,50051e02460547051e022c51321e00460547051e002c52,,,,"task V3E_077 {
+  require cap(relay1)
+  set relay1 = 1
+  readback relay1 expect 1
+  wait 50ms
+  set relay1 = 0
+  readback relay1 expect 0
+  halt
+}"
+V3E_078,long_sequence,1,1,1,1,1,1,50051e02460547051e022c51641e00460547051e002c52,,,,"task V3E_078 {
+  require cap(relay1)
+  set relay1 = 1
+  readback relay1 expect 1
+  wait 100ms
+  set relay1 = 0
+  readback relay1 expect 0
+  halt
+}"
+V3E_079,long_sequence,1,1,1,1,1,1,50051e02460547051e022c51c8011e00460547051e002c52,,,,"task V3E_079 {
+  require cap(relay1)
+  set relay1 = 1
+  readback relay1 expect 1
+  wait 200ms
+  set relay1 = 0
+  readback relay1 expect 0
+  halt
+}"
+V3E_080,long_sequence,1,1,1,1,1,1,50061e02460647061e022c51321e00460647061e002c52,,,,"task V3E_080 {
+  require cap(relay2)
+  set relay2 = 1
+  readback relay2 expect 1
+  wait 50ms
+  set relay2 = 0
+  readback relay2 expect 0
+  halt
+}"
+V3E_081,long_sequence,1,1,1,1,1,1,50061e02460647061e022c51641e00460647061e002c52,,,,"task V3E_081 {
+  require cap(relay2)
+  set relay2 = 1
+  readback relay2 expect 1
+  wait 100ms
+  set relay2 = 0
+  readback relay2 expect 0
+  halt
+}"
+V3E_082,long_sequence,1,1,1,1,1,1,50061e02460647061e022c51c8011e00460647061e002c52,,,,"task V3E_082 {
+  require cap(relay2)
+  set relay2 = 1
+  readback relay2 expect 1
+  wait 200ms
+  set relay2 = 0
+  readback relay2 expect 0
+  halt
+}"
+V3E_083,retry_then_sensor,1,1,1,1,1,1,500550011e0440651e1e02460547051e022c6502640a1e0233406508641b411e026404411e00470152,,,,"task V3E_083 {
+  require cap(relay1)
+  require cap(water_sensor)
+  retry 2 times {
+    set relay1 = 1
+    readback relay1 expect 1
+  }
+  read water_sensor
+  halt
+}"
+V3E_084,retry_then_sensor,1,1,1,1,1,1,500650011e0440651e1e02460647061e022c6502640a1e0233406508641b411e026404411e00470152,,,,"task V3E_084 {
+  require cap(relay2)
+  require cap(water_sensor)
+  retry 2 times {
+    set relay2 = 1
+    readback relay2 expect 1
+  }
+  read water_sensor
+  halt
+}"
+V3E_085,retry_then_sensor,1,1,1,1,1,1,500550021e0440651e1e02460547051e022c6502640a1e0233406508641b411e026404411e00470252,,,,"task V3E_085 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  retry 2 times {
+    set relay1 = 1
+    readback relay1 expect 1
+  }
+  read temperature_sensor
+  halt
+}"
+V3E_086,retry_then_sensor,1,1,1,1,1,1,500650021e0440651e1e02460647061e022c6502640a1e0233406508641b411e026404411e00470252,,,,"task V3E_086 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  retry 2 times {
+    set relay2 = 1
+    readback relay2 expect 1
+  }
+  read temperature_sensor
+  halt
+}"
+V3E_087,retry_then_sensor,1,1,1,1,1,1,500550031e0440651e1e02460547051e022c6502640a1e0233406508641b411e026404411e00470352,,,,"task V3E_087 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  retry 2 times {
+    set relay1 = 1
+    readback relay1 expect 1
+  }
+  read humidity_sensor
+  halt
+}"
+V3E_088,retry_then_sensor,1,1,1,1,1,1,500650031e0440651e1e02460647061e022c6502640a1e0233406508641b411e026404411e00470352,,,,"task V3E_088 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  retry 2 times {
+    set relay2 = 1
+    readback relay2 expect 1
+  }
+  read humidity_sensor
+  halt
+}"
+V3E_089,toggle_readback,1,1,1,1,1,1,50051e0440651e1e02460547051e022c1e00460547051e002c41411e023364214152,,,,"task V3E_089 {
+  require cap(relay1)
+  repeat 2 times {
+    set relay1 = 1
+    readback relay1 expect 1
+    set relay1 = 0
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_090,toggle_readback,1,1,1,1,1,1,50051e064065201e02460547051e022c51641e00460547051e002c41411e023364234152,,,,"task V3E_090 {
+  require cap(relay1)
+  repeat 3 times {
+    set relay1 = 1
+    readback relay1 expect 1
+    wait 100ms
+    set relay1 = 0
+    readback relay1 expect 0
+  }
+  halt
+}"
+V3E_091,toggle_readback,1,1,1,1,1,1,50061e0440651e1e02460647061e022c1e00460647061e002c41411e023364214152,,,,"task V3E_091 {
+  require cap(relay2)
+  repeat 2 times {
+    set relay2 = 1
+    readback relay2 expect 1
+    set relay2 = 0
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_092,toggle_readback,1,1,1,1,1,1,50061e0640651e1e02460647061e022c1e00460647061e002c41411e023364214152,,,,"task V3E_092 {
+  require cap(relay2)
+  repeat 3 times {
+    set relay2 = 1
+    readback relay2 expect 1
+    set relay2 = 0
+    readback relay2 expect 0
+  }
+  halt
+}"
+V3E_093,cross_device_retry,1,1,1,1,1,1,500550061e0440651e1e02460547051e022c1e02460647061e022c41411e023364214152,,,,"task V3E_093 {
+  require cap(relay1)
+  require cap(relay2)
+
+  repeat 2 times {
+    set relay1 = 1
+    readback relay1 expect 1
+    
+    set relay2 = 1
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_094,cross_device_retry,1,1,1,1,1,1,500550061e0640651e1e02460547051e022c1e02460647061e022c41411e023364214152,,,,"task V3E_094 {
+  require cap(relay1)
+  require cap(relay2)
+
+  repeat 3 times {
+    set relay1 = 1
+    readback relay1 expect 1
+    
+    set relay2 = 1
+    readback relay2 expect 1
+  }
+  halt
+}"
+V3E_095,readback_all_sensors,1,1,1,1,1,1,5001500250034701510a4702510a470352,,,,"task V3E_095 {
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+
+  read water_sensor
+  wait 10ms
+  read temperature_sensor
+  wait 10ms
+  read humidity_sensor
+  halt
+}"
+V3E_096,readback_all_sensors,1,1,1,1,1,1,50055001500250031e02460547051e022c51644701470247031e00460547051e002c52,,,,"task V3E_096 {
+  require cap(relay1)
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+
+  set relay1 = 1
+  readback relay1 expect 1
+
+  wait 100ms
+  read water_sensor
+  read temperature_sensor
+  read humidity_sensor
+
+  set relay1 = 0
+  readback relay1 expect 0
+
+  halt
+}"

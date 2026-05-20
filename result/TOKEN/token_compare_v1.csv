@@ -1,0 +1,525 @@
+﻿task_id,format,prompt_eval_count,eval_count,output_chars,output_bytes,response,model
+T001,MIR,66,6,13,13,SET RELAY1 ON,llama3.1:8b
+T001,JSON,56,19,38,38,"{
+  ""T001"": {
+    ""relay1"": ""on""
+  }
+}",llama3.1:8b
+T001,PYTHON,58,5,11,11,relay1.on(),llama3.1:8b
+T002,MIR,66,6,14,14,SET RELAY1 OFF,llama3.1:8b
+T002,JSON,56,27,66,66,"{
+  ""task_id"": ""T002"",
+  ""device"": ""relay1"",
+  ""action"": ""close""
+}",llama3.1:8b
+T002,PYTHON,58,5,12,12,relay1.off(),llama3.1:8b
+T003,MIR,66,6,13,13,SET RELAY2 ON,llama3.1:8b
+T003,JSON,56,27,65,65,"{
+  ""task_id"": ""T003"",
+  ""device"": ""relay2"",
+  ""action"": ""open""
+}",llama3.1:8b
+T003,PYTHON,58,5,11,11,relay2.on(),llama3.1:8b
+T004,MIR,66,8,13,13,OUTP RELAY2=0,llama3.1:8b
+T004,JSON,56,27,66,66,"{
+  ""task_id"": ""T004"",
+  ""device"": ""relay2"",
+  ""action"": ""close""
+}",llama3.1:8b
+T004,PYTHON,58,5,14,14,relay2.close(),llama3.1:8b
+T005,MIR,70,5,18,18,read water_sensor;,llama3.1:8b
+T005,JSON,60,27,71,71,"{
+  ""task_id"": ""T005"",
+  ""device"": ""water_sensor"",
+  ""action"": ""read""
+}",llama3.1:8b
+T005,PYTHON,62,70,283,305,"```python
+# 读取水位传感器的当前值
+water_level = water_sensor.read()
+print(water_level)
+```
+
+Note: This code assumes that the `water_sensor` object has a `read()` method to retrieve its current value. The actual implementation may vary depending on the specific hardware and library being used.",llama3.1:8b
+T006,MIR,70,5,24,24,READ temperature_sensor;,llama3.1:8b
+T006,JSON,60,29,91,91,"{
+  ""task_id"": ""T006"",
+  ""device"": ""temperature_sensor"",
+  ""action"": ""read_current_value""
+}",llama3.1:8b
+T006,PYTHON,62,79,362,374,"```python
+# 读取 temperature_sensor 的当前值
+temperature = temperature_sensor.read()
+print(temperature)
+```
+
+This code reads the current value from the `temperature_sensor` and prints it to the console. The `read()` method is assumed to be a built-in method of the `temperature_sensor` object, which returns the current temperature reading as a float or integer value.",llama3.1:8b
+T007,MIR,70,5,26,26,read humidity_sensor.value,llama3.1:8b
+T007,JSON,60,29,88,88,"{
+  ""task_id"": ""T007"",
+  ""device"": ""humidity_sensor"",
+  ""action"": ""read_current_value""
+}",llama3.1:8b
+T007,PYTHON,62,72,325,337,"```python
+# 读取humidity_sensor的当前值
+humidity_value = humidity_sensor.read()
+print(humidity_value)
+```
+
+Note: This code assumes that `humidity_sensor` is an object with a `read()` method, which returns the current value of the sensor. The actual implementation may vary depending on the specific hardware and library being used.",llama3.1:8b
+T008,MIR,70,4,11,11,READ relay1,llama3.1:8b
+T008,JSON,60,34,88,88,"{
+  ""task"": {
+    ""id"": ""T008"",
+    ""device"": ""relay1"",
+    ""action"": ""read_state""
+  }
+}",llama3.1:8b
+T008,PYTHON,62,69,256,256,"```python
+import RPi.GPIO as GPIO
+
+def read_relay_state():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(17, GPIO.OUT)  # Replace with the actual pin number of relay1
+    state = GPIO.input(17)
+    GPIO.cleanup()
+    return state
+
+print(read_relay_state())
+```",llama3.1:8b
+T009,MIR,70,6,18,18,RELAY2_READ_STATUS,llama3.1:8b
+T009,JSON,60,28,72,72,"{
+  ""task_id"": ""T009"",
+  ""device"": ""relay2"",
+  ""action"": ""read_status""
+}",llama3.1:8b
+T009,PYTHON,62,85,324,324,"```python
+import RPi.GPIO as GPIO
+
+# Set up the GPIO module
+GPIO.setmode(GPIO.BCM)
+
+# Define the pin for the relay
+relay_pin = 17
+
+# Read the current state of the relay
+current_state = GPIO.input(relay_pin)
+
+print(""Current state:"", ""ON"" if current_state else ""OFF"")
+
+# Clean up the GPIO pins when finished
+GPIO.cleanup()
+```",llama3.1:8b
+T010,MIR,76,13,36,36,"OPEN relay1
+WAIT 200 ms
+CLOSE relay1",llama3.1:8b
+T010,JSON,66,40,108,108,"{
+  ""T010"": {
+    ""relay1"": {
+      ""action"": ""open"",
+      ""wait"": 200,
+      ""action"": ""close""
+    }
+  }
+}",llama3.1:8b
+T010,PYTHON,68,16,40,40,"relay1.on()
+time.sleep(0.2)
+relay1.off()",llama3.1:8b
+T011,MIR,76,13,35,35,"RELAY_SET relay1 OFF
+DELAY 200
+STOP",llama3.1:8b
+T011,JSON,66,71,219,219,"{
+  ""tasks"": [
+    {
+      ""id"": ""T011"",
+      ""devices"": [""relay1""],
+      ""actions"": [
+        {""type"": ""close"", ""device"": ""relay1""},
+        {""type"": ""wait"", ""time"": 200},
+        {""type"": ""stop""}
+      ]
+    }
+  ]
+}",llama3.1:8b
+T011,PYTHON,68,101,354,370,"```python
+import RPi.GPIO as GPIO
+
+# 关闭 relay1
+GPIO.output(17, False)  # Replace 17 with the actual pin number of relay1
+
+# 等待 200 毫秒
+import time
+time.sleep(0.2)
+
+# 停止
+GPIO.cleanup()
+```
+
+Note: This code assumes that you are using a Raspberry Pi and have already set up GPIO for your relay. The pin number may vary depending on the actual hardware setup.",llama3.1:8b
+T012,MIR,76,13,36,36,"OPEN relay2
+WAIT 200 ms
+CLOSE relay2",llama3.1:8b
+T012,JSON,66,93,327,327,"{
+  ""tasks"": [
+    {
+      ""id"": ""T012"",
+      ""devices"": [""relay2""],
+      ""actions"": [
+        {
+          ""type"": ""open"",
+          ""device"": ""relay2""
+        },
+        {
+          ""type"": ""wait"",
+          ""ms"": 200
+        },
+        {
+          ""type"": ""close"",
+          ""device"": ""relay2""
+        }
+      ]
+    }
+  ]
+}",llama3.1:8b
+T012,PYTHON,68,16,40,40,"relay2.on()
+time.sleep(0.2)
+relay2.off()",llama3.1:8b
+T013,MIR,76,11,24,24,"RELAY2 OFF
+WAIT 200
+STOP",llama3.1:8b
+T013,JSON,66,85,297,297,"{
+  ""tasks"": [
+    {
+      ""id"": ""T013"",
+      ""devices"": [""relay2""],
+      ""actions"": [
+        {
+          ""type"": ""close"",
+          ""device"": ""relay2""
+        },
+        {
+          ""type"": ""wait"",
+          ""ms"": 200
+        },
+        {
+          ""type"": ""stop""
+        }
+      ]
+    }
+  ]
+}",llama3.1:8b
+T013,PYTHON,68,16,42,42,"relay2.off()
+time.sleep(0.2)
+relay2.stop()",llama3.1:8b
+T014,MIR,82,15,39,39,"OPEN relay1
+WAIT 0.5s
+READ water_sensor",llama3.1:8b
+T014,JSON,72,78,281,281,"{
+  ""tasks"": [
+    {
+      ""id"": ""T014"",
+      ""steps"": [
+        {
+          ""device"": ""relay1"",
+          ""action"": ""open""
+        },
+        {
+          ""wait"": 500
+        },
+        {
+          ""device"": ""water_sensor"",
+          ""action"": ""read""
+        }
+      ]
+    }
+  ]
+}",llama3.1:8b
+T014,PYTHON,74,104,371,371,"```python
+import RPi.GPIO as GPIO
+
+# Set up GPIO mode
+GPIO.setmode(GPIO.BCM)
+
+# Set relay1 as output and turn it on
+GPIO.setup(17, GPIO.OUT)
+GPIO.output(17, GPIO.HIGH)
+
+# Wait for 500 milliseconds
+import time
+time.sleep(0.5)
+
+# Read water_sensor (assuming it's a digital input connected to pin 23)
+water_level = GPIO.input(23)
+
+# Clean up GPIO settings
+GPIO.cleanup()
+```",llama3.1:8b
+T015,MIR,82,16,45,45,"relay1.close()
+wait(0.5s)
+water_sensor.read()",llama3.1:8b
+T015,JSON,72,78,282,282,"{
+  ""tasks"": [
+    {
+      ""id"": ""T015"",
+      ""steps"": [
+        {
+          ""device"": ""relay1"",
+          ""action"": ""close""
+        },
+        {
+          ""wait"": 500
+        },
+        {
+          ""device"": ""water_sensor"",
+          ""action"": ""read""
+        }
+      ]
+    }
+  ]
+}",llama3.1:8b
+T015,PYTHON,74,69,302,302,"```python
+relay1.close()
+time.sleep(0.5)
+print(water_sensor.read())
+```
+
+Note: This code assumes that `relay1` and `water_sensor` are objects with the necessary methods (`close()` and `read()`, respectively). The actual implementation may vary depending on the specific hardware and library being used.",llama3.1:8b
+T016,MIR,82,15,45,45,"OPEN relay2
+WAIT 0.5s
+READ temperature_sensor",llama3.1:8b
+T016,JSON,72,82,427,427,"```json
+{
+    ""tasks"": [
+        {
+            ""id"": ""T016"",
+            ""steps"": [
+                {
+                    ""device"": ""relay2"",
+                    ""action"": ""open""
+                },
+                {
+                    ""wait"": 500
+                },
+                {
+                    ""device"": ""temperature_sensor"",
+                    ""action"": ""read""
+                }
+            ]
+        }
+    ]
+}
+```",llama3.1:8b
+T016,PYTHON,74,18,60,60,"relay2.on()
+time.sleep(0.5)
+print(temperature_sensor.read())",llama3.1:8b
+T017,MIR,82,13,47,47,"relay2.close()
+wait(500)
+humidity_sensor.read()",llama3.1:8b
+T017,JSON,72,78,285,285,"{
+  ""tasks"": [
+    {
+      ""id"": ""T017"",
+      ""steps"": [
+        {
+          ""device"": ""relay2"",
+          ""action"": ""close""
+        },
+        {
+          ""wait"": 500
+        },
+        {
+          ""device"": ""humidity_sensor"",
+          ""action"": ""read""
+        }
+      ]
+    }
+  ]
+}",llama3.1:8b
+T017,PYTHON,74,75,334,334,"```python
+relay2.close()
+time.sleep(0.5)
+humidity = humidity_sensor.read()
+print(humidity)
+```
+
+Note: This code assumes that `relay2` and `humidity_sensor` are objects with the necessary methods, and `time` is a module for timing functions. The actual implementation may vary depending on the specific hardware and library being used.",llama3.1:8b
+T018,MIR,75,8,29,29,"read relay1
+read water_sensor",llama3.1:8b
+T018,JSON,65,67,238,238,"{
+  ""tasks"": [
+    {
+      ""id"": ""T018"",
+      ""steps"": [
+        {
+          ""device"": ""relay1"",
+          ""action"": ""read""
+        },
+        {
+          ""device"": ""water_sensor"",
+          ""action"": ""read""
+        }
+      ]
+    }
+  ]
+}",llama3.1:8b
+T018,PYTHON,67,35,136,136,"```python
+# Read the state of relay1
+relay_state = relay1.read()
+
+# Read the state of water_sensor
+water_level = water_sensor.read()
+```",llama3.1:8b
+T019,MIR,75,8,35,35,"read relay2
+read temperature_sensor",llama3.1:8b
+T019,JSON,65,67,244,244,"{
+  ""tasks"": [
+    {
+      ""id"": ""T019"",
+      ""steps"": [
+        {
+          ""device"": ""relay2"",
+          ""action"": ""read""
+        },
+        {
+          ""device"": ""temperature_sensor"",
+          ""action"": ""read""
+        }
+      ]
+    }
+  ]
+}",llama3.1:8b
+T019,PYTHON,67,34,156,156,"```python
+# Read the state of relay2
+relay_state = relay2.read()
+
+# Read the temperature from temperature_sensor
+temperature = temperature_sensor.read()
+```",llama3.1:8b
+T020,MIR,75,10,42,42,"read_water_sensor()
+read_humidity_sensor()",llama3.1:8b
+T020,JSON,65,67,247,247,"{
+  ""tasks"": [
+    {
+      ""id"": ""T020"",
+      ""steps"": [
+        {
+          ""device"": ""water_sensor"",
+          ""action"": ""read""
+        },
+        {
+          ""device"": ""humidity_sensor"",
+          ""action"": ""read""
+        }
+      ]
+    }
+  ]
+}",llama3.1:8b
+T020,PYTHON,67,36,163,163,"```python
+# Read the value from the water sensor
+water_level = water_sensor.read()
+
+# Read the value from the humidity sensor
+humidity = humidity_sensor.read()
+```",llama3.1:8b
+T021,MIR,74,9,28,28,"WAIT 100ms
+READ water_sensor",llama3.1:8b
+T021,JSON,64,78,283,283,"{
+  ""tasks"": [
+    {
+      ""task_id"": ""T021"",
+      ""devices"": [""water_sensor""],
+      ""actions"": [
+        {
+          ""action"": ""wait"",
+          ""params"": {""ms"": 100}
+        },
+        {
+          ""action"": ""read"",
+          ""device"": ""water_sensor""
+        }
+      ]
+    }
+  ]
+}",llama3.1:8b
+T021,PYTHON,66,38,143,143,"import time
+
+# Wait for 100 milliseconds
+time.sleep(0.1)
+
+# Read the water sensor value
+water_level = input(""water_sensor"")
+
+print(water_level)",llama3.1:8b
+T022,MIR,74,9,34,34,"WAIT 100ms
+READ temperature_sensor",llama3.1:8b
+T022,JSON,64,78,295,295,"{
+  ""tasks"": [
+    {
+      ""task_id"": ""T022"",
+      ""devices"": [""temperature_sensor""],
+      ""actions"": [
+        {
+          ""action"": ""wait"",
+          ""params"": {""ms"": 100}
+        },
+        {
+          ""action"": ""read"",
+          ""device"": ""temperature_sensor""
+        }
+      ]
+    }
+  ]
+}",llama3.1:8b
+T022,PYTHON,66,33,148,148,"import time
+
+# Wait for 100 milliseconds
+time.sleep(0.1)
+
+# Read the temperature from the temperature sensor
+temperature = temperature_sensor.read()",llama3.1:8b
+T023,MIR,74,9,31,31,"WAIT 100ms
+READ humidity_sensor",llama3.1:8b
+T023,JSON,64,78,289,289,"{
+  ""tasks"": [
+    {
+      ""task_id"": ""T023"",
+      ""devices"": [""humidity_sensor""],
+      ""actions"": [
+        {
+          ""action"": ""wait"",
+          ""params"": {""ms"": 100}
+        },
+        {
+          ""action"": ""read"",
+          ""device"": ""humidity_sensor""
+        }
+      ]
+    }
+  ]
+}",llama3.1:8b
+T023,PYTHON,66,32,130,130,"import time
+
+# Wait for 100 milliseconds
+time.sleep(0.1)
+
+# Read the humidity sensor value
+humidity_value = humidity_sensor.read()",llama3.1:8b
+T024,MIR,80,15,39,39,"OPEN relay1
+WAIT 50ms
+CLOSE relay1
+STOP",llama3.1:8b
+T024,JSON,70,72,224,224,"{
+  ""tasks"": [
+    {
+      ""id"": ""T024"",
+      ""devices"": [""relay1""],
+      ""steps"": [
+        {""action"": ""open"", ""device"": ""relay1""},
+        {""wait"": 50},
+        {""action"": ""close"", ""device"": ""relay1""}
+      ]
+    }
+  ]
+}",llama3.1:8b
+T024,PYTHON,72,16,41,41,"relay1.on()
+time.sleep(0.05)
+relay1.off()",llama3.1:8b

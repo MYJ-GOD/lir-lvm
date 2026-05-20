@@ -1,0 +1,10 @@
+# Generation Eval Summary
+
+- total: 24
+- ir_valid_rate: 1.000
+- compile_pass_rate: 1.000
+- task_success_rate: 1.000
+
+## Error Breakdown
+
+- none

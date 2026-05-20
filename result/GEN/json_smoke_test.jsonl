@@ -1,0 +1,3 @@
+{"task_id": "V2_001", "attempt": 1, "mir": "{\"task\":\"v2_001\",\"cap\":[\"relay1\"],\"body\":[{\"op\":\"set\",\"dev\":\"relay1\",\"to\":1},{\"op\":\"halt\"}]}"}
+{"task_id": "V2_002", "attempt": 1, "mir": "{\"task\":\"v2_002\",\"cap\":[\"relay1\"],\"body\":[{\"op\":\"set\",\"dev\":\"relay1\",\"to\":0},{\"op\":\"halt\"}]}"}
+{"task_id": "V2_003", "attempt": 1, "mir": "{\"task\":\"v2_003\",\"cap\":[\"relay2\"],\"body\":[{\"op\":\"set\",\"dev\":\"relay2\",\"to\":1},{\"op\":\"halt\"}]}"}

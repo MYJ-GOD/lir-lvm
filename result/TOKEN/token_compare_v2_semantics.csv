@@ -1,0 +1,517 @@
+﻿task_id,format,prompt_eval_count,eval_count,output_chars,output_bytes,response,model,semantic_ok,expected_semantics,observed_semantics
+T001,MIR,146,27,65,65,"task T001 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+}",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""100""]]"
+T001,JSON,68,68,255,255,"```json
+{
+  ""T001"": {
+    ""device"": ""relay1"",
+    ""action"": ""open""
+  }
+}
+```
+
+This compact JSON structure represents the task with a unique ID (T001), specifies the allowed device as relay1, and defines the action to be taken on that device as opening it.",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""halt""]]"
+T001,PYTHON,70,5,11,11,relay1.on(),llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""halt""]]"
+T002,MIR,146,24,59,59,"task T002 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""halt""]]"
+T002,JSON,68,26,65,65,"{
+  ""T002"": {
+    ""device"": ""relay1"",
+    ""action"": ""close""
+  }
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""halt""]]"
+T002,PYTHON,70,5,12,12,relay1.off(),llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""halt""]]"
+T003,MIR,146,27,65,65,"task T003 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+}",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""100""]]"
+T003,JSON,68,30,76,76,"```json
+{
+  ""T003"": {
+    ""device"": ""relay2"",
+    ""action"": ""open""
+  }
+}
+```",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""halt""]]"
+T003,PYTHON,70,5,11,11,relay2.on(),llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""halt""]]"
+T004,MIR,146,24,59,59,"task T004 {
+  require cap(relay2)
+  set relay2 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""halt""]]"
+T004,JSON,68,26,65,65,"{
+  ""T004"": {
+    ""device"": ""relay2"",
+    ""action"": ""close""
+  }
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""halt""]]"
+T004,PYTHON,70,5,14,14,relay2.close(),llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""halt""]]"
+T005,MIR,150,27,81,81,"task T005 {
+  require cap(water_sensor)
+  read water_sensor
+  wait 100ms
+  halt
+}",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""halt""]]","[[""read"", ""water_sensor""], [""wait"", ""100""], [""halt""]]"
+T005,JSON,72,63,271,271,"```json
+{
+  ""task_id"": ""T005"",
+  ""device"": ""water_sensor"",
+  ""instruction"": ""read_current_value""
+}
+```
+
+This JSON object represents a compact machine-readable structure that fully represents the task of reading the current value from the water sensor device with ID T005.",llama3.1:8b,1,"[[""read"", ""water_sensor""], [""halt""]]","[[""read"", ""water_sensor""], [""halt""]]"
+T005,PYTHON,74,34,143,143,"```python
+value = water_sensor.read()
+print(value)
+```
+
+This code reads the current value from the `water_sensor` and prints it to the console.",llama3.1:8b,1,"[[""read"", ""water_sensor""], [""halt""]]","[[""read"", ""water_sensor""], [""halt""]]"
+T006,MIR,150,24,86,86,"task T006 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  wait 100ms
+}",llama3.1:8b,0,"[[""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""temperature_sensor""], [""wait"", ""100""]]"
+T006,JSON,72,62,274,274,"```json
+{
+  ""task_id"": ""T006"",
+  ""device"": ""temperature_sensor"",
+  ""instruction"": ""read_current_value""
+}
+```
+
+This JSON object represents a compact machine-readable structure that fully represents the task of reading the current value from a temperature sensor with ID T006.",llama3.1:8b,1,"[[""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""temperature_sensor""], [""halt""]]"
+T006,PYTHON,74,8,38,38,temp_value = temperature_sensor.read(),llama3.1:8b,1,"[[""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""temperature_sensor""], [""halt""]]"
+T007,MIR,150,25,85,85,"task T007 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  wait 100ms
+} halt",llama3.1:8b,0,"[[""read"", ""humidity_sensor""], [""halt""]]",null
+T007,JSON,72,62,270,270,"```json
+{
+  ""task_id"": ""T007"",
+  ""device"": ""humidity_sensor"",
+  ""instruction"": ""read_current_value""
+}
+```
+
+This JSON object represents a compact machine-readable structure that fully represents the task of reading the current value from the humidity sensor with ID T007.",llama3.1:8b,1,"[[""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""humidity_sensor""], [""halt""]]"
+T007,PYTHON,74,49,227,227,"```python
+humidity_value = humidity_sensor.read()
+print(humidity_value)
+```
+
+This code reads the current value from the `humidity_sensor` and stores it in the variable `humidity_value`. The value is then printed to the console.",llama3.1:8b,1,"[[""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""humidity_sensor""], [""halt""]]"
+T008,MIR,150,31,82,82,"task T008 {
+  require cap(relay1)
+  set relay1 = read relay1
+  wait 100ms
+  halt
+}",llama3.1:8b,0,"[[""read"", ""relay1""], [""halt""]]",null
+T008,JSON,72,80,315,315,"```json
+{
+  ""T008"": {
+    ""device"": ""relay1"",
+    ""action"": ""read_state""
+  }
+}
+```
+
+This JSON object represents a single task with ID T008, which instructs the device relay1 to read its current state. The action is specified as `read_state`, indicating that the task is to retrieve the current status of the device.",llama3.1:8b,1,"[[""read"", ""relay1""], [""halt""]]","[[""read"", ""relay1""], [""halt""]]"
+T008,PYTHON,74,6,19,19,relay1.read_state(),llama3.1:8b,1,"[[""read"", ""relay1""], [""halt""]]","[[""read"", ""relay1""], [""halt""]]"
+T009,MIR,150,31,82,82,"task T009 {
+  require cap(relay2)
+  set relay2 = read relay2
+  wait 100ms
+  halt
+}",llama3.1:8b,0,"[[""read"", ""relay2""], [""halt""]]",null
+T009,JSON,72,62,217,217,"```json
+{
+  ""T009"": {
+    ""device"": ""relay2"",
+    ""action"": ""read_state""
+  }
+}
+```
+
+This JSON object represents a single task with ID `T009`. It specifies that the task is to read the current state of device `relay2`.",llama3.1:8b,1,"[[""read"", ""relay2""], [""halt""]]","[[""read"", ""relay2""], [""halt""]]"
+T009,PYTHON,74,6,19,19,relay2.read_state(),llama3.1:8b,1,"[[""read"", ""relay2""], [""halt""]]","[[""read"", ""relay2""], [""halt""]]"
+T010,MIR,156,30,72,72,"task T010 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""halt""]]"
+T010,JSON,78,84,335,335,"```json
+{
+  ""T010"": {
+    ""relay1"": [
+      {""action"": ""open""},
+      {""delay"": 200},
+      {""action"": ""close""}
+    ]
+  }
+}
+```
+
+This compact JSON control program represents the task with a single instruction to open relay1, wait for 200 milliseconds, and then close it. The structure is machine-readable and fully represents the task.",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""set"", ""relay1"", ""0""], [""halt""]]"
+T010,PYTHON,80,16,40,40,"relay1.on()
+time.sleep(0.2)
+relay1.off()",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""200""], [""set"", ""relay1"", ""0""], [""halt""]]"
+T011,MIR,156,30,72,72,"task T011 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""halt""]]"
+T011,JSON,78,41,111,111,"{
+  ""T011"": {
+    ""relay1"": {
+      ""action"": ""off"",
+      ""wait"": 200,
+      ""duration_unit"": ""ms""
+    }
+  }
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""halt""]]"
+T011,PYTHON,80,16,44,44,"relay1.close()
+time.sleep(0.2)
+relay1.stop()",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""200""], [""halt""]]"
+T012,MIR,156,30,72,72,"task T012 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 200ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""halt""]]"
+T012,JSON,78,98,380,380,"```json
+{
+  ""T012"": {
+    ""device"": ""relay2"",
+    ""actions"": [
+      {""action"": ""open""},
+      {""delay"": 200},
+      {""action"": ""close""}
+    ]
+  }
+}
+```
+
+This compact JSON control program represents the task with a unique ID `T012`, specifies that it targets device `relay2`, and includes three actions: opening the relay, waiting for 200 milliseconds, and then closing the relay.",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""set"", ""relay2"", ""0""], [""halt""]]"
+T012,PYTHON,80,16,40,40,"relay2.on()
+time.sleep(0.2)
+relay2.off()",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""200""], [""set"", ""relay2"", ""0""], [""halt""]]"
+T013,MIR,156,30,72,72,"task T013 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 200ms
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""halt""]]"
+T013,JSON,78,47,135,135,"{
+  ""T013"": {
+    ""device"": ""relay2"",
+    ""action"": [
+      {""type"": ""close""},
+      {""delay"": 200},
+      {""type"": ""stop""}
+    ]
+  }
+}",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""halt""]]",null
+T013,PYTHON,80,16,44,44,"relay2.close()
+time.sleep(0.2)
+relay2.stop()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""200""], [""halt""]]"
+T014,MIR,162,42,120,120,"task T014 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 500ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]"
+T014,JSON,84,82,327,327,"```json
+{
+    ""T014"": {
+        ""steps"": [
+            {""device"": ""relay1"", ""action"": ""open""},
+            {""wait"": 500},
+            {""device"": ""water_sensor"", ""action"": ""read""}
+        ]
+    }
+}
+```
+
+This JSON control program represents the task of opening relay1, waiting for 500 milliseconds, and then reading water_sensor.",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]",null
+T014,PYTHON,86,18,54,54,"relay1.on()
+time.sleep(0.5)
+print(water_sensor.read())",llama3.1:8b,0,"[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""500""], [""halt""]]"
+T015,MIR,162,42,120,120,"task T015 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 500ms
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]"
+T015,JSON,84,82,328,328,"```json
+{
+    ""T015"": {
+        ""steps"": [
+            {""device"": ""relay1"", ""action"": ""close""},
+            {""wait"": 500},
+            {""device"": ""water_sensor"", ""action"": ""read""}
+        ]
+    }
+}
+```
+
+This JSON control program represents the task of closing relay1, waiting for 500 milliseconds, and then reading water_sensor.",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]",null
+T015,PYTHON,86,18,55,55,"relay1.off()
+time.sleep(0.5)
+print(water_sensor.read())",llama3.1:8b,0,"[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""read"", ""water_sensor""], [""halt""]]","[[""set"", ""relay1"", ""0""], [""wait"", ""500""], [""halt""]]"
+T016,MIR,162,42,132,132,"task T016 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]"
+T016,JSON,84,78,359,359,"```json
+{
+    ""T016"": {
+        ""steps"": [
+            {
+                ""device"": ""relay2"",
+                ""action"": ""open""
+            },
+            {
+                ""delay"": 500,
+                ""unit"": ""ms""
+            },
+            {
+                ""device"": ""temperature_sensor"",
+                ""action"": ""read""
+            }
+        ]
+    }
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]",null
+T016,PYTHON,86,16,53,53,"relay2.on()
+time.sleep(0.5)
+temperature_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]","[[""set"", ""relay2"", ""1""], [""wait"", ""500""], [""read"", ""temperature_sensor""], [""halt""]]"
+T017,MIR,162,42,126,126,"task T017 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 500ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]"
+T017,JSON,84,78,357,357,"```json
+{
+    ""T017"": {
+        ""steps"": [
+            {
+                ""device"": ""relay2"",
+                ""action"": ""close""
+            },
+            {
+                ""delay"": 500,
+                ""unit"": ""ms""
+            },
+            {
+                ""device"": ""humidity_sensor"",
+                ""action"": ""read""
+            }
+        ]
+    }
+}
+```",llama3.1:8b,0,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]",null
+T017,PYTHON,86,16,53,53,"relay2.close()
+time.sleep(0.5)
+humidity_sensor.read()",llama3.1:8b,1,"[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]","[[""set"", ""relay2"", ""0""], [""wait"", ""500""], [""read"", ""humidity_sensor""], [""halt""]]"
+T018,MIR,155,39,118,118,"task T018 {
+  require cap(relay1)
+  require cap(water_sensor)
+
+  read relay1
+  wait 100ms
+  read water_sensor
+  halt
+}",llama3.1:8b,0,"[[""read"", ""relay1""], [""read"", ""water_sensor""], [""halt""]]","[[""read"", ""relay1""], [""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]"
+T018,JSON,77,82,300,300,"```json
+{
+  ""T018"": {
+    ""steps"": [
+      {""device"": ""relay1"", ""action"": ""read""},
+      {""device"": ""water_sensor"", ""action"": ""read""}
+    ]
+  }
+}
+```
+
+This JSON represents the task T018, which involves reading from relay1 and then water_sensor. The steps are defined in a list within the task object.",llama3.1:8b,0,"[[""read"", ""relay1""], [""read"", ""water_sensor""], [""halt""]]",null
+T018,PYTHON,79,9,33,33,"relay1.read()
+water_sensor.read()",llama3.1:8b,1,"[[""read"", ""relay1""], [""read"", ""water_sensor""], [""halt""]]","[[""read"", ""relay1""], [""read"", ""water_sensor""], [""halt""]]"
+T019,MIR,155,33,116,116,"task T019 {
+  require cap(relay2)
+  read relay2
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""read"", ""relay2""], [""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""relay2""], [""read"", ""temperature_sensor""], [""halt""]]"
+T019,JSON,77,85,331,331,"```json
+{
+  ""T019"": {
+    ""steps"": [
+      {""device"": ""relay2"", ""action"": ""read""},
+      {""device"": ""temperature_sensor"", ""action"": ""read""}
+    ]
+  }
+}
+```
+
+This JSON control program represents the task ID T019, which involves reading from relay2 and then temperature_sensor. The steps are defined in a list within the task object.",llama3.1:8b,0,"[[""read"", ""relay2""], [""read"", ""temperature_sensor""], [""halt""]]",null
+T019,PYTHON,79,9,39,39,"relay2.read()
+temperature_sensor.read()",llama3.1:8b,1,"[[""read"", ""relay2""], [""read"", ""temperature_sensor""], [""halt""]]","[[""read"", ""relay2""], [""read"", ""temperature_sensor""], [""halt""]]"
+T020,MIR,155,39,135,135,"task T020 {
+  require cap(water_sensor)
+  read water_sensor
+  wait 100ms
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""humidity_sensor""], [""halt""]]","[[""read"", ""water_sensor""], [""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]"
+T020,JSON,77,91,364,364,"```json
+{
+  ""T020"": {
+    ""steps"": [
+      {
+        ""device"": ""water_sensor"",
+        ""action"": ""read""
+      },
+      {
+        ""device"": ""humidity_sensor"",
+        ""action"": ""read""
+      }
+    ]
+  }
+}
+```
+
+This JSON control program represents the task ID T020, which consists of two steps: reading from the water sensor and then reading from the humidity sensor.",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""humidity_sensor""], [""halt""]]",null
+T020,PYTHON,79,40,106,142,"```python
+# 读取水位传感器数据
+water_level = water_sensor.read()
+
+# 读取湿度传感器数据
+humidity = humidity_sensor.read()
+```",llama3.1:8b,0,"[[""read"", ""water_sensor""], [""read"", ""humidity_sensor""], [""halt""]]",null
+T021,MIR,154,27,81,81,"task T021 {
+  require cap(water_sensor)
+  wait 100ms
+  read water_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]","[[""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]"
+T021,JSON,76,80,299,299,"```json
+{
+  ""T021"": {
+    ""delay"": 100,
+    ""read"": [
+      {
+        ""device"": ""water_sensor"",
+        ""type"": ""value""
+      }
+    ]
+  }
+}
+```
+
+This JSON control program represents the task with ID T021. It includes a delay of 100 milliseconds and then reads the value from the water sensor device.",llama3.1:8b,0,"[[""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]",null
+T021,PYTHON,78,32,117,117,"import time
+
+# Wait for 100 milliseconds
+time.sleep(0.1)
+
+# Read the water sensor
+water_level = input(""water_sensor"")",llama3.1:8b,0,"[[""wait"", ""100""], [""read"", ""water_sensor""], [""halt""]]",null
+T022,MIR,154,27,93,93,"task T022 {
+  require cap(temperature_sensor)
+  wait 100ms
+  read temperature_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]","[[""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]"
+T022,JSON,76,80,355,355,"```json
+{
+    ""T022"": {
+        ""delay"": 100,
+        ""read"": [
+            {
+                ""device"": ""temperature_sensor"",
+                ""type"": ""value""
+            }
+        ]
+    }
+}
+```
+
+This JSON control program represents the task with ID T022. It includes a delay of 100 milliseconds and then reads the value from the temperature sensor device.",llama3.1:8b,0,"[[""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]",null
+T022,PYTHON,78,33,148,148,"import time
+
+# Wait for 100 milliseconds
+time.sleep(0.1)
+
+# Read the temperature from the temperature sensor
+temperature = temperature_sensor.read()",llama3.1:8b,0,"[[""wait"", ""100""], [""read"", ""temperature_sensor""], [""halt""]]",null
+T023,MIR,154,27,87,87,"task T023 {
+  require cap(humidity_sensor)
+  wait 100ms
+  read humidity_sensor
+  halt
+}",llama3.1:8b,1,"[[""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]","[[""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]"
+T023,JSON,76,79,342,342,"```json
+{
+    ""T023"": {
+        ""delay"": 100,
+        ""read"": [
+            {
+                ""device"": ""humidity_sensor"",
+                ""type"": ""value""
+            }
+        ]
+    }
+}
+```
+
+This JSON control program represents the task with ID T023. It includes a delay of 100 milliseconds and then reads the value from the humidity sensor.",llama3.1:8b,0,"[[""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]",null
+T023,PYTHON,78,32,130,130,"import time
+
+# Wait for 100 milliseconds
+time.sleep(0.1)
+
+# Read the humidity sensor value
+humidity_value = humidity_sensor.read()",llama3.1:8b,0,"[[""wait"", ""100""], [""read"", ""humidity_sensor""], [""halt""]]",null
+T024,MIR,160,38,88,88,"task T024 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  set relay1 = 0
+  halt
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""set"", ""relay1"", ""0""], [""halt""]]"
+T024,JSON,82,40,114,114,"{
+  ""T024"": {
+    ""relay1"": [
+      {""action"": ""open""},
+      {""delay"": 50},
+      {""action"": ""close""}
+    ]
+  }
+}",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""set"", ""relay1"", ""0""], [""halt""]]"
+T024,PYTHON,84,16,41,41,"relay1.on()
+time.sleep(0.05)
+relay1.off()",llama3.1:8b,1,"[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""set"", ""relay1"", ""0""], [""halt""]]","[[""set"", ""relay1"", ""1""], [""wait"", ""50""], [""set"", ""relay1"", ""0""], [""halt""]]"
