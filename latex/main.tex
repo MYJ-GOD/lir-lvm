@@ -1201,7 +1201,7 @@ toggle + readback & 循环 set/readback & 是 & 96 闭环任务集 \\
 \section{结论}
 \label{sec:conclusion}
 
-\textbf{Artifact Availability.} 本文所有实验代码、数据集、MVM 固件及编译器源码均已开源，仓库地址：\url{https://github.com/MYJ-GOD/M-Language-Core}。数据集包括 \texttt{tasks\_v2.jsonl}（113 确定性任务）、\texttt{tasks\_v3\_expanded.jsonl}（96 闭环任务）、\texttt{tasks\_v4.jsonl}（15 控制流任务），均已标注 ground truth。固件支持 ESP8266 与 ESP32 Arduino IDE 直接烧录，跨平台移植仅需修改引脚映射。
+\textbf{Artifact Availability.} 本文所有实验代码、数据集、MVM 固件及编译器源码均已开源，仓库地址：\url{https://github.com/MYJ-GOD/M-IR-MVM}。数据集包括 \texttt{tasks\_v2.jsonl}（113 确定性任务）、\texttt{tasks\_v3\_expanded.jsonl}（96 闭环任务）、\texttt{tasks\_v4.jsonl}（15 控制流任务），均已标注 ground truth。固件支持 ESP8266 与 ESP32 Arduino IDE 直接烧录，跨平台移植仅需修改引脚映射。
 
 本文的核心理论贡献在于提出并验证了"生成友好—执行友好"分层解耦的表示设计原则：将 LLM 输出的语义表示与 MCU 执行的物理编码分离，通过确定性编译桥接，使两者可独立优化而不相互掣肘。这一原则的具体实例化——M-IR + M-bytecode + MVM——在 113 个确定性任务和 96 个闭环任务上验证了其可行性。
 
