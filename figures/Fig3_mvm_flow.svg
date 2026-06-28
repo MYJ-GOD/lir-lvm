@@ -1,65 +1,357 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 720" font-family="Helvetica, Arial, sans-serif" font-size="14">
-  <defs>
-    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#333"/>
-    </marker>
-    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#c0392b"/>
-    </marker>
-  </defs>
-
-  <!-- Title -->
-  <text x="260" y="32" text-anchor="middle" font-size="16" font-weight="bold">MVM Execution and Guardrail Flow</text>
-
-  <!-- Step 1: Load frame -->
-  <rect x="110" y="55" width="300" height="55" rx="10" fill="#dce8f5" stroke="#4a7ab5" stroke-width="1.5"/>
-  <text x="260" y="88" text-anchor="middle" font-size="14">Load frame</text>
-  <line x1="260" y1="110" x2="260" y2="130" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-  <!-- Step 2: Decode opcode -->
-  <rect x="110" y="130" width="300" height="55" rx="10" fill="#dce8f5" stroke="#4a7ab5" stroke-width="1.5"/>
-  <text x="260" y="163" text-anchor="middle" font-size="14">Decode opcode</text>
-  <line x1="260" y1="185" x2="260" y2="205" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-  <!-- Step 3: Static checks -->
-  <rect x="110" y="205" width="300" height="55" rx="10" fill="#d4edda" stroke="#5cb85c" stroke-width="1.5"/>
-  <text x="260" y="228" text-anchor="middle" font-size="14">Static checks</text>
-  <text x="260" y="247" text-anchor="middle" font-size="12" fill="#555">(bounds / encoding)</text>
-  <line x1="260" y1="260" x2="260" y2="280" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-  <!-- Step 4: Runtime guards -->
-  <rect x="110" y="280" width="300" height="55" rx="10" fill="#d4edda" stroke="#5cb85c" stroke-width="1.5"/>
-  <text x="260" y="303" text-anchor="middle" font-size="14">Runtime guards</text>
-  <text x="260" y="322" text-anchor="middle" font-size="12" fill="#555">(stack / depth / step / caps)</text>
-
-  <!-- Branch: fail -> Fault -->
-  <line x1="110" y1="307" x2="75" y2="307" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arrow-red)"/>
-  <text x="85" y="298" font-size="11" fill="#c0392b">fail</text>
-  <rect x="10" y="278" width="65" height="58" rx="8" fill="#f8d7da" stroke="#c0392b" stroke-width="1.5"/>
-  <text x="42" y="302" text-anchor="middle" font-size="12">Fault</text>
-  <text x="42" y="318" text-anchor="middle" font-size="11" fill="#555">(code, pc)</text>
-
-  <!-- Continue: Runtime guards -> Execute -->
-  <line x1="260" y1="335" x2="260" y2="355" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-  <!-- Step 5: Execute -->
-  <rect x="110" y="355" width="300" height="55" rx="10" fill="#fef3cd" stroke="#d4a843" stroke-width="1.5"/>
-  <text x="260" y="388" text-anchor="middle" font-size="14">Execute IOW / IOR / ALU</text>
-  <line x1="260" y1="410" x2="260" y2="430" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-  <!-- Step 6: Emit result or fault -->
-  <rect x="110" y="430" width="300" height="55" rx="10" fill="#f5d5e0" stroke="#c47a8a" stroke-width="1.5"/>
-  <text x="260" y="463" text-anchor="middle" font-size="14">Emit result or fault</text>
-
-  <!-- Legend -->
-  <rect x="110" y="520" width="14" height="14" rx="3" fill="#dce8f5" stroke="#4a7ab5" stroke-width="1"/>
-  <text x="130" y="532" font-size="11" fill="#555">Fetch / Decode</text>
-  <rect x="240" y="520" width="14" height="14" rx="3" fill="#d4edda" stroke="#5cb85c" stroke-width="1"/>
-  <text x="260" y="532" font-size="11" fill="#555">Guardrails</text>
-  <rect x="110" y="544" width="14" height="14" rx="3" fill="#fef3cd" stroke="#d4a843" stroke-width="1"/>
-  <text x="130" y="556" font-size="11" fill="#555">Execution</text>
-  <rect x="240" y="544" width="14" height="14" rx="3" fill="#f5d5e0" stroke="#c47a8a" stroke-width="1"/>
-  <text x="260" y="556" font-size="11" fill="#555">Output</text>
-  <rect x="110" y="568" width="14" height="14" rx="3" fill="#f8d7da" stroke="#c0392b" stroke-width="1"/>
-  <text x="130" y="580" font-size="11" fill="#555">Fault (rejected)</text>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="293.4pt" height="125.28pt" viewBox="0 0 293.4 125.28" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-06-05T16:08:01.667612</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 125.28 
+L 293.4 125.28 
+L 293.4 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 8.595 81.71136 
+L 47.655 81.71136 
+Q 51.003 81.71136 51.003 80.3808 
+L 51.003 33.8112 
+Q 51.003 32.48064 47.655 32.48064 
+L 8.595 32.48064 
+Q 5.247 32.48064 5.247 33.8112 
+L 5.247 80.3808 
+Q 5.247 81.71136 8.595 81.71136 
+z
+" clip-path="url(#p1b321babdb)" style="fill: #0f4d92; opacity: 0.1"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 8.595 81.71136 
+L 47.655 81.71136 
+Q 51.003 81.71136 51.003 80.3808 
+L 51.003 33.8112 
+Q 51.003 32.48064 47.655 32.48064 
+L 8.595 32.48064 
+Q 5.247 32.48064 5.247 33.8112 
+L 5.247 80.3808 
+Q 5.247 81.71136 8.595 81.71136 
+L 8.595 81.71136 
+z
+" clip-path="url(#p1b321babdb)" style="fill: none; stroke: #0f4d92; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 52.677 81.71136 
+L 91.737 81.71136 
+Q 95.085 81.71136 95.085 80.3808 
+L 95.085 33.8112 
+Q 95.085 32.48064 91.737 32.48064 
+L 52.677 32.48064 
+Q 49.329 32.48064 49.329 33.8112 
+L 49.329 80.3808 
+Q 49.329 81.71136 52.677 81.71136 
+z
+" clip-path="url(#p1b321babdb)" style="fill: #0f4d92; opacity: 0.1"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 52.677 81.71136 
+L 91.737 81.71136 
+Q 95.085 81.71136 95.085 80.3808 
+L 95.085 33.8112 
+Q 95.085 32.48064 91.737 32.48064 
+L 52.677 32.48064 
+Q 49.329 32.48064 49.329 33.8112 
+L 49.329 80.3808 
+Q 49.329 81.71136 52.677 81.71136 
+L 52.677 81.71136 
+z
+" clip-path="url(#p1b321babdb)" style="fill: none; stroke: #0f4d92; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 96.759 81.71136 
+L 135.819 81.71136 
+Q 139.167 81.71136 139.167 80.3808 
+L 139.167 33.8112 
+Q 139.167 32.48064 135.819 32.48064 
+L 96.759 32.48064 
+Q 93.411 32.48064 93.411 33.8112 
+L 93.411 80.3808 
+Q 93.411 81.71136 96.759 81.71136 
+z
+" clip-path="url(#p1b321babdb)" style="fill: #42949e; opacity: 0.1"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 96.759 81.71136 
+L 135.819 81.71136 
+Q 139.167 81.71136 139.167 80.3808 
+L 139.167 33.8112 
+Q 139.167 32.48064 135.819 32.48064 
+L 96.759 32.48064 
+Q 93.411 32.48064 93.411 33.8112 
+L 93.411 80.3808 
+Q 93.411 81.71136 96.759 81.71136 
+L 96.759 81.71136 
+z
+" clip-path="url(#p1b321babdb)" style="fill: none; stroke: #42949e; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 140.841 81.71136 
+L 179.901 81.71136 
+Q 183.249 81.71136 183.249 80.3808 
+L 183.249 33.8112 
+Q 183.249 32.48064 179.901 32.48064 
+L 140.841 32.48064 
+Q 137.493 32.48064 137.493 33.8112 
+L 137.493 80.3808 
+Q 137.493 81.71136 140.841 81.71136 
+z
+" clip-path="url(#p1b321babdb)" style="fill: #b64342; opacity: 0.1"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 140.841 81.71136 
+L 179.901 81.71136 
+Q 183.249 81.71136 183.249 80.3808 
+L 183.249 33.8112 
+Q 183.249 32.48064 179.901 32.48064 
+L 140.841 32.48064 
+Q 137.493 32.48064 137.493 33.8112 
+L 137.493 80.3808 
+Q 137.493 81.71136 140.841 81.71136 
+L 140.841 81.71136 
+z
+" clip-path="url(#p1b321babdb)" style="fill: none; stroke: #b64342; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 184.923 81.71136 
+L 223.983 81.71136 
+Q 227.331 81.71136 227.331 80.3808 
+L 227.331 33.8112 
+Q 227.331 32.48064 223.983 32.48064 
+L 184.923 32.48064 
+Q 181.575 32.48064 181.575 33.8112 
+L 181.575 80.3808 
+Q 181.575 81.71136 184.923 81.71136 
+z
+" clip-path="url(#p1b321babdb)" style="fill: #3775ba; opacity: 0.1"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 184.923 81.71136 
+L 223.983 81.71136 
+Q 227.331 81.71136 227.331 80.3808 
+L 227.331 33.8112 
+Q 227.331 32.48064 223.983 32.48064 
+L 184.923 32.48064 
+Q 181.575 32.48064 181.575 33.8112 
+L 181.575 80.3808 
+Q 181.575 81.71136 184.923 81.71136 
+L 184.923 81.71136 
+z
+" clip-path="url(#p1b321babdb)" style="fill: none; stroke: #3775ba; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 229.005 81.71136 
+L 276.435 81.71136 
+Q 279.783 81.71136 279.783 80.3808 
+L 279.783 33.8112 
+Q 279.783 32.48064 276.435 32.48064 
+L 229.005 32.48064 
+Q 225.657 32.48064 225.657 33.8112 
+L 225.657 80.3808 
+Q 225.657 81.71136 229.005 81.71136 
+z
+" clip-path="url(#p1b321babdb)" style="fill: #9a4d8e; opacity: 0.1"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 229.005 81.71136 
+L 276.435 81.71136 
+Q 279.783 81.71136 279.783 80.3808 
+L 279.783 33.8112 
+Q 279.783 32.48064 276.435 32.48064 
+L 229.005 32.48064 
+Q 225.657 32.48064 225.657 33.8112 
+L 225.657 80.3808 
+Q 225.657 81.71136 229.005 81.71136 
+L 229.005 81.71136 
+z
+" clip-path="url(#p1b321babdb)" style="fill: none; stroke: #9a4d8e; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 140.841 114.97536 
+L 179.901 114.97536 
+Q 183.249 114.97536 183.249 113.6448 
+L 183.249 91.4688 
+Q 183.249 90.13824 179.901 90.13824 
+L 140.841 90.13824 
+Q 137.493 90.13824 137.493 91.4688 
+L 137.493 113.6448 
+Q 137.493 114.97536 140.841 114.97536 
+z
+" clip-path="url(#p1b321babdb)" style="fill: #b64342; opacity: 0.1"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 140.841 114.97536 
+L 179.901 114.97536 
+Q 183.249 114.97536 183.249 113.6448 
+L 183.249 91.4688 
+Q 183.249 90.13824 179.901 90.13824 
+L 140.841 90.13824 
+Q 137.493 90.13824 137.493 91.4688 
+L 137.493 113.6448 
+Q 137.493 114.97536 140.841 114.97536 
+L 140.841 114.97536 
+z
+" clip-path="url(#p1b321babdb)" style="fill: none; stroke: #b64342; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #272727" transform="translate(20.959688 51.816403)">Load</text>
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #272727" transform="translate(19.120781 57.724622)">Frame</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #767676" transform="translate(23.442525 61.201688)">fetch</text>
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #767676" transform="translate(19.359113 65.152462)">bytecode</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #272727" transform="translate(61.370906 51.776184)">Decode</text>
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #272727" transform="translate(61.039969 57.764841)">Opcode</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #767676" transform="translate(62.363137 61.227)">instruction</text>
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #767676" transform="translate(65.121187 65.177775)">decode</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #272727" transform="translate(108.120094 51.816403)">Static</text>
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #272727" transform="translate(105.616969 57.724622)">Checks</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #767676" transform="translate(108.003037 61.201688)">bounds /</text>
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #767676" transform="translate(107.5221 65.152462)">encoding</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #272727" transform="translate(148.371469 51.816403)">Runtime</text>
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #272727" transform="translate(149.868656 57.724622)">Guards</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #767676" transform="translate(151.00605 61.253325)">cap / step</text>
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #767676" transform="translate(155.329762 65.2041)">stack</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #272727" transform="translate(192.947531 51.816403)">Execute</text>
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #272727" transform="translate(192.287531 57.724622)">IOW/IOR</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #767676" transform="translate(192.8079 61.227)">stack-based</text>
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #767676" transform="translate(199.890675 65.177775)">exec</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #272727" transform="translate(246.218906 51.816403)">Emit</text>
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #272727" transform="translate(243.552188 57.724622)">Result</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #767676" transform="translate(247.078688 61.227)">OK or</text>
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #767676" transform="translate(246.15765 65.177775)">FAULT</text>
+   </g>
+   <g id="patch_16">
+    <path d="M 49.651049 57.096 
+Q 50.163747 57.096 49.893821 57.096 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+    <path d="M 47.093821 55.696 
+L 49.893821 57.096 
+L 47.093821 58.496 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 93.733049 57.096 
+Q 94.245747 57.096 93.975821 57.096 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+    <path d="M 91.175821 55.696 
+L 93.975821 57.096 
+L 91.175821 58.496 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 137.815049 57.096 
+Q 138.327747 57.096 138.057821 57.096 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+    <path d="M 135.257821 55.696 
+L 138.057821 57.096 
+L 135.257821 58.496 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 181.897049 57.096 
+Q 182.409747 57.096 182.139821 57.096 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+    <path d="M 179.339821 55.696 
+L 182.139821 57.096 
+L 179.339821 58.496 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 225.979049 57.096 
+Q 226.491747 57.096 226.221821 57.096 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+    <path d="M 223.421821 55.696 
+L 226.221821 57.096 
+L 223.421821 58.496 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #0f4d92" x="28.125" y="17.1792" transform="rotate(-0 28.125 17.1792)">FETCH</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 700; font-size: 5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #0f4d92" x="72.207" y="17.1792" transform="rotate(-0 72.207 17.1792)">DECODE</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 700; font-size: 5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #42949e" x="116.289" y="17.1792" transform="rotate(-0 116.289 17.1792)">VALIDATE</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 700; font-size: 5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #b64342" x="160.371" y="17.1792" transform="rotate(-0 160.371 17.1792)">GUARD</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 700; font-size: 5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #3775ba" x="204.453" y="17.1792" transform="rotate(-0 204.453 17.1792)">EXECUTE</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #9a4d8e" x="252.72" y="17.1792" transform="rotate(-0 252.72 17.1792)">OUTPUT</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 700; font-size: 5.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #272727" x="160.371" y="100.101703" transform="rotate(-0 160.371 100.101703)">Fault</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 3.96px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #767676" x="160.371" y="108.570122" transform="rotate(-0 160.371 108.570122)">code, pc</text>
+   </g>
+   <g id="patch_21">
+    <path d="M 160.371 82.381296 
+Q 160.371 85.924446 160.371 88.796776 
+" style="fill: none; stroke-dasharray: 2.22,0.96; stroke-dashoffset: 0; stroke: #b64342; stroke-width: 0.6; stroke-linecap: round"/>
+    <path d="M 161.771 85.996776 
+L 160.371 88.796776 
+L 158.971 85.996776 
+" style="fill: none; stroke-dasharray: 2.22,0.96; stroke-dashoffset: 0; stroke: #b64342; stroke-width: 0.6; stroke-linecap: round"/>
+   </g>
+   <g id="text_21">
+    <text style="font-size: 4.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #b64342" x="164.835" y="87.0336" transform="rotate(-0 164.835 87.0336)">violation</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p1b321babdb">
+   <rect x="7.2" y="7.2" width="279" height="110.88"/>
+  </clipPath>
+ </defs>
 </svg>

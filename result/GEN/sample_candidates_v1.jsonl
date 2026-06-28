@@ -1,4 +1,0 @@
-{"task_id":"T001","attempt":1,"mir":"task relay1_on {\n  set relay1 = 1\n  halt\n}\n"}
-{"task_id":"T005","attempt":1,"mir":"task read_water {\n  require cap(pump1)\n  read pump1\n  halt\n}\n"}
-{"task_id":"T014","attempt":1,"mir":"task relay1_on_wait_read_water {\n  require cap(relay1)\n  require cap(water_sensor)\n  set relay1 = 1\n  readback relay1 expect 1\n  halt\n}\n"}
-{"task_id":"T024","attempt":1,"mir":"task relay1_pulse {\n  require cap(relay1)\n  set relay1 = 1\n  wait 50ms\n  set relay1 = 0\n  halt\n}\n"}

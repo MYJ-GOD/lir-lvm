@@ -1,0 +1,63 @@
+% Fig.4: Closed-Loop FSM — auto-generated
+\begin{tikzpicture}[scale=0.95, transform shape,
+  >=Stealth, font=\sffamily\small,
+  state/.style={draw=black!80, fill=white, minimum width=1.8cm,
+                minimum height=1.0cm, align=center, inner sep=3pt,
+                font=\sffamily\footnotesize\bfseries},
+  arr/.style={-Stealth, thick, draw=black},
+  darrow/.style={-Stealth, thick, draw=black!80, dashed},
+]
+
+% Initial state
+\fill[black] (-2.00, 0.00) circle (3pt);
+\draw[arr] (-1.85, 0.00) -- (-0.90, 0.00);
+
+% States
+\node[state] (set) at (0.00, 0.00) { SET };
+\node[state] (ack) at (2.80, 0.00) { ACK };
+\node[state] (read) at (5.80, 0.00) { READBACK };
+\node[state] (cmp) at (8.80, 0.00) { COMPARE };
+
+% Annotations
+\node[font=\sffamily\scriptsize, black!65, anchor=north] at (0.00, -0.60) {write device};
+\node[font=\sffamily\scriptsize, black!65, anchor=north] at (2.80, -0.60) {confirm write};
+\node[font=\sffamily\scriptsize, black!65, anchor=north] at (5.80, -0.60) {read device};
+\node[font=\sffamily\scriptsize, black!65, anchor=north] at (8.80, -0.60) {match check};
+
+% LVM instruction mapping
+\node[font=\ttfamily\scriptsize, black!75, anchor=north] at (0.00, -0.92) {IOW};
+\node[font=\ttfamily\scriptsize, black!75, anchor=north] at (2.80, -0.92) {(status)};
+\node[font=\ttfamily\scriptsize, black!75, anchor=north] at (5.80, -0.92) {IOR};
+\node[font=\ttfamily\scriptsize, black!75, anchor=north] at (8.80, -0.92) {LIT; EQ};
+
+% State transitions
+\draw[arr] (set.east) -- (ack.west) ;
+\draw[arr] (ack.east) -- (read.west) ;
+\draw[arr] (read.east) -- (cmp.west) ;
+
+% CONVERGED terminal (match)
+\fill[black] (12.00, 1.20) circle (3pt);
+\draw[line width=0.8pt] (12.00, 1.20) circle (7pt);
+\draw[arr] (cmp.east) -- ++(0.4, 0) |- (12.00, 1.20);
+\node[font=\sffamily\scriptsize, black!70, anchor=south] at (10.55, 1.24) {match};
+\node[font=\sffamily\scriptsize\bfseries, black!85, anchor=south] at (12.00, 1.95)
+  {CONVERGED};
+
+% SAFE-HALT terminal (retries exhausted / guard fault)
+\fill[black] (12.00, -1.20) circle (3pt);
+\draw[line width=0.8pt] (12.00, -1.20) circle (7pt);
+\draw[arr] (cmp.east) -- ++(0.4, 0) |- (12.00, -1.20);
+\node[font=\sffamily\scriptsize, black!70, anchor=south, align=center] at (11.15, -1.16)
+  {retries exhausted /\\ guard fault};
+\node[font=\sffamily\scriptsize\bfseries, red!80!black, anchor=north] at (12.00, -1.95)
+  {SAFE HALT};
+
+% Retry loop (routed over the top to avoid the bottom annotations)
+\draw[darrow]
+  (8.80, 0.55)
+  |- (0.00, 1.80)
+  -| (0.00, 0.55);
+\node[font=\sffamily\scriptsize, black!70, anchor=south] at (4.40, 1.80)
+  {mismatch $\rightarrow$ retry};
+
+\end{tikzpicture}

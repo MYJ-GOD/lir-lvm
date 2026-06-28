@@ -1,71 +1,300 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 420" font-family="Helvetica, Arial, sans-serif" font-size="14">
-  <defs>
-    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#333"/>
-    </marker>
-    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#c0392b"/>
-    </marker>
-    <marker id="arrow-green" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#27ae60"/>
-    </marker>
-  </defs>
-
-  <!-- Title -->
-  <text x="410" y="32" text-anchor="middle" font-size="16" font-weight="bold">Closed-loop State Machine</text>
-
-  <!-- SET -->
-  <rect x="30" y="140" width="120" height="60" rx="10" fill="#dce8f5" stroke="#4a7ab5" stroke-width="1.5"/>
-  <text x="90" y="175" text-anchor="middle" font-size="14" font-weight="bold">SET</text>
-
-  <!-- Arrow SET -> ACK -->
-  <line x1="150" y1="170" x2="195" y2="170" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-  <!-- ACK -->
-  <rect x="195" y="140" width="120" height="60" rx="10" fill="#dce8f5" stroke="#4a7ab5" stroke-width="1.5"/>
-  <text x="255" y="175" text-anchor="middle" font-size="14" font-weight="bold">ACK</text>
-
-  <!-- Arrow ACK -> READBACK -->
-  <line x1="315" y1="170" x2="360" y2="170" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-  <!-- READBACK -->
-  <rect x="360" y="140" width="120" height="60" rx="10" fill="#d4edda" stroke="#5cb85c" stroke-width="1.5"/>
-  <text x="420" y="175" text-anchor="middle" font-size="14" font-weight="bold">READBACK</text>
-
-  <!-- Arrow READBACK -> COMPARE -->
-  <line x1="480" y1="170" x2="525" y2="170" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-  <!-- COMPARE -->
-  <rect x="525" y="140" width="130" height="60" rx="10" fill="#fef3cd" stroke="#d4a843" stroke-width="1.5"/>
-  <text x="590" y="175" text-anchor="middle" font-size="14" font-weight="bold">COMPARE</text>
-
-  <!-- COMPARE -> CONVERGED (match) -->
-  <line x1="590" y1="140" x2="590" y2="80" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrow-green)"/>
-  <text x="605" y="112" font-size="12" fill="#27ae60">match</text>
-  <rect x="525" y="35" width="130" height="50" rx="10" fill="#d4edda" stroke="#27ae60" stroke-width="1.5"/>
-  <text x="590" y="66" text-anchor="middle" font-size="13" font-weight="bold" fill="#27ae60">CONVERGED</text>
-
-  <!-- COMPARE -> SAFE/FAULT (fault) -->
-  <line x1="590" y1="200" x2="590" y2="270" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arrow-red)"/>
-  <text x="605" y="240" font-size="12" fill="#c0392b">fault</text>
-  <rect x="525" y="270" width="130" height="50" rx="10" fill="#f8d7da" stroke="#c0392b" stroke-width="1.5"/>
-  <text x="590" y="301" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">SAFE / FAULT</text>
-
-  <!-- COMPARE -> retry -> SET (mismatch) -->
-  <line x1="525" y1="195" x2="525" y2="340" stroke="#333" stroke-width="1.5"/>
-  <line x1="525" y1="340" x2="90" y2="340" stroke="#333" stroke-width="1.5"/>
-  <line x1="90" y1="340" x2="90" y2="200" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text x="300" y="332" text-anchor="middle" font-size="12" fill="#333">mismatch → retry</text>
-
-  <!-- Legend -->
-  <rect x="30" y="390" width="12" height="12" rx="3" fill="#dce8f5" stroke="#4a7ab5" stroke-width="1"/>
-  <text x="48" y="401" font-size="11" fill="#555">I/O stage</text>
-  <rect x="140" y="390" width="12" height="12" rx="3" fill="#d4edda" stroke="#5cb85c" stroke-width="1"/>
-  <text x="158" y="401" font-size="11" fill="#555">Verify stage</text>
-  <rect x="260" y="390" width="12" height="12" rx="3" fill="#fef3cd" stroke="#d4a843" stroke-width="1"/>
-  <text x="278" y="401" font-size="11" fill="#555">Decision</text>
-  <rect x="370" y="390" width="12" height="12" rx="3" fill="#d4edda" stroke="#27ae60" stroke-width="1"/>
-  <text x="388" y="401" font-size="11" fill="#555">Success</text>
-  <rect x="470" y="390" width="12" height="12" rx="3" fill="#f8d7da" stroke="#c0392b" stroke-width="1"/>
-  <text x="488" y="401" font-size="11" fill="#555">Failure</text>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="293.4pt" height="147.456pt" viewBox="0 0 293.4 147.456" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-06-05T16:08:01.940519</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 147.456 
+L 293.4 147.456 
+L 293.4 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 12.78 75.324672 
+L 57.42 75.324672 
+Q 60.768 75.324672 60.768 73.728 
+L 60.768 39.13344 
+Q 60.768 37.536768 57.42 37.536768 
+L 12.78 37.536768 
+Q 9.432 37.536768 9.432 39.13344 
+L 9.432 73.728 
+Q 9.432 75.324672 12.78 75.324672 
+z
+" clip-path="url(#p968b02f1f5)" style="fill: #0f4d92; opacity: 0.1"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 12.78 75.324672 
+L 57.42 75.324672 
+Q 60.768 75.324672 60.768 73.728 
+L 60.768 39.13344 
+Q 60.768 37.536768 57.42 37.536768 
+L 12.78 37.536768 
+Q 9.432 37.536768 9.432 39.13344 
+L 9.432 73.728 
+Q 9.432 75.324672 12.78 75.324672 
+L 12.78 75.324672 
+z
+" clip-path="url(#p968b02f1f5)" style="fill: none; stroke: #0f4d92; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 65.79 75.324672 
+L 104.85 75.324672 
+Q 108.198 75.324672 108.198 73.728 
+L 108.198 39.13344 
+Q 108.198 37.536768 104.85 37.536768 
+L 65.79 37.536768 
+Q 62.442 37.536768 62.442 39.13344 
+L 62.442 73.728 
+Q 62.442 75.324672 65.79 75.324672 
+z
+" clip-path="url(#p968b02f1f5)" style="fill: #0f4d92; opacity: 0.1"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 65.79 75.324672 
+L 104.85 75.324672 
+Q 108.198 75.324672 108.198 73.728 
+L 108.198 39.13344 
+Q 108.198 37.536768 104.85 37.536768 
+L 65.79 37.536768 
+Q 62.442 37.536768 62.442 39.13344 
+L 62.442 73.728 
+Q 62.442 75.324672 65.79 75.324672 
+L 65.79 75.324672 
+z
+" clip-path="url(#p968b02f1f5)" style="fill: none; stroke: #0f4d92; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 113.22 75.324672 
+L 160.65 75.324672 
+Q 163.998 75.324672 163.998 73.728 
+L 163.998 39.13344 
+Q 163.998 37.536768 160.65 37.536768 
+L 113.22 37.536768 
+Q 109.872 37.536768 109.872 39.13344 
+L 109.872 73.728 
+Q 109.872 75.324672 113.22 75.324672 
+z
+" clip-path="url(#p968b02f1f5)" style="fill: #42949e; opacity: 0.1"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 113.22 75.324672 
+L 160.65 75.324672 
+Q 163.998 75.324672 163.998 73.728 
+L 163.998 39.13344 
+Q 163.998 37.536768 160.65 37.536768 
+L 113.22 37.536768 
+Q 109.872 37.536768 109.872 39.13344 
+L 109.872 73.728 
+Q 109.872 75.324672 113.22 75.324672 
+L 113.22 75.324672 
+z
+" clip-path="url(#p968b02f1f5)" style="fill: none; stroke: #42949e; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 169.02 75.324672 
+L 216.45 75.324672 
+Q 219.798 75.324672 219.798 73.728 
+L 219.798 39.13344 
+Q 219.798 37.536768 216.45 37.536768 
+L 169.02 37.536768 
+Q 165.672 37.536768 165.672 39.13344 
+L 165.672 73.728 
+Q 165.672 75.324672 169.02 75.324672 
+z
+" clip-path="url(#p968b02f1f5)" style="fill: #9a4d8e; opacity: 0.1"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 169.02 75.324672 
+L 216.45 75.324672 
+Q 219.798 75.324672 219.798 73.728 
+L 219.798 39.13344 
+Q 219.798 37.536768 216.45 37.536768 
+L 169.02 37.536768 
+Q 165.672 37.536768 165.672 39.13344 
+L 165.672 73.728 
+Q 165.672 75.324672 169.02 75.324672 
+L 169.02 75.324672 
+z
+" clip-path="url(#p968b02f1f5)" style="fill: none; stroke: #9a4d8e; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 227.61 56.696832 
+L 275.04 56.696832 
+Q 278.388 56.696832 278.388 55.10016 
+L 278.388 25.82784 
+Q 278.388 24.231168 275.04 24.231168 
+L 227.61 24.231168 
+Q 224.262 24.231168 224.262 25.82784 
+L 224.262 55.10016 
+Q 224.262 56.696832 227.61 56.696832 
+z
+" clip-path="url(#p968b02f1f5)" style="fill: #2e9e44; opacity: 0.1"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 227.61 56.696832 
+L 275.04 56.696832 
+Q 278.388 56.696832 278.388 55.10016 
+L 278.388 25.82784 
+Q 278.388 24.231168 275.04 24.231168 
+L 227.61 24.231168 
+Q 224.262 24.231168 224.262 25.82784 
+L 224.262 55.10016 
+Q 224.262 56.696832 227.61 56.696832 
+L 227.61 56.696832 
+z
+" clip-path="url(#p968b02f1f5)" style="fill: none; stroke: #2e9e44; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 227.61 128.547072 
+L 275.04 128.547072 
+Q 278.388 128.547072 278.388 126.9504 
+L 278.388 97.67808 
+Q 278.388 96.081408 275.04 96.081408 
+L 227.61 96.081408 
+Q 224.262 96.081408 224.262 97.67808 
+L 224.262 126.9504 
+Q 224.262 128.547072 227.61 128.547072 
+z
+" clip-path="url(#p968b02f1f5)" style="fill: #b64342; opacity: 0.1"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 227.61 128.547072 
+L 275.04 128.547072 
+Q 278.388 128.547072 278.388 126.9504 
+L 278.388 97.67808 
+Q 278.388 96.081408 275.04 96.081408 
+L 227.61 96.081408 
+Q 224.262 96.081408 224.262 97.67808 
+L 224.262 126.9504 
+Q 224.262 128.547072 227.61 128.547072 
+L 227.61 128.547072 
+z
+" clip-path="url(#p968b02f1f5)" style="fill: none; stroke: #b64342; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #272727" x="35.1" y="53.588291" transform="rotate(-0 35.1 53.588291)">SET</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 5.04px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #767676" x="35.1" y="63.721159" transform="rotate(-0 35.1 63.721159)">write device</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #272727" x="85.32" y="53.588291" transform="rotate(-0 85.32 53.588291)">ACK</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 5.04px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #767676" x="85.32" y="63.721159" transform="rotate(-0 85.32 63.721159)">confirm write</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #272727" x="136.935" y="53.588291" transform="rotate(-0 136.935 53.588291)">READBACK</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 5.04px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #767676" x="136.935" y="63.721159" transform="rotate(-0 136.935 63.721159)">read device</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #272727" x="192.735" y="53.588291" transform="rotate(-0 192.735 53.588291)">COMPARE</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 5.04px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #767676" x="192.735" y="63.721159" transform="rotate(-0 192.735 63.721159)">match check</text>
+   </g>
+   <g id="patch_14">
+    <path d="M 59.418501 56.43072 
+Q 61.604037 56.43072 63.00695 56.43072 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+    <path d="M 60.20695 55.03072 
+L 63.00695 56.43072 
+L 60.20695 57.83072 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 106.848501 56.43072 
+Q 109.034037 56.43072 110.43695 56.43072 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+    <path d="M 107.63695 55.03072 
+L 110.43695 56.43072 
+L 107.63695 57.83072 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 162.648501 56.43072 
+Q 164.834037 56.43072 166.23695 56.43072 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+    <path d="M 163.43695 55.03072 
+L 166.23695 56.43072 
+L 163.43695 57.83072 
+" style="fill: none; stroke: #4d4d4d; stroke-width: 0.7; stroke-linecap: round"/>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 6.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #272727" x="251.325" y="37.491962" transform="rotate(-0 251.325 37.491962)">CONVERGED</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 4.68px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #767676" x="251.325" y="47.661373" transform="rotate(-0 251.325 47.661373)">match</text>
+   </g>
+   <g id="patch_17">
+    <path d="M 218.169229 46.091918 
+Q 222.031048 43.789775 225.124594 41.945623 
+" style="fill: none; stroke: #2e9e44; stroke-width: 0.8; stroke-linecap: round"/>
+    <path d="M 222.002647 42.176821 
+L 225.124594 41.945623 
+L 223.436384 44.581899 
+" style="fill: none; stroke: #2e9e44; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 5.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #2e9e44" x="222.03" y="35.14176" transform="rotate(-0 222.03 35.14176)">match</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #272727" x="251.325" y="109.212593" transform="rotate(-0 251.325 109.212593)">SAFE / FAULT</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 4.32px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #767676" x="251.325" y="119.418548" transform="rotate(-0 251.325 119.418548)">error</text>
+   </g>
+   <g id="patch_18">
+    <path d="M 217.02353 75.642629 
+Q 222.02923 92.353269 226.77827 108.207097 
+" style="fill: none; stroke: #b64342; stroke-width: 0.8; stroke-linecap: round"/>
+    <path d="M 227.315922 105.123117 
+L 226.77827 108.207097 
+L 224.633677 105.926588 
+" style="fill: none; stroke: #b64342; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 5.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #b64342" x="222.03" y="92.35584" transform="rotate(-0 222.03 92.35584)">fault</text>
+   </g>
+   <g id="patch_19">
+    <path d="M 214.922801 89.734835 
+Q 131.721639 20.039267 37.627296 72.314143 
+" style="fill: none; stroke-dasharray: 2.96,1.28; stroke-dashoffset: 0; stroke: #4d4d4d; stroke-width: 0.8; stroke-linecap: round"/>
+    <path d="M 40.754836 72.178157 
+L 37.627296 72.314143 
+L 39.395031 69.730519 
+" style="fill: none; stroke-dasharray: 2.96,1.28; stroke-dashoffset: 0; stroke: #4d4d4d; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 6px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #4d4d4d" x="124.38" y="117.63648" transform="rotate(-0 124.38 117.63648)">mismatch → retry</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p968b02f1f5">
+   <rect x="7.2" y="7.2" width="279" height="133.056"/>
+  </clipPath>
+ </defs>
 </svg>

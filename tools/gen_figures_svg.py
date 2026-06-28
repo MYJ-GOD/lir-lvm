@@ -22,12 +22,17 @@ C_GUARDED = '#2171b5'
 C_NOGUARD = '#cb181d'
 
 plt.rcParams.update({
-    'font.family': 'serif',
+    'font.family': 'sans-serif',
+    'font.sans-serif': ['Arial', 'Helvetica', 'DejaVu Sans', 'sans-serif'],
     'font.size': 11,
-    'axes.labelsize': 12,
-    'axes.titlesize': 13,
+    'axes.labelsize': 13,
+    'axes.titlesize': 14,
     'legend.fontsize': 10,
+    'xtick.labelsize': 10,
+    'ytick.labelsize': 10,
     'figure.dpi': 300,
+    'svg.fonttype': 'none',
+    'pdf.fonttype': 42,
 })
 # Prefer CJK-compatible serif fonts for Chinese paper context
 import matplotlib.font_manager as fm
@@ -64,25 +69,25 @@ def fig6_compression():
     m_bytes = [7, 7, 5, 5, 14]
     json_bytes = [29, 29, 21, 21, 75]
 
-    fig, ax = plt.subplots(figsize=(7, 4))
+    fig, ax = plt.subplots(figsize=(8, 5))
     x = np.arange(len(tasks_short))
     w = 0.35
     bars1 = ax.bar(x - w/2, m_bytes, w, label='M-bytecode', color=C_M, edgecolor='white')
     bars2 = ax.bar(x + w/2, json_bytes, w, label='JSON', color=C_JSON, edgecolor='white')
-    ax.set_xlabel('Task')
-    ax.set_ylabel('Payload (bytes)')
-    ax.set_title('Fig.6  M-bytecode vs JSON Payload Size')
+    ax.set_xlabel('Task', fontsize=12)
+    ax.set_ylabel('Payload (bytes)', fontsize=12)
+    ax.set_title('Fig.6  M-bytecode vs JSON Payload Size', fontsize=14)
     ax.set_xticks(x)
-    ax.set_xticklabels(tasks_short, rotation=10, fontsize=10)
-    ax.legend()
+    ax.set_xticklabels(tasks_short, rotation=10, fontsize=11)
+    ax.legend(fontsize=11)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     for bar in bars1:
         ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1,
-                f'{int(bar.get_height())}B', ha='center', va='bottom', fontsize=9)
+                f'{int(bar.get_height())}B', ha='center', va='bottom', fontsize=11)
     for bar in bars2:
         ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1,
-                f'{int(bar.get_height())}B', ha='center', va='bottom', fontsize=9)
+                f'{int(bar.get_height())}B', ha='center', va='bottom', fontsize=11)
     fig.tight_layout()
     fig.savefig(os.path.join(FIGDIR, 'Fig6_e1_compression.svg'), format='svg')
     plt.close(fig)
@@ -214,29 +219,29 @@ def fig9_scr():
         'G4_m_with_o_no_retry': 'M (no retry)',
     }
 
-    fig, ax1 = plt.subplots(figsize=(7, 4))
+    fig, ax1 = plt.subplots(figsize=(8, 5))
     x = np.arange(len(groups))
     w = 0.35
     bars = ax1.bar(x, scr_vals, w, color=[C_JSON, C_M, C_M, C_M],
                    edgecolor='white', alpha=0.85, label='SCR')
-    ax1.set_ylabel('SCR')
-    ax1.set_title('Fig.9  Safety Convergence Rate (SCR) by Strategy')
+    ax1.set_ylabel('SCR', fontsize=12)
+    ax1.set_title('Fig.9  Safety Convergence Rate (SCR) by Strategy', fontsize=14)
     ax1.set_xticks(x)
-    ax1.set_xticklabels([group_labels.get(g, g) for g in groups], rotation=15, ha='right', fontsize=9)
+    ax1.set_xticklabels([group_labels.get(g, g) for g in groups], rotation=15, ha='right', fontsize=10)
     ax1.set_ylim(0, 1.15)
     ax1.spines['top'].set_visible(False)
     ax1.spines['right'].set_visible(False)
     for bar, val in zip(bars, scr_vals):
         ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.02,
-                f'{val:.2f}', ha='center', va='bottom', fontsize=10)
+                f'{val:.2f}', ha='center', va='bottom', fontsize=11)
 
     ax2 = ax1.twinx()
-    ax2.plot(x, rtt_vals, 'D-', color='#e6550d', markersize=7, linewidth=1.5, label='RTT (ms)')
-    ax2.set_ylabel('Mean RTT (ms)', color='#e6550d')
+    ax2.plot(x, rtt_vals, 'D-', color='#e6550d', markersize=8, linewidth=2.0, label='RTT (ms)')
+    ax2.set_ylabel('Mean RTT (ms)', color='#e6550d', fontsize=12)
     ax2.tick_params(axis='y', labelcolor='#e6550d')
     ax2.spines['top'].set_visible(False)
-    ax1.legend(loc='upper left')
-    ax2.legend(loc='upper right')
+    ax1.legend(loc='upper left', fontsize=10)
+    ax2.legend(loc='upper right', fontsize=10)
     fig.tight_layout()
     fig.savefig(os.path.join(FIGDIR, 'Fig9_e4_scr.svg'), format='svg')
     plt.close(fig)
@@ -261,18 +266,18 @@ def fig10_scr_curve():
                 noguard_priors.append(prior)
                 noguard_safe.append(safe)
 
-    fig, ax = plt.subplots(figsize=(7, 4))
-    ax.plot(guarded_priors, guarded_safe, 'o-', color=C_GUARDED, linewidth=2,
-            markersize=8, label='Guarded')
-    ax.plot(noguard_priors, noguard_safe, 's--', color=C_NOGUARD, linewidth=2,
-            markersize=8, label='No-guard')
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.plot(guarded_priors, guarded_safe, 'o-', color=C_GUARDED, linewidth=2.5,
+            markersize=10, label='Guarded')
+    ax.plot(noguard_priors, noguard_safe, 's--', color=C_NOGUARD, linewidth=2.5,
+            markersize=10, label='No-guard')
     ax.fill_between(guarded_priors, guarded_safe, alpha=0.15, color=C_GUARDED)
-    ax.set_xlabel('Fault Prior')
-    ax.set_ylabel('SAFE Ratio')
-    ax.set_title('Fig.10  SAFE Ratio vs Fault Prior')
+    ax.set_xlabel('Fault Prior', fontsize=12)
+    ax.set_ylabel('SAFE Ratio', fontsize=12)
+    ax.set_title('Fig.10  SAFE Ratio vs Fault Prior', fontsize=14)
     ax.set_xlim(0.05, 0.95)
     ax.set_ylim(-0.05, 1.1)
-    ax.legend()
+    ax.legend(fontsize=11)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.xaxis.set_major_formatter(ticker.PercentFormatter(1.0))
@@ -324,7 +329,7 @@ def fig7_combined_ablation():
     }
     labels_short = [variant_labels.get(v, v) for v in variants]
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4.2))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.5))
 
     # Panel (a): Fault distribution (stacked bar)
     x = np.arange(len(variants))
@@ -335,12 +340,12 @@ def fig7_combined_ablation():
         ax1.bar(x, vals, bottom=bottom, label=code_labels.get(code, f'F{code}'),
                 color=colors[i], edgecolor='white', width=0.6)
         bottom += np.array(vals)
-    ax1.set_xlabel('Ablation Variant')
-    ax1.set_ylabel('Fault Count')
-    ax1.set_title('(a) Fault Distribution')
+    ax1.set_xlabel('Ablation Variant', fontsize=12)
+    ax1.set_ylabel('Fault Count', fontsize=12)
+    ax1.set_title('(a) Fault Distribution', fontsize=13)
     ax1.set_xticks(x)
-    ax1.set_xticklabels(labels_short, rotation=15, ha='right', fontsize=9)
-    ax1.legend(fontsize=8, loc='upper right', ncol=2)
+    ax1.set_xticklabels(labels_short, rotation=20, ha='right', fontsize=10)
+    ax1.legend(fontsize=9, loc='upper right', ncol=2)
     ax1.spines['top'].set_visible(False)
     ax1.spines['right'].set_visible(False)
 
@@ -349,17 +354,17 @@ def fig7_combined_ablation():
     ax2.bar(x - w/2, uabr_vals, w, label='UABR', color='#2171b5', edgecolor='white')
     ax2.bar(x + w/2, [f/n for f, n in zip(fault_vals, n_vals)], w,
             label='Fault rate', color='#cb181d', edgecolor='white')
-    ax2.set_xlabel('Ablation Variant')
-    ax2.set_ylabel('Rate')
-    ax2.set_title('(b) UABR and Fault Rate')
+    ax2.set_xlabel('Ablation Variant', fontsize=12)
+    ax2.set_ylabel('Rate', fontsize=12)
+    ax2.set_title('(b) UABR and Fault Rate', fontsize=13)
     ax2.set_xticks(x)
-    ax2.set_xticklabels(labels_short, rotation=15, ha='right', fontsize=9)
+    ax2.set_xticklabels(labels_short, rotation=20, ha='right', fontsize=10)
     ax2.set_ylim(0, 1.15)
-    ax2.legend(fontsize=10)
+    ax2.legend(fontsize=11)
     ax2.spines['top'].set_visible(False)
     ax2.spines['right'].set_visible(False)
 
-    fig.suptitle('Fig.7  Ablation Analysis of Security Mechanisms', fontsize=14, y=1.02)
+    fig.suptitle('Fig.7  Ablation Analysis of Security Mechanisms', fontsize=16, y=1.02)
     fig.tight_layout()
     fig.savefig(os.path.join(FIGDIR, 'Fig7_e2_ablation_combined.svg'), format='svg')
     plt.close(fig)

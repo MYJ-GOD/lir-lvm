@@ -1,0 +1,26 @@
+=== E2-Fuzz: 8000 adversarial payloads, seed=42 ===
+step_limit=1000  max_stack=256
+overall containment rate = 0.9999 (7999/8000)
+escapes (unauthorized side effect or unbounded run) = 0
+
+attack class          total  blocked    rate
+unauthorized_io        1000     1000  1.0000
+bad_opcode             1000     1000  1.0000
+infinite_loop          1000     1000  1.0000
+stack_underflow        1000     1000  1.0000
+stack_overflow         1000     1000  1.0000
+jump_oob               1000     1000  1.0000
+truncated_varint       1000     1000  1.0000
+random_bytes           1000      999  0.9990
+
+intercept stage distribution:
+  vm_runtime         4002  (0.5002)
+  verifier           3997  (0.4996)
+  clean_exit            1  (0.0001)
+fault-code distribution:
+  VERIFY_BAD_ENCODING            3997  (0.4996)
+  EXEC_FAULT_UNAUTHORIZED_IO     1071  (0.1339)
+  EXEC_FAULT_STEP_LIMIT          1000  (0.1250)
+  EXEC_FAULT_STACK_OVERFLOW      1000  (0.1250)
+  EXEC_FAULT_STACK_UNDERFLOW      931  (0.1164)
+  OK                                1  (0.0001)

@@ -1,0 +1,108 @@
+% Fig.Intro: LLM-to-MCU pipeline overview (IMPROVED VERSION)
+% 改进点:
+% 1. 字体加大: \scriptsize → \footnotesize (节点), \tiny → \scriptsize (标注)
+% 2. 节点尺寸: 0.85cm×1.8cm → 1.2cm×2.6cm
+% 3. 箭头加粗: thick → very thick
+% 4. 层背景加深: black!3 → blue!5, 边框 black!15 → black!35
+% 5. 间距加大: 3.2cm → 4.0cm (消除挤压)
+% 6. 反馈箭头突出: 加粗至1.5pt, 改为红色, 更大弧线
+% 7. 关键节点高亮: LLM/LVM用深色填充
+% 8. 对齐优化: 严格grid布局
+
+\begin{tikzpicture}[scale=1.0, transform shape,
+  >=Stealth, font=\sffamily\small,
+  % 节点样式 - 加大尺寸,加大字体
+  box/.style={draw=black!70, fill=white, minimum width=2.6cm,
+              minimum height=1.2cm, align=center, inner sep=4pt,
+              font=\sffamily\footnotesize\bfseries, line width=0.6pt},
+  % 高亮节点 - 关键组件(LLM/LVM)
+  boxhl/.style={draw=blue!80, fill=blue!25, minimum width=2.6cm,
+              minimum height=1.2cm, align=center, inner sep=4pt,
+              font=\sffamily\footnotesize\bfseries, line width=0.8pt},
+  % 警告节点 - 安全关键(Bytecode)
+  boxwarn/.style={draw=orange!80, fill=orange!15, minimum width=2.6cm,
+              minimum height=1.2cm, align=center, inner sep=4pt,
+              font=\sffamily\footnotesize\bfseries, line width=0.7pt},
+  % 箭头 - 加粗
+  arr/.style={-Stealth, very thick, draw=black!70},
+  % 反馈箭头 - 突出显示
+  feedback/.style={-Stealth, line width=1.5pt, draw=red!75!black, dashed},
+  % 标注文字 - 加大字号
+  note/.style={font=\sffamily\scriptsize, black!60, align=center},
+]
+
+% ============================================================
+% Layer 1: Generation-friendly (顶层)
+% ============================================================
+% 背景框 - 加深颜色,加粗边框
+\fill[blue!5, draw=black!35, line width=0.5pt, rounded corners=2pt]
+  (-0.8, 2.0) rectangle (16.8, 4.8);
+\node[font=\sffamily\large\bfseries, black!70, anchor=north west]
+  at (-0.7, 4.7) {Generation-friendly Layer};
+
+% 节点 - 横向间距4.0cm,纵向居中y=3.4
+\node[box]    (nl)   at (1.2, 3.4) {Natural\\Language};
+\node[boxhl]  (llm)  at (5.2, 3.4) {LLM};
+\node[box]    (lir)  at (9.2, 3.4) {LIR\\(DSL)};
+\node[box]    (cmp)  at (13.2, 3.4) {Compiler};
+
+% 标注 - 加大字号,下移避免与节点贴太近
+\node[note] at (1.2, 2.55) {user\\instruction};
+\node[note] at (5.2, 2.55) {text\\generation};
+\node[note] at (9.2, 2.55) {EBNF grammar\\LLM-stable};
+\node[note] at (13.2, 2.55) {deterministic\\lowering};
+
+% 箭头 - 加粗
+\draw[arr] (nl.east) -- (llm.west);
+\draw[arr] (llm.east) -- (lir.west);
+\draw[arr] (lir.east) -- (cmp.west);
+
+% ============================================================
+% Layer 2: Execution-friendly (底层)
+% ============================================================
+% 背景框
+\fill[orange!5, draw=black!35, line width=0.5pt, rounded corners=2pt]
+  (-0.8, -0.7) rectangle (16.8, 1.8);
+\node[font=\sffamily\large\bfseries, black!70, anchor=north west]
+  at (-0.7, 1.7) {Execution-friendly Layer};
+
+% 节点 - 对齐上层
+\node[boxwarn] (bc)  at (5.2, 0.6) {Compact\\Bytecode};
+\node[boxhl]   (lvm) at (9.2, 0.6) {LVM\\($\sim$2\,KB)};
+\node[box]     (dev) at (13.2, 0.6) {MCU\\Device};
+
+% 标注
+\node[note] at (5.2, -0.25) {10.9\,B avg\\13.8$\times$ vs JSON};
+\node[note] at (9.2, -0.25) {bounded exec\\UABR\,=\,1.000};
+\node[note] at (13.2, -0.25) {relay/sensor\\ESP8266};
+
+% 箭头
+\draw[arr] (bc.east) -- (lvm.west);
+\draw[arr] (lvm.east) -- (dev.west);
+
+% ============================================================
+% 垂直连接: Compiler → Bytecode
+% ============================================================
+\draw[arr] (cmp.south) -- ++(0, -0.6) -| (bc.north)
+  node[pos=0.4, right, font=\sffamily\scriptsize, black!65] {varint encode};
+
+% ============================================================
+% 反馈路径: LVM → LLM (repair loop)
+% ============================================================
+% 加粗红色虚线,更大弧度
+\draw[feedback]
+  (lvm.south) ++(0.8, 0) -- ++(0, -1.8)
+  -| ([xshift=-0.8cm]llm.south)
+  -- (llm.south)
+  node[pos=0.08, below, font=\sffamily\small, red!75!black, align=center]
+    {fault\\feedback};
+
+% ============================================================
+% 右侧约束标签 (设计目标)
+% ============================================================
+\node[font=\sffamily\small, black!50, anchor=west, text width=2.8cm, align=left]
+  at (15.2, 4.1) {\textbullet~token-efficient\\[1pt]\textbullet~compact};
+\node[font=\sffamily\small, black!50, anchor=west, text width=2.8cm, align=left]
+  at (15.2, 0.6) {\textbullet~bounded-exec\\[1pt]\textbullet~auditable};
+
+\end{tikzpicture}

@@ -3,7 +3,7 @@
 适用范围：
 
 - `tasks_v1.jsonl`
-- 当前 M-IR compiler v0.1
+- 当前 LIR compiler v0.1
 - 只要求输出可编译的最小子集
 
 ---
@@ -11,10 +11,10 @@
 ## 1. System Prompt
 
 ```text
-You generate M-IR programs for hardware control tasks.
+You generate LIR programs for hardware control tasks.
 
 Follow these rules exactly:
-1. Output only M-IR text.
+1. Output only LIR text.
 2. Do not output markdown fences.
 3. Use only devices from the allow-list.
 4. Every accessed device must first appear in require cap(...).
@@ -43,7 +43,7 @@ Task ID: {task_id}
 Allowed devices: {allowed_devices}
 Instruction: {prompt}
 
-Generate one valid M-IR program.
+Generate one valid LIR program.
 ```
 
 ---
@@ -63,9 +63,9 @@ Feedback:
 - error_code: {error_code}
 - hint: {hint}
 
-Rewrite the program as one valid M-IR program.
+Rewrite the program as one valid LIR program.
 Requirements:
-1. Output only the final M-IR program.
+1. Output only the final LIR program.
 2. Start with task <task_id> {{
 3. End with halt inside the task block.
 4. Do not add extra text before or after the task block.

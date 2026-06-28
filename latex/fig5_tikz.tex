@@ -1,0 +1,82 @@
+% Fig.5: Generation Pipeline with Repair Loop — auto-generated
+\begin{tikzpicture}[scale=0.90, transform shape,
+  >=Stealth, font=\sffamily\small,
+  box/.style={draw=black!80, fill=white, minimum width=1.8cm,
+              minimum height=0.9cm, align=center, inner sep=2pt,
+              font=\sffamily\scriptsize\bfseries},
+  arr/.style={-Stealth, thick, draw=black!70},
+  darrow/.style={-Stealth, thick, draw=black!70, dashed},
+]
+
+% Layer backgrounds
+\fill[black!3, draw=black!15, line width=0.3pt]
+  (-0.6, 2.1) rectangle (15.8, 4.5);
+\node[font=\sffamily\small\bfseries, black!60, anchor=north west]
+  at (-0.5, 4.45) {Generation Pipeline};
+
+\fill[black!3, draw=black!15, line width=0.3pt]
+  (-0.6, -0.6) rectangle (15.8, 1.8);
+\node[font=\sffamily\small\bfseries, black!60, anchor=north west]
+  at (-0.5, 1.75) {Repair Loop (on failure)};
+
+% Main pipeline
+\node[box] (tp) at (0.80, 3.20) { Task\\[-1pt]Prompt };
+\node[box] (llm) at (3.30, 3.20) { LLM };
+\node[box] (lir) at (5.80, 3.20) { LIR };
+\node[box] (cmp) at (8.30, 3.20) { Compiler };
+\node[box] (vfy) at (10.80, 3.20) { Verifier };
+\node[box] (lvm) at (13.30, 3.20) { LVM };
+
+\node[font=\sffamily\tiny, black!45, anchor=north] at (0.80, 2.67) {NL goal +};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (3.30, 2.67) {structured};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (5.80, 2.67) {textual DSL};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (8.30, 2.67) {IR lowering +};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (10.80, 2.67) {opcode / varint /};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (13.30, 2.67) {bounded exec.};
+
+\draw[arr] (tp.east) -- (llm.west) ;
+\draw[arr] (llm.east) -- (lir.west) ;
+\draw[arr] (lir.east) -- (cmp.west) ;
+\draw[arr] (cmp.east) -- (vfy.west) ;
+\draw[arr] (vfy.east) -- (lvm.west) ;
+
+% Repair loop
+\node[box] (out) at (0.80, 0.60) { LVM\\[-1pt]Output };
+\node[box] (prs) at (3.40, 0.60) { Parse\\[-1pt]Result };
+\node[box, draw=red!70, fill=red!5] (err) at (6.00, 0.60) { Error\\[-1pt]Formatter };
+\node[box] (rep) at (8.60, 0.60) { LLM\\[-1pt]Repair };
+\node[box] (flt) at (11.20, 0.60) { Fault\\[-1pt]Trace };
+
+\node[font=\sffamily\tiny, black!45, anchor=north] at (0.80, 0.07) {OK or};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (3.40, 0.07) {stage /};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (6.00, 0.07) {stage / code /};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (8.60, 0.07) {regenerate};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (11.20, 0.07) {pc / fault /};
+
+\draw[arr] (out.east) -- (prs.west) ;
+\draw[arr] (prs.east) -- (err.west) ;
+\draw[arr] (err.east) -- (rep.west) ;
+\draw[arr] (rep.east) -- (flt.west) ;
+
+% LVM -> Repair entry
+\draw[arr] (lvm.south) -- ++(0, -0.4) -| (out.north);
+
+% Accept box
+\node[draw=black!60, fill=black!5, minimum width=1.4cm, minimum height=0.55cm,
+      font=\sffamily\tiny\bfseries, align=center, inner sep=2pt]
+  (acc) at (3.40, -1.1) {Accept};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (3.40, -1.45) {task done};
+\draw[arr] (prs.south) -- (acc.north);
+\node[font=\sffamily\tiny, black!60, anchor=west] at (4.25, -0.85) {OK};
+
+% Re-compile (orthogonal dashed)
+\draw[darrow, black!70, line width=0.7pt]
+  (8.60, 1.15)
+  -- (8.60, 3.10)
+  -| (8.30, 3.75);
+\node[font=\sffamily\tiny, black!50, anchor=west]
+  at (8.75, 2.30) {re-compile};
+\node[font=\sffamily\tiny, black!40, anchor=west]
+  at (8.75, 2.05) {(max 3 rounds)};
+
+\end{tikzpicture}

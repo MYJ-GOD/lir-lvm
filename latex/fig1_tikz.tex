@@ -1,0 +1,52 @@
+% Fig.1: System Architecture — two-block trust-boundary view
+\begin{tikzpicture}[scale=1.0, transform shape,
+  >=Stealth, font=\sffamily\small,
+  container/.style={draw=black!75, line width=0.8pt, rounded corners=3pt,
+                    fill=black!4},
+  guard/.style={draw=black!75, line width=0.7pt, rounded corners=2pt,
+                fill=black!10},
+  title/.style={font=\sffamily\small\bfseries, black!90, align=center},
+  item/.style={font=\sffamily\footnotesize, black!80, anchor=west, align=left},
+  sub/.style={font=\sffamily\scriptsize, black!60, anchor=west},
+  flow/.style={-Stealth, line width=1.1pt, draw=black},
+  fb/.style={-Stealth, line width=0.9pt, draw=black!80, dashed},
+]
+
+% ============ LEFT CONTAINER: Host / untrusted generation ============
+\node[container, minimum width=6.4cm, minimum height=3.7cm] (host) at (3.3, 0) {};
+\node[title, anchor=north] at (3.3, 1.62) {Host (Cloud)\\[1pt]\footnotesize\mdseries\itshape untrusted LLM generation};
+
+\node[item] at (0.55, 0.50) {Natural language $\to$ \textbf{LLM}};
+\node[item] at (0.55, -0.10) {\textbf{LIR} $\to$ deterministic \textbf{Compiler}};
+\node[item] at (0.55, -0.70) {$\to$ static \textbf{Verifier}};
+\node[item] at (0.55, -1.30) {$\to$ compact \textbf{bytecode}};
+
+% ============ RIGHT CONTAINER: MCU / bounded execution ============
+\node[container, minimum width=6.4cm, minimum height=3.7cm] (mcu) at (11.3, 0) {};
+\node[title, anchor=north] at (11.3, 1.62) {MCU (Edge Device)\\[1pt]\footnotesize\mdseries\itshape bounded safe execution};
+
+\node[item] at (8.45, 0.55) {\textbf{LVM} stack interpreter ($\sim$2\,KB)};
+% highlighted guard sub-box (the security pitch)
+\node[guard, minimum width=5.5cm, minimum height=0.95cm, anchor=center]
+  (gbox) at (11.3, -0.30) {};
+\node[font=\sffamily\scriptsize\bfseries, black!85, anchor=north] at (11.3, 0.10)
+  {Runtime guards};
+\node[font=\sffamily\scriptsize, black!75, anchor=north, align=center] at (11.3, -0.28)
+  {capability gating $\cdot$ step limit $\cdot$ fault audit};
+\node[item] at (8.45, -1.30) {Hardware I/O \,(relays / sensors)};
+
+% ============ FORWARD FLOW: bytecode crosses trust boundary ============
+\draw[flow] (host.east) -- (mcu.west)
+  node[font=\sffamily\scriptsize, black!85, midway, above=1pt] {bytecode}
+  node[font=\sffamily\scriptsize, black!60, midway, below=1pt] {$\sim$11\,B};
+
+% trust boundary: vertical dashed line in the gap, crossed by the bytecode arrow
+\draw[black!45, dashed, line width=0.6pt] (7.3, 1.7) -- (7.3, 0.45);
+\draw[black!45, dashed, line width=0.6pt] (7.3, -0.45) -- (7.3, -1.7);
+\node[font=\sffamily\scriptsize, black!55, anchor=south] at (7.3, 1.78) {trust boundary};
+
+% ============ FEEDBACK LOOP: structured fault / readback -> repair =====
+\draw[fb] (mcu.south) -- ++(0,-0.7) -| (host.south)
+  node[font=\sffamily\scriptsize, black!75, pos=0.25, below] {structured fault / readback $\to$ repair};
+
+\end{tikzpicture}

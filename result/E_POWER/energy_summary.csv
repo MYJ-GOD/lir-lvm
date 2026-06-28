@@ -1,0 +1,4 @@
+group,mean_power_mW,us_per_task,uJ_per_task,x_vs_native,x_vs_bytecode
+native,419.337,8.506,3.5669,1.00,0.07
+bytecode,418.938,115.710,48.4752,13.59,1.00
+json,417.815,226.347,94.5709,26.51,1.95

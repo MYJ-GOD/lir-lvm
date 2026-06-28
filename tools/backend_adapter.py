@@ -130,6 +130,8 @@ def simulate_subset(
     payload: bytes,
     sensor_values: Optional[Dict[int, int]] = None,
     relay_state: Optional[Dict[int, int]] = None,
+    step_limit: Optional[int] = None,
+    max_stack: Optional[int] = None,
 ) -> BackendResult:
     ok, code, msg, program = decode_program(payload)
     if not ok:
@@ -149,8 +151,16 @@ def simulate_subset(
 
     try:
         while ip < len(program):
+            # Step-limit guard (formal-model StepGuard): bounds total executed
+            # instructions, preventing infinite loops from backward JMP/JZ.
+            if step_limit is not None and steps >= step_limit:
+                return BackendResult(True, False, "execute", "EXEC_FAULT_STEP_LIMIT", "step limit exceeded", steps, stack[-1] if stack else None, relays)
             op, arg = program[ip]
             steps += 1
+
+            # Stack-overflow guard (formal-model STK fault).
+            if max_stack is not None and len(stack) > max_stack:
+                return BackendResult(True, False, "execute", "EXEC_FAULT_STACK_OVERFLOW", "stack overflow", steps, stack[-1] if stack else None, relays)
 
             if op == M_GTWAY:
                 dev = int(arg)

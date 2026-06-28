@@ -1,4 +1,0 @@
-﻿task_id,category,ir_valid,structural_ok,execution_pass,task_success,error_stage,error_code,hint,raw_bytes,compact_bytes,zlib_bytes,cbor_bytes,m_bytecode_bytes,candidate_json
-V2_001,single_set,1,1,1,1,,,,92,92,84,63,7,"{""task"":""v2_001"",""cap"":[""relay1""],""body"":[{""op"":""set"",""dev"":""relay1"",""to"":1},{""op"":""halt""}]}"
-V2_002,single_set,1,1,1,1,,,,92,92,84,63,7,"{""task"":""v2_002"",""cap"":[""relay1""],""body"":[{""op"":""set"",""dev"":""relay1"",""to"":0},{""op"":""halt""}]}"
-V2_003,single_set,1,1,1,1,,,,92,92,85,63,7,"{""task"":""v2_003"",""cap"":[""relay2""],""body"":[{""op"":""set"",""dev"":""relay2"",""to"":1},{""op"":""halt""}]}"

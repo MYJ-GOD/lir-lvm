@@ -1,0 +1,73 @@
+% Fig.1: LLM-to-MCU pipeline overview — motivation figure
+\begin{tikzpicture}[scale=0.90, transform shape,
+  >=Stealth, font=\sffamily\small,
+  box/.style={draw=black!80, fill=white, minimum width=1.8cm,
+              minimum height=0.85cm, align=center, inner sep=2pt,
+              font=\sffamily\scriptsize\bfseries},
+  boxhl/.style={draw=black!80, fill=blue!12, minimum width=1.8cm,
+              minimum height=0.85cm, align=center, inner sep=2pt,
+              font=\sffamily\scriptsize\bfseries},
+  boxwarn/.style={draw=black!80, fill=red!10, minimum width=1.8cm,
+              minimum height=0.85cm, align=center, inner sep=2pt,
+              font=\sffamily\scriptsize\bfseries},
+  arr/.style={-Stealth, thick, draw=black!70},
+  darrow/.style={-Stealth, thick, draw=black!70, dashed},
+  note/.style={font=\sffamily\tiny, black!50, align=center},
+]
+
+% ---- Layer 1: Generation-friendly ----
+\fill[black!3, draw=black!15, line width=0.3pt]
+  (-0.6, 2.2) rectangle (16.4, 4.6);
+\node[font=\sffamily\small\bfseries, black!60, anchor=north west]
+  at (-0.5, 4.55) {Generation-friendly layer};
+
+\node[box]    (nl)   at (1.00, 3.35) { Natural\\[-1pt]Language };
+\node[boxhl]  (llm)  at (4.20, 3.35) { LLM };
+\node[boxhl]  (lir)  at (7.40, 3.35) { LIR\\[-1pt](DSL) };
+\node[box]    (cmp)  at (10.60, 3.35) { Compiler };
+\node[box]    (vfy)  at (13.80, 3.35) { Verifier };
+
+\node[note] at (1.00, 2.72) {user instruction};
+\node[note] at (4.20, 2.72) {generate text};
+\node[note] at (7.40, 2.72) {EBNF grammar\\LLM-stable};
+\node[note] at (10.60, 2.72) {deterministic\\lowering};
+\node[note] at (13.80, 2.72) {static check};
+
+\draw[arr] (nl.east) -- (llm.west);
+\draw[arr] (llm.east) -- (lir.west);
+\draw[arr] (lir.east) -- (cmp.west);
+\draw[arr] (cmp.east) -- (vfy.west);
+
+% ---- Layer 2: Execution-friendly ----
+\fill[black!3, draw=black!15, line width=0.3pt]
+  (-0.6, -0.5) rectangle (16.4, 2.0);
+\node[font=\sffamily\small\bfseries, black!60, anchor=north west]
+  at (-0.5, 1.95) {Execution-friendly layer};
+
+\node[boxwarn] (bc)  at (4.20, 0.85) { Compact\\[-1pt]Bytecode };
+\node[boxhl]   (lvm) at (8.20, 0.85) { LVM\\[-1pt]($\sim$2\,KB) };
+\node[box]     (dev) at (12.20, 0.85) { MCU\\[-1pt]Device };
+
+\node[note] at (4.20, 0.22) {10.9\,B payload\\13.8$\times$ vs JSON};
+\node[note] at (8.20, 0.22) {bounded exec.\\UABR=1.000};
+\node[note] at (12.20, 0.22) {relay / sensor\\ESP8266};
+
+\draw[arr] (bc.east) -- (lvm.west);
+\draw[arr] (lvm.east) -- (dev.west);
+
+% ---- Compiler -> Bytecode (downward) ----
+\draw[arr] (vfy.south) -- ++(0, -0.5) -| (bc.north)
+  node[pos=0.45, right, font=\sffamily\tiny, black!55] {varint encode};
+
+% ---- Feedback: LVM -> LLM (dashed loop) ----
+\draw[darrow, orange!75!black, line width=0.7pt]
+  (lvm.south) ++(0.5, 0) -- ++(0, -1.5) -| (llm.south)
+  node[pos=0.06, below, font=\sffamily\tiny, orange!75!black] {fault feedback};
+
+% ---- Constraint labels on the right margin ----
+\node[font=\sffamily\tiny, black!40, anchor=west, text width=2.4cm]
+  at (15.0, 4.00) {$\bullet$ token-efficient\\$\bullet$ compact};
+\node[font=\sffamily\tiny, black!40, anchor=west, text width=2.4cm]
+  at (15.0, 0.85) {$\bullet$ bounded-to-exec\\$\bullet$ auditable-on-fault};
+
+\end{tikzpicture}

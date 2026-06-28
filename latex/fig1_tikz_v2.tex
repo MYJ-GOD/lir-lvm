@@ -1,0 +1,171 @@
+% Fig.1: System Architecture — REDRAWN Version (方案A: 双层全页布局)
+%
+% 改进点:
+% 1. ✅ 绝对字号: 节点9pt, 标注7.5pt, 层标题11pt (不用scale!)
+% 2. ✅ 规范尺寸: 全页宽17.8cm (不用scale=0.9)
+% 3. ✅ 简化布局: 三层→双层 (Security合并到Backend)
+% 4. ✅ 加粗线条: 箭头1.2pt, 反馈1.5pt
+% 5. ✅ 清晰配色: 蓝色Frontend + 橙色Backend, 红色反馈
+% 6. ✅ 宽敞间距: 节点2.3cm宽, 间距2.8cm
+
+\begin{tikzpicture}[
+  >=Stealth,
+  % 节点样式 - 用绝对字号!
+  box/.style={
+    draw=black!70, fill=white,
+    minimum width=2.3cm,
+    minimum height=1.0cm,
+    align=center,
+    inner sep=4pt,
+    font=\fontsize{9}{11}\selectfont\sffamily\bfseries,
+    line width=0.6pt,
+    rounded corners=1pt
+  },
+  % 双行节点(如Natural Language)
+  boxwide/.style={
+    draw=black!70, fill=white,
+    minimum width=2.3cm,
+    minimum height=1.4cm,
+    align=center,
+    inner sep=4pt,
+    font=\fontsize{9}{11}\selectfont\sffamily\bfseries,
+    line width=0.6pt,
+    rounded corners=1pt
+  },
+  % 关键节点高亮
+  boxhl/.style={
+    draw=blue!80, fill=blue!15,
+    minimum width=2.3cm,
+    minimum height=1.0cm,
+    align=center,
+    inner sep=4pt,
+    font=\fontsize{9}{11}\selectfont\sffamily\bfseries,
+    line width=0.8pt,
+    rounded corners=1pt
+  },
+  % 主箭头 - 加粗
+  arr/.style={
+    -Stealth, line width=1.2pt, draw=black!70
+  },
+  % 反馈箭头 - 红色加粗虚线
+  feedback/.style={
+    -Stealth, line width=1.5pt, draw=red!70, dashed
+  },
+  % 标注文字 - 绝对字号
+  note/.style={
+    font=\fontsize{7.5}{9}\selectfont\sffamily,
+    text=black!55
+  },
+  % 层标题
+  layer/.style={
+    font=\fontsize{11}{13}\selectfont\sffamily\bfseries,
+    text=black!70
+  }
+]
+
+% ============================================================
+% 计算尺寸 (纸上算好的):
+% 全页宽: 17.8cm
+% 边距: 左0.7cm, 右0.7cm
+% 可用: 17.8 - 1.4 = 16.4cm
+%
+% Frontend: 6个节点
+%   节点宽: 2.3cm × 6 = 13.8cm
+%   间距: (16.4 - 13.8) ÷ 5 = 0.52cm → 取2.8cm中心间距
+%   位置: x = 1.15, 3.95, 6.75, 9.55, 12.35, 15.15
+%
+% Backend: 5个节点
+%   节点宽: 2.3cm × 5 = 11.5cm
+%   对齐Frontend的LLM/LVM/Feedback位置
+% ============================================================
+
+% ============================================================
+% LAYER 1: Frontend (y=4.2)
+% ============================================================
+\fill[blue!8, draw=blue!30, line width=0.5pt, rounded corners=2pt]
+  (0.3, 2.8) rectangle (16.5, 5.6);
+\node[layer, anchor=north west] at (0.5, 5.5)
+  {Frontend: LLM Generation Pipeline};
+
+% 节点 - 横向间距2.8cm
+\node[boxwide] (nl)  at (1.15, 4.2) {Natural\\Language};
+\node[boxhl]   (llm) at (3.95, 4.2) {LLM};
+\node[box]     (lir) at (6.75, 4.2) {LIR};
+\node[box]     (cmp) at (9.55, 4.2) {Compiler};
+\node[box]     (vfy) at (12.35, 4.2) {Verifier};
+\node[box]     (bc)  at (15.15, 4.2) {Bytecode};
+
+% 标注 - 7.5pt绝对字号
+\node[note] at (1.15, 3.45) {user input};
+\node[note] at (3.95, 3.45) {llama3.1};
+\node[note] at (6.75, 3.45) {DSL};
+\node[note] at (9.55, 3.45) {deterministic};
+\node[note] at (12.35, 3.45) {static check};
+\node[note] at (15.15, 3.45) {varint};
+
+% 主流程箭头
+\draw[arr] (nl.east) -- (llm.west);
+\draw[arr] (llm.east) -- (lir.west);
+\draw[arr] (lir.east) -- (cmp.west);
+\draw[arr] (cmp.east) -- (vfy.west);
+\draw[arr] (vfy.east) -- (bc.west);
+
+% ============================================================
+% LAYER 2: Backend + Security (y=0.8)
+% ============================================================
+\fill[orange!8, draw=orange!30, line width=0.5pt, rounded corners=2pt]
+  (0.3, -0.6) rectangle (16.5, 2.2);
+\node[layer, anchor=north west] at (0.5, 2.1)
+  {Backend: MCU Execution \& Runtime Protection};
+
+% 节点 - 对齐Frontend关键位置
+\node[box]   (tx)  at (2.55, 0.8) {Transmission};
+\node[boxhl] (lvm) at (5.35, 0.8) {LVM};
+\node[box]   (hw)  at (8.15, 0.8) {Hardware I/O};
+\node[box]   (fb)  at (10.95, 0.8) {Feedback};
+\node[box]   (rp)  at (13.75, 0.8) {Repair Loop};
+
+% 标注
+\node[note] at (2.55, 0.05) {serial/WiFi};
+\node[note] at (5.35, 0.05) {ESP8266};
+\node[note] at (8.15, 0.05) {relay/sensor};
+\node[note] at (10.95, 0.05) {fault report};
+\node[note] at (13.75, 0.05) {fix \& retry};
+
+% 主流程箭头
+\draw[arr] (tx.east) -- (lvm.west);
+\draw[arr] (lvm.east) -- (hw.west);
+\draw[arr] (hw.east) -- (fb.west);
+\draw[arr] (fb.east) -- (rp.west);
+
+% Security 标注 - 直接写在节点下方,不单独成层
+\node[note, text=blue!60] at (5.35, -0.55) {\textbullet~Cap.~Gating};
+\node[note, text=blue!60] at (8.15, -0.55) {\textbullet~Step~Limit};
+\node[note, text=blue!60] at (10.95, -0.55) {\textbullet~Fault~Audit};
+\node[note, text=blue!60] at (13.75, -0.55) {\textbullet~Closed-loop~Verify};
+
+% ============================================================
+% 跨层连接: Bytecode → Transmission
+% ============================================================
+% 从Frontend最右端绕到Backend最左端
+\draw[arr] (bc.east) -- ++(0.6, 0) |- (16.2, 2.5) -- (0.8, 2.5) |- (tx.west);
+
+% ============================================================
+% 反馈路径1: Repair Loop → LIR (红色虚线)
+% ============================================================
+% rp顶部 → 绕过Frontend层 → lir顶部
+\draw[feedback]
+  (rp.north) -- (13.75, 5.8)
+  -- (6.75, 5.8) node[note, text=red!70, anchor=south, pos=0.5] {repaired LIR}
+  -- (lir.north);
+
+% ============================================================
+% 反馈路径2: Feedback → LLM (红色虚线)
+% ============================================================
+% fb顶部 → 在Frontend层下方穿过 → llm顶部
+\draw[feedback]
+  (fb.north) -- (10.95, 2.4)
+  -- (3.95, 2.4) node[note, text=red!70, anchor=north, pos=0.5] {error feedback}
+  -- (llm.south);
+
+\end{tikzpicture}

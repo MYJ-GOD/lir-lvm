@@ -1,0 +1,1230 @@
+LGT4CG: Lightweight GPU-TEE for cloud GPUs
+Fengyuan Yua, Chenlin Huanga
+,∗, Zhichao Huab,∗, Yan Dinga, Keming Wanga, Renyu Yangc, 
+Hua Chengd, Bo Yua
+a College of Computer Science and Technology, National University of Defense Technology, Changsha, China
+b Institute of Parallel and Distributed Systems, Shanghai Jiao Tong University, Shanghai, China
+c School of Software, Beihang University, Beijing, China
+d Beijing Big Data Advanced Technology Research Institute, Tsinghua University, Beijing, China
+A R T I C L E  I N F O
+Keywords:
+Operating system security
+Trusted Execution Environment
+Heterogeneous computing
+A B S T R A C T
+GPU Trusted Execution Environments (GPU-TEEs) protect GPU-accelerated AI applications from untrusted 
+system software. Existing GPU-TEEs can be categorized into Type-I and Type-II designs. Type-I GPU-TEEs 
+execute AI applications and the full-featured AI runtime inside the TEE, enlarging the trusted computing base 
+(TCB). Type-II GPU-TEEs reduce the TCB by moving applications and complex runtimes outside the TEE and 
+verifying execution via pre-recorded metadata. Existing lightweight Type-II designs target integrated GPUs, 
+leaving cloud discrete GPUs (dGPUs) unprotected. We propose LGT4CG, a lightweight GPU-TEE for dGPUs. It 
+includes GPU Shield, which secures CPU–GPU interactions, and Task Monitor, which verifies execution against 
+metadata. We implement a prototype on ARM with NVIDIA RTX 3090. The runtime TCB consists of only about 
+6K lines of C code. On DNNs, LGT4CG adds an average overhead of 4.16% for inference and 0.34% for training. 
+On LLMs, the average overhead is 7.10% for TTFT and 6.05% for output throughput.
+1. Introduction
+AI applications execute diverse AI models, including Deep Neu
+ral Networks (DNNs) and Large Language Models (LLMs), and have 
+become increasingly powerful and widely adopted across numerous 
+domains, including content generation, healthcare, finance, and be
+yond [1–3]. An increasing number of organizations and individual 
+developers choose to deploy their AI applications in the cloud to reduce 
+management overhead and improve service quality. However, public 
+cloud environments introduce a growing attack surface. In particular, 
+security vulnerabilities in critical components such as hypervisors and 
+GPU drivers have been repeatedly disclosed in recent years [4–6]. 
+Under such threat models, adversaries with elevated privileges, includ
+ing malicious cloud operators or co-resident tenants, may attempt to 
+compromise AI applications by extracting sensitive data or tampering 
+with GPU computations.
+To run AI applications in untrusted clouds, researchers have pro
+posed Trusted Execution Environments (TEEs) to ensure confidential
+ity and integrity against untrusted system software and privileged 
+users [7–12]. Since modern AI applications are typically accelerated 
+by GPUs, GPU-TEEs have been developed to secure these applica
+tions [13–23]. GPU vendors, e.g., NVIDIA, also provide proprietary 
+GPU-TEE solutions [24]. As illustrated in Fig.  1, existing GPU-TEEs 
+∗ Corresponding authors.
+can be broadly categorized into Type-I and Type-II designs. The Type
+I design [13–18,23] runs AI applications and the entire AI runtime 
+within the TEE, including the AI framework and complex GPU runtime 
+(e.g., PyTorch and CUDA), as shown in Fig.  1(a). While this approach 
+provides comprehensive protection and broad compatibility, it also 
+significantly enlarges the Trusted Computing Base (TCB) of Type-I 
+GPU-TEEs, potentially compromising application security.
+Type-II designs aim to reduce the TCB by excluding AI applications 
+and the AI runtime from the TEE. Without protection, the untrusted AI 
+runtime can be exploited by malicious attackers to leak sensitive data 
+or invalidate computation. To mitigate this risk, Type-II GPU-TEEs [19
+22] divide GPU execution into two distinct stages: a preparing stage 
+and a running stage. In the offline preparing stage, the AI application 
+is executed on a trusted platform (e.g., a personal laptop) using only 
+test inputs. This stage generates execution metadata for AI applications, 
+including the computation graph and kernel binaries. During the online 
+running stage, computations are performed on an untrusted cloud plat
+form. The GPU-TEE leverages the pre-generated execution metadata to 
+protect the correctness of the AI applications running in the untrusted 
+environment. This protection is typically enforced within a dedicated 
+monitor that resides inside the TEE, as illustrated in Fig.  1(b).
+However, existing Type-II GPU-TEE implementations primarily tar
+get mobile or edge platforms with integrated GPUs (iGPUs). In contrast, 
+E-mail addresses: clhuang@nudt.edu.cn (C. Huang), zchua@sjtu.edu.cn (Z. Hua).
+https://doi.org/10.1016/j.sysarc.2026.103886
+Received 11 March 2026; Received in revised form 2 May 2026; Accepted 7 June 2026
+Available online 13 June 2026 
+1383-7621/© 2026 The Authors. Published by Elsevier B.V. This is an open access article under the CC BY-NC-ND license ( http://creativecommons.org/licenses/by- 
+nc-nd/4.0/ ). 
+F. Yu et al.
+Journal of Systems Architecture 178 (2026) 103886 
+Fig. 1. Type-I and Type-II GPU-TEEs..
+discrete GPUs (dGPUs), which dominate cloud computing environ
+ments, have received little attention in the design of lightweight GPU
+TEEs. In this paper, we analyze the hardware architecture and software 
+components of dGPUs and present LGT4CG, a lightweight GPU-TEE 
+tailored for these platforms.
+We implement a prototype of LGT4CG on an ARM platform
+equipped with an NVIDIA RTX 3090 GPU. The trusted computing 
+base (TCB) of LGT4CG consists of only about 6K lines of C code. 
+Experimental results show that LGT4CG incurs an average overhead of 
+4.16% for DNN inference and 0.34% for DNN training. For LLMs, the 
+average overhead is 7.10% on TTFT and 6.05% on output throughput. 
+The main contributions of this paper are as follows:
+• A systematic study of existing GPU-TEE systems that identifies a 
+critical gap: the absence of lightweight Type-II GPU-TEE solutions 
+targeting dGPUs in cloud environments.
+• A GPU Shield that secures CPU-dGPU interactions by establishing 
+a trusted context.
+• A Task Monitor that protects dGPU execution by verifying the 
+correctness of GPU execution primitives against the pre-recorded 
+metadata.
+• A prototype implementation of LGT4CG on an ARM platform 
+with an NVIDIA RTX 3090 GPU, along with an evaluation of AI 
+applications using representative AI models.
+2. Background
+2.1. Characterizing AI software and GPU execution
+AI software has a hierarchical structure, from top to bottom: AI 
+application, the AI runtime, and the GPU driver. AI runtime refers to the 
+entire user-space software stack on which an AI application depends. 
+This stack includes AI frameworks such as PyTorch and vLLM, AI
+specific libraries such as cuDNN, and the vendor-provided GPU runtime
+such as CUDA runtime that sits underneath them.
+GPUs are often shared among multiple users and applications, with 
+different processes running concurrently on the same device. The GPU 
+runtime manages a separate GPU context for each application. When 
+an AI application accesses the GPU, it creates a GPU context through 
+the GPU driver. A GPU context represents the logical execution envi
+ronment of an AI task on the GPU and is used to isolate execution 
+state and address space across different tasks. Within these contexts, 
+high-level abstractions in applications such as operators, tensors, and 
+computation graphs are translated into low-level execution primitives.
+We classify execution primitives into four categories: Malloc, Free,
+Copy, and Launch. Malloc primitives allocate and map memory re
+gions in GPU memory, while Free primitives release these regions.
+Copy primitives transfer input data and model weights into the allo
+cated memory regions. Launch primitives initiate kernel execution on 
+the GPU.
+Integrated GPUs (iGPUs) iGPUs share system RAM with the CPU. 
+In iGPU systems, GPU contexts are maintained entirely by software, 
+as the iGPU hardware does not inherently track or enforce context 
+isolation. The GPU runtime can directly update the GPU-accessible 
+register that specifies the GPU page table to switch context. For Malloc
+and Free, the GPU runtime completes GPU memory mapping and 
+unmapping by updating the GPU page table in RAM. Similarly, Copy
+primitives directly copy data into the allocated memory region in RAM.
+Launch initiates kernel execution by writing the kernel entry address, 
+arguments, and execution configuration directly into the corresponding 
+GPU registers.
+Discrete GPUs (dGPUs) dGPUs commonly interact with the CPU 
+through the PCIe interconnect. During system boot, the BIOS and OS 
+kernel enumerate PCIe devices and perform a series of configuration 
+steps, including device identification, resource allocation, and Base 
+Address Register (BAR) initialization. The GPU exposes its MMIO inter
+faces and portions of VRAM by mapping them into BARs. These BAR 
+regions establish the foundation for subsequent CPU–GPU interactions.
+Unlike iGPUs, dGPUs do not realize execution primitives directly 
+through registers, nor is context management implemented purely in 
+software. GPU execution primitives on dGPUs are realized through 
+hardware commands. Taking NVIDIA GPUs as an example, there are 
+two types of commands. The first type consists of kernel launch com
+mands for Launch. The second type consists of DMA commands for
+Copy, Malloc, and Free. Copy transfers model weights and input 
+data, while Malloc and Free transfer the GPU page tables. Context 
+management is cooperatively handled by software and hardware. The 
+software runtime is responsible for setting up and registering GPU 
+contexts, whereas the hardware enforces context isolation and assists 
+in scheduling and execution.
+To support context management under this command-based execu
+tion model, dGPUs introduce GPU channels. A channel is the abstrac
+tion that allows the runtime to enqueue commands to the GPU. Each 
+channel is associated with a command buffer1 and a ring buffer2.1. 
+The runtime writes commands sequentially into the command buffer. 
+Then it records the location and size of each command group in the 
+ring buffer. The runtime then notifies the GPU by writing to a doorbell 
+register exposed within BAR regions. After receiving the signal, the GPU 
+fetches and executes commands from the command buffer. In addition, 
+each GPU context maintains a DMA buffer in host memory that carries 
+data for Copy commands. The driver establishes GPU mappings for the 
+above buffers so that the GPU can read or write them.
+2.2. GPU-TEE
+The increasing migration of AI applications to cloud GPUs has 
+amplified the risk of security breaches. Both the complexity and po
+tential bugs in software [26], as well as the threat posed by malicious 
+insiders [27,28], compromise the confidentiality and integrity of AI 
+applications.
+Trusted Execution Environments (TEEs) can create an isolated ex
+ecution environment that protects applications from untrusted system 
+software. TEEs have been widely used to protect various types of ap
+plications. To protect AI applications, GPU-TEEs have been introduced 
+to safeguard the confidentiality and integrity of GPU-accelerated AI 
+applications. Both academia [13–22] and industry [24] have shown 
+considerable interest in developing GPU-TEE solutions. We survey ex
+isting GPU-TEEs, summarized in Table  1, and categorize them into 
+1 In the official documentation [25], command buffer is referred to as 
+pushbuffer, ring buffer is referred to as GPFIFO.
+2 
+F. Yu et al.
+Table 1
+Existing GPU-TEE solutions.
+ Type Solution Protection TCB Overhead 
+ 
+Type-I
+HIXa [13] SGX + Trusted DMA AI runtime + H.F. ∼26%  Gravitona [29] SGX + Secure Context AI runtime + H.F. ∼25%  HETEEa [30] Security controller AI runtime + H.F. ∼43%  SAGE [14] SGX + Verification Function AI runtime + H.F.–  GEVisor [16] SGX + VMX-root AI runtime (w/o Driver) + H.F. ∼13%  XpuTEE [23] SGX + VMX-root AI runtime (w/o Driver) + H.F. 2.48% (∼1% for LLMs)  Honeycomb [17] AMD SEV + SEV-TIO AI runtime + H.F. ∼10% (∼2% for LLMs)  Cronus [15] S-EL2 + SMMU AI runtime + H.F. 7.1%  ACAI [18] ARM CCA + SMMU AI runtime + H.F.–  NVIDIACCa [24] SEV/TDX + H/B Series GPU AI runtime + H.F.– 
+ 
+Type-II
+Strongbox [19] TZ + Stage-2 Verifier + H.F. ∼10%  CAGE [20] ARM CCA + SMMU Verifier + H.F. 2.45%  GPUReplay [21] TZ Replayer + H.F. ∼25%  GR-T [22] Remote VM + TZ Replayer + H.F. ∼25% 
+a means requiring extra hardware or modifications beyond the standard CPU and GPU components.
+H.F. means hardware and firmware.
+Table 2
+CVE analyses of representative components of AI runtime. AI runtime is 
+fraught with vulnerabilities, including RCE (remote code execution), DoS 
+(denial of service), and MC (memory corruption). LoC shows the code size 
+in LoCs of each software. Time Scale indicates the year strides for each of the 
+two CVE analyses.
+ Name RCE DoS MC LoC Time scale 
+ PyTorch [31] 1 7 7 9M 2022–2026  Tensorflow [32] 1 80 53 2.9M 2018–2026  Python 6 23 8 1.4M 2002–2026 
+two main designs: monolithic GPU-TEE design (Type-I) and lightweight 
+GPU-TEE design (Type-II).
+Type-I Solutions The monolithic design integrates the entire AI 
+runtime within the TEE to protect the input, model weights, kernel 
+binaries, and execution of AI applications. The confidentiality and 
+integrity of inputs, models, binaries, and execution are ensured through 
+the inherent security features of TEEs. However, this design results in 
+a large runtime TCB, as it requires porting the entire AI runtime into 
+the TEE.
+In addition, attackers may exploit software vulnerabilities within 
+the AI runtime to compromise the integrity of computations. More 
+than one hundred CVEs (Table  2) have been reported in modern 
+AI software, which is fully incorporated into the TCB by all Type-I 
+solutions. By exploiting vulnerabilities in these complex and error
+prone software components, attackers can execute arbitrary code or 
+manipulate sensitive state within the TEE, resulting in severe security 
+risks.2
+Type-II Solutions Lightweight approaches aim to address the is
+sue of an excessively large TCB in Type-I designs by excluding AI 
+applications and the bulky AI runtime from the TCB. To achieve this, 
+Type-II GPU-TEEs adopt a two-stage execution model to protect the 
+GPU computation of AI applications. Specifically, GPU computation 
+is divided into a preparing stage and a running stage. The preparing 
+stage is executed on a trusted platform to generate execution metadata, 
+such as the computation graph and kernel binaries, for the target AI 
+application. During the running stage, this metadata is leveraged to 
+protect the online GPU computation of AI applications running on 
+untrusted platforms. Different solutions utilize execution metadata in 
+different ways. Some solutions [19,20] compare the metadata profiled 
+offline with metadata generated online to verify the correctness of 
+online GPU computation. Other solutions [21,22] adopt replay-based 
+2 Code statistics include third-party projects. The LoC of AI frameworks 
+comprises the C/C++, CUDA and Python code. Due to the dynamic code 
+generation of AI frameworks, their LoC is measured after compilation.
+approaches. They deploy a recorder offline to capture the computation 
+graph and kernels, and place a replayer in the online GPU-TEE, which 
+uses the captured computation graph and kernel binaries to reproduce 
+the computation. The codebase of the verifier or replayer typically 
+consists of only a few thousand lines, which significantly reduces the 
+TCB size compared with Type-I approaches.
+Motivation Although Type-II designs significantly reduce the TCB 
+size, there is currently no reference implementation of a lightweight 
+Type-II GPU-TEE targeting dGPUs. Existing solutions such as Strong
+Box [19], CAGE [20], and GPUReplay [21] focus on integrated GPUs in 
+mobile or edge platforms, which are not directly applicable to discrete 
+GPUs widely deployed in cloud environments.
+3. Overview
+3.1. Goals
+The primary goal of LGT4CG is to provide a lightweight and prac
+tical GPU-TEE system capable of securely running GPU-accelerated AI 
+applications on untrusted cloud dGPUs. The details are as follows:
+•G1: Security: LGT4CG aims to provide strong security guar
+antees for GPU execution, including isolating protected AI ap
+plications from untrusted software and preventing unauthorized 
+interference during execution. Simultaneously, LGT4CG ensures 
+the correctness of AI application results.
+•G2: Lightweightness: AI applications and the bulky AI runtime 
+are excluded from the TCB. Only a minimal set of security-critical 
+components is trusted, thereby significantly reducing the attack 
+surface.
+•G3: Compatibility: LGT4CG is implemented entirely using se
+curity primitives available in existing hardware, requiring no 
+custom hardware extensions. It can be integrated with existing 
+AI software stacks with minimal modifications.
+3.2. Threat model and assumptions
+We assume a trusted preparing stage environment, e.g., a per
+sonal laptop or workstation. All operations in the preparing stage 
+are considered secure. Similar to prior Type-II GPU-TEE designs, we 
+assume that users possess an identical GPU to that used in the online 
+environment, enabling them to extract execution metadata offline. In 
+contrast, we assume an untrusted running stage environment. Both co
+located applications and system software in the running stage may be 
+compromised by privileged attackers or controlled by malicious system 
+administrators. These attackers may attempt to extract sensitive data 
+from AI applications or tamper with computation results. We assume 
+the local availability of suitable profiling and tracing tools to obtain 
+Journal of Systems Architecture 178 (2026) 103886 
+3 
+F. Yu et al.
+Journal of Systems Architecture 178 (2026) 103886 
+Fig. 2. The architecture of LGT4CG.
+the metadata required for subsequent verification. This assumption is 
+consistent with prior Type-II GPU-TEE designs.
+For online AI applications, we assume that the CPU-side logic does 
+not perform any input pre-processing or output post-processing. We 
+assume that the online platform provides a secure boot mechanism that 
+securely initializes the TEE. After initialization, however, any software 
+outside the TEE, including the OS kernel, GPU driver, GPU runtime, 
+and hypervisor, may be compromised. We assume the vendor-provided 
+GPU firmware is bug-free. However, the GPU firmware is loaded by the 
+untrusted GPU driver, so the firmware is untrusted before verification. 
+We trust the GPU microarchitecture itself: direct microarchitectural 
+attacks against the GPU and physical attacks on the GPU are out of 
+scope, which is consistent with prior GPU-TEEs [13–22]. Denial-of
+service (DoS) attacks, side-channel attacks, and physical attacks are also 
+outside the scope of LGT4CG, which is consistent with prior GPU-TEE 
+solutions.
+3.3. LGT4CG architecture
+As shown in Fig.  2, LGT4CG reuses the AI runtime in an untrusted 
+environment and ensures safe GPU execution through two lightweight 
+software components: GPU Shield and Task Monitor. They operate 
+at a higher privilege level than the system software and intercept 
+security-critical operations issued by both the GPU runtime and the 
+GPU driver. GPU Shield establishes a secure and controlled context 
+for transmitting GPU hardware commands, thereby guaranteeing the 
+security of CPU–GPU interactions. Task Monitor is responsible for 
+verifying the correctness of execution primitives, ensuring that online 
+GPU execution conforms to the execution metadata captured during 
+the preparing stage. With this architecture, LGT4CG leverages existing 
+hardware isolation primitives to provide strong security guarantees 
+(G1). Furthermore, LGT4CG excludes AI applications, the AI runtime, 
+and other system software from the TCB, thereby achieving the design 
+goal of lightweightness (G2). Finally, LGT4CG collaborates with the un
+trusted AI runtime to verify critical operations rather than performing 
+intrusive modifications, thereby ensuring compatibility (G3).
+3.4. Workflow
+The usage workflow of LGT4CG is illustrated in Fig.  3 and proceeds 
+as follows.  
+First, the user remotely attests the online LGT4CG GPU
+TEE to establish trust. Upon successful attestation, the user sends a 
+request for secure AI application execution to LGT4CG via a secure 
+channel. The pre-generated execution metadata and cryptographic keys 
+for protecting sensitive data are also transmitted at this stage.  Next, 
+the user starts the AI application under the protection of LGT4CG. 
+GPU Shield protects the context initialization for the AI application.  
+Fig. 3. The workflow of LGT4CG.
+The encrypted data are then uploaded to the AI application. For each 
+data transfer to the GPU, the untrusted AI runtime invokes LGT4CG 
+through dedicated submission interfaces. Task Monitor decrypts and 
+verifies the ciphertext inside the TEE, and then transfers the plaintext 
+to the GPU.  The untrusted AI runtime generates execution metadata, 
+such as a computation graph, and attempts to execute it on the GPU. 
+Task Monitor verifies that the metadata generated conforms to the one 
+prepared. If verification succeeds, the execution metadata is considered 
+valid and secure and is submitted to the GPU for execution. Upon 
+completion, the computation results are returned to the TEE, encrypted, 
+and subsequently delivered to the GPU user.  Finally, the user sends 
+a termination signal to the GPU-TEE over a secure channel. Once the 
+AI application terminates, all sensitive data are securely erased and the 
+GPU-TEE environment is safely destroyed.
+4. Design
+GPU Shield is responsible for constructing exclusive and trusted con
+texts for AI applications. All interactions with the GPU are monitored 
+by GPU Shield, preventing attackers from creating hidden contexts to 
+bypass the protection. AI applications translate their workloads into 
+hardware commands and submit them through the trusted context. 
+Although attackers may attempt to submit malicious commands by 
+compromising any part of the AI runtime, Task Monitor inspects all 
+submissions and blocks the execution of malicious commands.
+4.1. GPU shield
+LGT4CG collaborates with the GPU driver to provide trusted con
+texts for AI applications. To ensure context security, we implement a 
+state machine within LGT4CG to track the execution status of each 
+context: wait, running, and done. The contexts of an AI application pass 
+through these three states sequentially and are never reused. LGT4CG 
+protects context state transitions by intercepting and validating the 
+critical context operations issued by the GPU driver. Any operation that 
+4 
+F. Yu et al.
+Journal of Systems Architecture 178 (2026) 103886 
+violates the expected transition sequence is rejected, and the violation 
+is reported to the GPU user.
+Context Creation When LGT4CG receives a new request for secure 
+AI application execution, it creates a context status instance in the wait
+state to track the AI application that is ready to run. This instance 
+records not only basic identifiers, such as the associated context ID 
+and the request source, but also the execution metadata required for 
+subsequent secure execution. After the user launches the AI application, 
+the untrusted GPU driver initiates the creation of context, channel, and 
+buffer objects. These objects constitute the interface between the AI 
+application and the GPU and can therefore serve as potential attack 
+surfaces. LGT4CG uses hardware access control mechanisms to prevent 
+the untrusted driver from directly creating these resources. Instead, the 
+driver must redirect all creation requests to the TEE for validation. 
+This ensures that even highly privileged attackers cannot bypass the 
+protective mechanisms of LGT4CG to create malicious contexts.
+For context creation, LGT4CG ensures that each created context 
+has a one-to-one binding with a context status instance. Additionally, 
+the address space configuration of the context must comply with the 
+security policies of LGT4CG, which enforce isolation between different 
+contexts. LGT4CG also ensures that the address spaces of the associated 
+channel buffers are properly isolated to prevent malicious injection. 
+After LGT4CG verifies all context-related resources, the corresponding 
+context status instance transitions from the wait state to the running
+state.
+This transition indicates that the AI application is now ready to 
+execute in a controlled and trusted environment. At this point, LGT4CG 
+permits the AI application to submit commands to the context to per
+form GPU computations. LGT4CG does not allow any reconfiguration 
+or destruction of resources associated with a running context prior to 
+receiving the termination signal from the GPU user.
+Context Destruction Upon receiving a termination signal, LGT4CG 
+sets the corresponding context status instance to the done state and 
+disables further command submission on that context. After the AI 
+application is terminated, the GPU driver issues a request to destroy 
+the associated context. LGT4CG verifies the identity of the context and 
+ensures that it is consistent with the record maintained in the context 
+status instance before approving the destruction.
+The destruction of a context triggers the cleanup of all related 
+resources, including its channels and buffers. The bindings of these 
+resources must remain consistent with the recorded metadata. Context 
+destruction also involves sanitizing all GPU memory used under that 
+context, which may include model weights, intermediate results, and 
+input data. Since a context may be associated with multiple channels, 
+buffers, and memory regions, LGT4CG not only enforces isolation be
+tween different contexts but also ensures the completeness of resource 
+cleanup. This prevents data leakage and eliminates residual data that 
+could otherwise be exploited by an attacker.
+4.2. Task monitor
+When a context is in the running state, the AI application translates 
+the AI model into execution primitives. These primitives are delivered 
+to the GPU via the trusted context. Task Monitor is responsible for 
+verifying these primitives. The primitive-level verification ensures the 
+security and correctness of GPU execution.
+For Malloc, LGT4CG enforces the following constraints. First, the 
+physical memory spaces of different GPU contexts must be isolated. 
+Second, no physical memory region can be mapped to multiple virtual 
+address spaces within a single context. Third, mappings of sensitive 
+data must reside in GPU VRAM rather than host RAM.
+For Free, LGT4CG enforces a temporal constraint: the deallocation 
+of GPU memory is disallowed until a task termination signal is re
+ceived. This design is motivated by the observation that AI applications 
+typically employ memory pooling strategies, in which GPU memory 
+is allocated incrementally on demand, reused throughout the task 
+lifetime, and reclaimed only upon task termination.
+For Copy, LGT4CG provides end-to-end protection for sensitive data 
+using cryptographic mechanisms. As for kernel binaries, only integrity 
+protection is enforced, as kernel binaries are typically open-source and 
+do not require confidentiality. As for input data and model weights, the 
+owner encrypts them before submission. The corresponding keys are 
+delivered to the TEE in advance through the secure channel established 
+by remote attestation described in Section 3.4. At runtime, decryption 
+and integrity verification are performed exclusively within LGT4CG. 
+After successful decryption and verification, LGT4CG transfers the data 
+to the GPU.
+In addition, LGT4CG verifies the destination address and transfer 
+size of the corresponding DMA command, thereby preventing mali
+cious overwriting of model weights or input data used in subsequent 
+computations. Once all checks pass, LGT4CG submits the DMA com
+mand. Upon completion of the DMA operation, LGT4CG clears all 
+CPU-side plaintext data and revokes access to the associated push
+buffers and DMA buffers, ensuring that plaintext data do not persist 
+in CPU-accessible memory.
+For Launch, LGT4CG validates each launch command against cap
+tured execution metadata. First, it verifies that the kernel entry address 
+specified in the command points to an authorized kernel binary. Kernel 
+binaries are transferred to the GPU via DMA. During this transfer, 
+LGT4CG intercepts the DMA, computes a hash over the kernel binary 
+to derive a unique identifier, and verifies its integrity. Within a GPU 
+context, each kernel binary is typically transferred only once. For 
+subsequent launch commands, LGT4CG only needs to verify the kernel 
+entry address.
+Beyond the kernel entry point and kernel binary, LGT4CG also 
+verifies the kernel parameters carried in launch commands. For pointer
+type parameters, LGT4CG verifies their input–output relationships. We 
+use GPT-based AI applications as a representative example, illustrated 
+in Fig.  4. The figure depicts a fragment of the computation graph for 
+the Attention layer, together with the details of the first kernel. The 
+first kernel is the RMS Normalization kernel ( ). It takes three pointer 
+parameters, output, input, and weight, and three value parameters, ep
+silon, num_tokens, and hidden_size. The output pointer designates the 
+output buffer of the kernel. LGT4CG checks that this output pointer 
+does not overwrite any buffer still required by later kernels. The input
+pointer refers to the hidden state produced by a prior kernel. LGT4CG 
+verifies that this pointer matches the output pointer of that prior kernel. 
+The weight pointer refers to a slice of the model weights. LGT4CG 
+verifies that this pointer is consistent with the buffer uploaded by Copy. 
+For value-type parameters and configuration values, LGT4CG directly 
+compares them against the expected values recorded in the execution 
+metadata. Only exact matches are permitted for execution.
+The subsequent kernels are validated under the same rule. By apply
+ing this verification iteratively, each kernel consumes its parameters 
+in an authorized manner, and the data flow across kernels remains 
+consistent with the intended execution metadata. As a result, both the 
+local correctness of individual kernels and the global correctness of 
+inter-kernel dependencies are enforced.
+5. Implementation
+We prototype LGT4CG on the Phytium 2000-Plus platform, which 
+is equipped with a 64-core ARMv8 CPU running at 1.8 to 2.2 GHz. 
+For GPU selection, we use NVIDIA products due to their widespread 
+deployment in cloud services and strong software ecosystem support. 
+Specifically, we use an NVIDIA RTX 3090 GPU (Ampere architecture), 
+which features 82 computation units and is equipped with 24 GB 
+VRAM. Our prototype runs Linux kernel v6.6.22, NVIDIA GPU kernel 
+driver v515.76, CUDA v12.6, PyTorch v2.9.1, and vllm v0.6.0. The TCB 
+of LGT4CG consists of approximately about 6K LoC. In addition, we 
+modify the CUDA runtime and the GPU driver to redirect GPU control 
+5 
+F. Yu et al.
+Journal of Systems Architecture 178 (2026) 103886 
+Fig. 4. An example of execution metadata verification.
+operations. These components are explicitly excluded from the TCB, 
+and the total volume of such modifications is limited to approximately 
+4K LoC. In a production deployment, we expect LGT4CG to reside 
+at ARM EL3. Since the vendor firmware is not open-sourced, our 
+prototype runs LGT4CG at ARM EL2 to enable performance evaluation.
+5.1. GPU shield
+LGT4CG protects three classes of buffers used by the GPU: the per
+GPU GSP message buffer, the per-channel command and ring buffers, 
+and the per-context DMA buffer. These buffers reside in different 
+physical locations and have different access patterns, but they share a 
+common protection scheme: the TEE uses Stage-2 page tables to restrict 
+CPU access, the IOMMU to restrict device DMA, and the TZASC to 
+protect the page tables themselves. Stage-2 page tables are configured 
+during trusted boot with identity mapping. IOMMU page tables are 
+created on demand by the untrusted driver and verified by LGT4CG 
+before activation. Subsequent modifications are validated by the TEE 
+before being applied. Each buffer applies a tailored variant of this 
+scheme, as detailed below.
+GSP Communication Protection NVIDIA GPUs based on the Am
+pere architecture and later integrate a dedicated GSP (GPU System 
+Processor) chip on the GPU, which offloads part of the driver man
+agement logic to the GPU side, including context management. The 
+untrusted GPU driver transfers the GSP firmware to the GPU during 
+context initialization. LGT4CG intercepts this process and redirects 
+it into the TEE. During loading, LGT4CG checks the supplied image 
+against the pre-recorded integrity hash. Only matching firmware is 
+loaded. After loading, LGT4CG blocks any modification or overwrite 
+on the firmware region during execution.
+The GPU driver and the GSP interact through a producer–consumer 
+model via a message buffer that resides in BAR2. The driver writes 
+messages to the buffer and then triggers the GSP doorbell register, 
+which resides in BAR0, to notify the GSP. We modify the driver to redi
+rect GSP doorbell accesses to the TEE. Within the TEE, we inspect the 
+GSP messages and record the results. During inspection, the associated 
+memory regions are configured as read-only to prevent tampering, and 
+the access permissions are restored once the inspection completes.
+Channel Buffer Protection The NVIDIA GPU driver allocates a 
+contiguous channel buffer of 16 MB, divided into chunks of 1 MB 
+each, where each chunk contains a command buffer and a ring buffer 
+(GPFIFO). The channel buffer also resides in the BAR region. LGT4CG 
+inspects the GPU page tables of this buffer and constructs an equivalent 
+mapping within the TEE that mirrors the GPU address translation. 
+When a command is submitted, the TEE locates the corresponding 
+ring buffer using the associated context ID and channel ID, resolves 
+the command buffer through the mirror page table mappings, and 
+verifies the command against the prepared execution metadata. The 
+same read-only window scheme used for GSP messages applies during 
+this verification. Once verification completes, the access permissions 
+are restored.
+DMA Buffer Protection The NVIDIA GPU driver selects a region 
+in host RAM as the DMA buffer during execution. LGT4CG uses the 
+DMA buffer to complete transfers of encrypted sensitive data. Before 
+initiating a DMA, LGT4CG updates the page tables so that the DMA 
+buffer is reachable only by the target dGPU and remains inaccessible 
+to untrusted software and other peripherals. Once the DMA completes, 
+LGT4CG clears the buffer contents and restores the default permissions.
+Sensitive Data Upload LGT4CG exposes two interfaces to the AI 
+runtime to upload the encrypted sensitive data. REGISTER copies the 
+ciphertext of the request into the TEE. Upon REGISTER, the TEE de
+crypts the ciphertext and verifies its integrity. SUBMIT asks the TEE 
+to deliver specified requests. Upon SUBMIT, the TEE assembles the 
+requested plaintexts in the protected DMA buffer, generates the cor
+responding DMA command, and submits the command to transfer 
+the data. The two interfaces above can conveniently replace existing 
+unprotected data transfer interfaces. For synchronous decryption, both 
+execute together after the prior GPU computation completes. For asyn
+chronous decryption, REGISTER can complete when loading or upon 
+receiving ciphertext data, while SUBMIT still executes after the prior 
+GPU computation completes.
+Context Creation The GSP uses an RPC API for creating (ALLOC_
+OBJECT) objects. The API parameters specify the object type and 
+its configuration. For example, the type identifier for a context is
+CONTEXT_SHARE_A, while that for a channel is CHANNEL_GPFIFO_A.
+For context creation RPCs, the driver transmits a UUID that uniquely 
+identifies the GPU to the GSP. The GSP then returns a UUID repre
+senting the newly created context, and the TEE records this identifier 
+for subsequent verification. For AI applications executing on the same 
+physical GPU, the GPU UUID remains identical, whereas the context 
+UUIDs3 differ across applications. For channel creation RPCs, the driver 
+transmits the GPFIFO pointer and the context UUID of the specific 
+channel. The GSP then returns a UUID representing the newly cre
+ated channel, and the TEE records the association among the context, 
+channel, and GPFIFO.
+Context Destruction The GSP uses an RPC API for releasing (FREE) 
+objects. The FREE API requires only the ID of the object to be released. 
+LGT4CG verifies that the ID matches the context being terminated, 
+ensuring the correctness of the released resources. We observe that 
+once the driver receives a context termination request, it first performs 
+scrubbing over all memory regions associated with the context. After 
+this sanitization, the driver issues the GSP RPC to free the context 
+and its channels. To prevent potential data leakage, LGT4CG enforces 
+protection over the scrubbing process. A context cleanup is consid
+ered secure only if all associated memory regions have been properly 
+scrubbed. If the driver attempts to free the context before scrubbing is 
+complete, LGT4CG treats this as a security violation and reports it to 
+the GPU user.
+PCIe Configuration Access Control After PCIe enumeration com
+pletes, information about resource allocation and BAR mappings is 
+stored in the PCIe configuration space. Although secure boot protects 
+these configurations during the boot process, improper modifications at 
+runtime can undermine GPU isolation. For example, an attacker could 
+maliciously modify BAR registers to remap MMIO regions to unau
+thorized physical addresses. To address this threat, LGT4CG applies a 
+blocking policy that prevents untrusted CPU software and untrusted 
+devices from arbitrarily modifying the PCIe configuration space. Specif
+ically, all write accesses to the PCIe configuration space are denied 
+after secure boot, ensuring that the established GPU resource mappings 
+cannot be tampered with at runtime.
+3 In the official documentation [25], the context UUID is referred to as the 
+Runlist ID.
+6 
+F. Yu et al.
+5.2. Task monitor
+We redirect the transmission of hardware commands to the TEE by 
+directly modifying the source code of the kernel driver and applying 
+binary rewriting to the GPU runtime. For Copy, we use AES-256
+GCM for data encryption and SHA-256 for kernel binary integrity 
+verification. For Launch, we check each invocation according to the 
+rules specified in Section 4.2. For Malloc and Free, we verify the 
+page tables generated by the driver within the GPU-TEE after their 
+construction. When verifying hardware commands, we apply the same 
+memory protection scheme used for GSP message protection to ensure 
+the integrity of the verification process.
+6. Security analysis
+Due to limitations of CPU firmware, certain components of our 
+design require support from the platform vendor. We believe that 
+this requirement is practical and can be readily addressed by GPU or 
+platform vendors. In particular, we expect LGT4CG to run at EL3, which 
+provides the highest privilege level on ARM platforms and is well suited 
+for enforcing strong isolation and secure mediation of GPU resources. 
+LGT4CG itself is fully trusted and assumed to be free of bugs. We next 
+summarize representative attacks that an adversary may mount from 
+outside the TEE.
+Attackers may attempt to load a malicious GSP firmware image 
+to undermine the protection of LGT4CG. The firmware integrity ver
+ification inside LGT4CG checks the firmware before GPU execution 
+(Section 5). A tampered image fails this verification.
+Attackers may attempt to access GPU VRAM directly from the CPU 
+through PCIe BAR windows, or tamper with BAR registers in the PCIe 
+configuration space to enlarge the exposed range. LGT4CG runs at 
+EL3 and exclusively manages the Stage-2 translation, keeping BAR
+exposed physical ranges unmapped in the normal world. It also blocks 
+all writes to the PCIe configuration space after secure boot, preventing 
+runtime BAR remapping. Both mechanisms together defend against this 
+BAR-based attack.
+Attackers may attempt to redirect the GPU mappings of sensitive 
+data to host RAM, where the CPU can bypass the protection of LGT4CG 
+and read the data directly. LGT4CG verifies every GPU page table and 
+rejects RAM mappings for sensitive data.
+Attackers may attempt to forge malicious commands to transfer sen
+sitive data from the GPU to host RAM. To mitigate this threat, LGT4CG 
+ensures that computation results are encrypted upon completion, and 
+prevents any GPU memory region from being returned to or directly 
+accessed from host memory.
+Attackers may control other devices to launch DMA attacks.
+LGT4CG addresses this threat by inspecting the IO page tables during 
+GPU context creation to ensure that no address space is shared between 
+the GPU and other devices. All modifications to the IO page tables must 
+be verified by LGT4CG to prevent unauthorized devices from accessing 
+GPU memory during computation.
+Attackers may attempt to launch cross-application attacks by ex
+ploiting the context of other applications to compromise protected AI 
+applications. To mitigate this risk, LGT4CG enforces strict context iso
+lation between different AI applications. Specifically, LGT4CG records 
+the associations among contexts, channels, and pushbuffers, ensuring 
+that every hardware command is validated against the correspond
+ing execution metadata of its owning context. In addition, LGT4CG 
+configures separate GPU page tables for different contexts, preventing 
+memory mappings from being shared across applications and thereby 
+eliminating cross-context memory interference.
+Attackers may attempt to modify kernel binaries to subvert AI 
+applications. LGT4CG detects such modifications through kernel binary 
+verification. LGT4CG tracks the lifecycle of each kernel and monitors 
+DMA commands, ensuring that verified kernels cannot be maliciously 
+altered.
+Table 3
+Overhead on OS operations.
+ Syscall Mmap Pagefaults Ctxsw 
+ Baseline 0.199μs 24.18ms 0.44μs 19.36μs  LGT4CG 0.201μs 24.75ms 0.45μs 19.73μs 
+ Overhead 1.005% 2.357% 2.272% 1.911% 
+ Select Socket Lat. Pipe Lat. TCP Lat. 
+ Baseline 1.1μs 41.62μs 10.82μs 20.22μs  LGT4CG 1.1μs 42.12μs 10.94μs 20.66μs 
+ Overhead 0.000% 1.201% 1.109% 2.176% 
+Attackers may manipulate the AI runtime during execution in an 
+attempt to supply a compromised computation graph to the GPU, 
+thereby tampering with the results. LGT4CG mitigates this risk by veri
+fying the semantics of each launch command. Any corrupted or invalid 
+computation graph will disrupt the expected command semantics and 
+cause the verification process to fail.
+7. Evaluation
+We answer the following questions in this section:
+Q1: What is the overhead introduced by LGT4CG on the critical 
+operations of the OS and AI applications?
+Q2: What is the overall end-to-end overhead of LGT4CG when 
+running an AI application?
+7.1. Experimental setup
+We selected eleven AI models to evaluate the end-to-end perfor
+mance overhead introduced by LGT4CG. The DNN models include 
+ResNet [33] (resnet152 [34]), DenseNet [35] (densenet201 [36]), 
+VGG [37] (vgg19 [38]), ViT [39] (vit_l_32 [40]), EffNet [41] (ef
+ficientnet_b5 [42]), and SwinT [43] (swin_v2_t [44]), evaluated on 
+the ImageNet dataset. The LLM models include Llama [45] (Llama
+3.2-1B [46]), Falcon [47] (Falcon3-3B-Base [48]), OPT [49] (OPT
+2.7B [50]), Qwen [51] (Qwen2.5-1.5B [52]), and GPT [53] (GPT
+2 [54]), evaluated on the ShareGPT dataset. For DNNs, we evaluated 
+both inference and training. For LLMs, we evaluated only the inference 
+scenario due to GPU memory capacity constraints. Each application 
+is executed for 10 iterations. In our experiments, we evaluate two 
+main configurations. The first is Baseline, which means running AI 
+applications without protection. The second is LGT4CG, which means 
+running AI applications under the protection of LGT4CG.
+7.2. Overhead on critical operations
+Overhead from Redirection LGT4CG requires the AI runtime to 
+redirect critical operations into the TEE for protection. We measured 
+the duration of entering and exiting LGT4CG. We prepared an exper
+imental program as the evaluation target, which launches a kernel 
+10,000 times. We also modified LGT4CG to produce a no-op version 
+of the GPU-TEE, which returns immediately without performing any 
+checks. The average overhead of a context switch is 5𝜇s.
+Overhead on OS Operations We measured the overhead intro
+duced by LGT4CG on critical OS operations using benchmarks from 
+LMBench [55]. We compared the benchmark performance on an un
+modified AI runtime with that on LGT4CG, as shown in Table  3. We 
+observed that the impact of LGT4CG on common OS operations ranges 
+from 0% to 2.357%. The overhead primarily arises from the additional 
+Stage-2 address translation performed by the hardware. The Stage-2 
+page table is configured as an identity mapping. Since most of the 
+OS address space does not rely on dynamic page table permission 
+adjustments for access control, the additional translation introduces 
+only marginal overhead.
+Journal of Systems Architecture 178 (2026) 103886 
+7 
+F. Yu et al.
+Table 4
+Overhead on AI application operations.
+ Malloc 64 MB 256 MB 1 GB 4 GB 
+ Baseline (ms) 1.055 1.997 17.099 86.422  LGT4CG (ms) 1.056 1.999 17.681 88.568  Overhead (%) 0.094 0.100 3.403 2.483 
+ Copy H2D 64 MB 256 MB 1 GB 4 GB 
+ Baseline (ms) 5.995 23.947 95.751 382.941  Transfer (ms) 6.018 24.038 96.031 383.383  Overhead-V (%) 0.384 0.380 0.292 0.115  Decrypt (ms) 27.137 104.305 433.615 1734.143  Overhead-C (%) 452.661 435.566 452.857 452.849 
+ Copy D2H 64 MB 256 MB 1 GB 4 GB 
+ Baseline (ms) 5.251 20.981 83.897 335.559  Transfer (ms) 5.267 21.059 84.123 336.307  Overhead-V (%) 0.305 0.372 0.269 0.223  Encrypt (ms) 28.896 111.135 461.974 1847.776  Overhead-C (%) 550.295 529.694 550.644 550.656 
+Overhead on AI application operations We measured the over
+head caused by LGT4CG on critical AI application operations like
+Malloc and Copy. We compare the critical AI application operations 
+running on the unmodified AI runtime with LGT4CG, as shown in Table 
+4. The overhead on Malloc ranges from 0.094% to 3.403%, which stems 
+from checks of LGT4CG on DMAs of GPU page tables. We decompose 
+the Copy into two components: data transfer and cryptographic opera
+tions. LGT4CG introduces additional verification overhead on transfer. 
+The verification overhead of Copy H2D ranges from 0.115% to 0.384%, 
+while the overhead of Copy D2H ranges from 0.223% to 0.372%. The 
+cryptographic operations increase with data size and, in isolation, can 
+be several times larger than the pure data transfer cost. In practice, 
+however, this isolated cost overstates the real overhead.
+Overhead on Model Weight Loading. We measured the model 
+weight loading of all eleven AI applications running under LGT4CG. 
+The result is shown in Fig.  5. For the DNN applications in Fig.  5(a), 
+the overhead of LGT4CG ranges from ∼3.1% (EffNet) to ∼12.2% (ViT). 
+For the LLM applications in Fig.  5(b), the overhead of LGT4CG ranges 
+from ∼1.9% (GPT) to ∼31.6% (Falcon). Decryption is the dominant 
+source of the overhead. The model weights are transferred when the 
+AI application starts. Larger models incur larger overhead. However, 
+subsequent requests reuse the model weights already resident on the 
+GPU. The decryption cost is therefore amortized across the lifetime of 
+the AI application. Note that we do not consider the case where the 
+weights are repeatedly evicted from the GPU and reloaded from the 
+host.
+Overhead on Model Input Loading. LGT4CG must decrypt every 
+input received from the users before the GPU can compute on it. 
+Compared with the model weights, the per-request input is much 
+smaller. For example, an LLM request carries only a short sequence 
+of token IDs on the order of a few kilobytes. A prompt with 1000 
+tokens costs roughly 2μs to decrypt. A DNN input is usually a single 
+3 × 224 × 224 image of about 0.6MB in fp32. Its decryption costs 
+roughly 240μs. Beyond decryption, the input loading also incurs a 
+verification overhead on the Copy primitive. This overhead is fixed and 
+almost negligible (see Table  4). We focus on the decryption overhead 
+in the following analysis.
+AI applications using DNNs usually group inputs into batches. For 
+DNN inference, we swept the batch size from 1 up to 1024. We 
+measured the ratio of the decryption overhead of LGT4CG in Fig.  6. 
+As the batch size grows, the decryption overhead grows linearly, while 
+the latency of GPU computation behaves like a piecewise linear func
+tion. When the GPU computation resources are not yet fully occupied, 
+increasing the batch size barely increases the computation time. Once 
+they are fully occupied, the computation time grows linearly with 
+the batch size. The ratio of the decryption overhead grows with the 
+batch size and reaches a plateau once the GPU is fully occupied. At a 
+(a) DNN model weight loading
+(b) LLM model weight loading
+Fig. 5. Overhead on model weight loading.
+Fig. 6. Decryption overhead ratio of LGT4CG in DNN inference.
+Table 5
+Decryption overhead ratio of LGT4CG in DNN training.
+ Model Computation (ms) Ratio (%) 
+ ResNet 314 4.80  DenseNet 237 6.36  VGG 303 4.98  ViT 373 4.04  EffNet 290 5.20  SwinT 271 5.57 
+batch size of 1024, the plateau ranges from ∼13.3% (ViT) to ∼23.2%
+(DenseNet).
+For DNN training, the batch size is usually fixed. We fix the batch 
+size at 64 in this experiment. The results are summarized in Table  5. 
+Decryption is approximately 15ms. The ratio of decryption overhead 
+ranges from ∼4.04% (ViT) to ∼6.36% (DenseNet).
+An LLM request goes through two phases in order: prefill and de
+code. Since prompts usually differ across requests, prefill is not batched. 
+We measured the overhead of LGT4CG under varying prompt lengths. 
+Journal of Systems Architecture 178 (2026) 103886 
+8 
+F. Yu et al.
+Journal of Systems Architecture 178 (2026) 103886 
+Fig. 7. Decryption overhead ratio of LGT4CG in LLM inference.
+Fig. 8. Asynchronous decryption engine.
+The decryption overhead is very small and almost negligible (see Fig. 
+7).
+As shown above, the decryption overhead of input loading in DNN 
+inference is substantial. To further hide this cost in continuous queries, 
+LGT4CG provides a dedicated asynchronous decryption engine. When 
+a request arrives (𝑇2), the engine immediately decrypts it inside the 
+TEE. At this point, the GPU is still computing the previous batch, so 
+the decryption is overlapped with the prior computation and hidden 
+behind it. Fig.  8 illustrates this overlap. The effectiveness of the overlap 
+depends on the gap between the remaining computation time of the 
+previous batch (𝑇3 − 𝑇2) and the decryption time of the current batch 
+(𝑇4 − 𝑇2). When the decryption is shorter than the computation, the 
+cost is fully hidden; otherwise the residual decryption stays on the 
+critical path. The latter case is relatively rare, so the engine hides most 
+of the decryption overhead, as confirmed by the end-to-end results in 
+Section 7.3.
+7.3. Overhead of end-to-end AI applications
+DNN inference For the DNN inference, we synthesize a stream of 
+requests with Poisson-distributed arrivals. The server processes up to 
+512 requests per batch. We additionally evaluate the LGT4CG with the 
+asynchronous decryption engine (LGT4CG (async)). Fig.  9 reports the 
+median per-request latency of the six DNNs under the three configu
+rations. Synchronous decryption inflates the latency by ∼4.7× (ViT) to 
+∼110× (VGG) because each request waits for its input to be decrypted 
+before the GPU can compute on it. The asynchronous decryption engine 
+overlaps the decryption with the computation of the previous request 
+and reduces the overhead to between ∼0.9% (DenseNet) and ∼9.9%
+(ResNet).
+DNN training For the DNN training, we fix the batch size at 64. Fig. 
+10 compares the end-to-end duration of the six DNNs under LGT4CG 
+with the baseline. AI training applications use DataLoader, which na
+tively supports asynchronous data prefetching. This mechanism can 
+work with the asynchronous decryption engine within LGT4CG. The 
+per-batch input decryption is therefore overlapped with the GPU com
+putation of the previous batch and hidden behind it. The training 
+overhead ranges from ∼0.22% (SwinT) to ∼0.46% (ResNet).
+LLM inference For LLM inference, we evaluate TTFT (Time to 
+First Token) with the batch size at 1 and output throughput with the 
+Fig. 9. End-to-end DNN inference with LGT4CG.
+Fig. 10. End-to-end DNN training with LGT4CG.
+batch size at 256. Fig.  11(a) shows the TTFT overhead ranges from 
+∼0.6% (GPT) to ∼11.0% (Qwen). Fig.  11(b) shows the throughput drop 
+introduced by LGT4CG ranges from ∼3.5% (OPT) to ∼8.9% (Llama).
+7.4. Graph mode support
+Modern GPUs support graph execution mode, which means launch
+ing a group of kernels within a single graph-execute command, elimi
+nating the kernel launch overhead. On the first graph execution, the AI 
+runtime dispatches kernel launch commands one by one. These com
+mands are stored contiguously in a dedicated VRAM region. LGT4CG 
+verifies each command as described in Section 4.2 and protects this 
+VRAM region during the graph execution. On subsequent graph execu
+tions, the AI runtime sends a single graph-execute command pointing 
+to the start of the captured graph. LGT4CG verifies this command and 
+confirms that it targets the captured graph. This scheme further reduces 
+the verification overhead.
+We use the LLM inference as a representative case and rerun the 
+same experiments under graph mode. Fig.  12 shows that graph mode 
+runs faster and incurs smaller overhead.
+8. Discussion
+8.1. Design selection
+As discussed above, Type-II GPU-TEEs can be implemented in 
+two different ways: verification-based and replay-based approaches. 
+LGT4CG adopts a verification-based approach rather than a replay
+based one. This is because, for dGPUs, the replayer inside the TEE 
+must perform context management and resource allocation indepen
+dently, which significantly increases implementation complexity. In 
+contrast, verification focuses only on the critical operations performed 
+9 
+F. Yu et al.
+Journal of Systems Architecture 178 (2026) 103886 
+by the driver and runtime. By validating key context management 
+operations together with GPU execution primitives, LGT4CG main
+tains a lightweight design while preserving compatibility with existing 
+software stacks.
+(a) Mean TTFT
+(b) Output throughput
+Fig. 11. End-to-end LLM inference with LGT4CG.
+(a) Mean TTFT
+(b) Output Throughput
+Fig. 12. End-to-end LLM inference with LGT4CG in graph mode.
+Moreover, verification does not sacrifice performance. Modern GPU 
+vendors, such as NVIDIA and AMD, provide support for graph-based 
+execution models (e.g., CUDA Graphs and HIP Graphs). Graph-based 
+execution models are in essence analogous to replay-based execution. 
+Verification can be extended to cover the graph to be executed, thereby 
+achieving performance comparable to that of replay-based approaches.
+8.2. Execution metadata collection
+Execution metadata, such as kernel parameters and binaries, plays 
+a crucial role in verifying the behavior of online AI applications. 
+However, the focus of this work is not on the collection mechanisms or 
+the detailed structure of execution metadata itself. Consequently, we 
+assume that such metadata is available through standard profiling or 
+runtime instrumentation mechanisms provided by modern GPU tools 
+(e.g., CUDA or HIP). We treat it as an auxiliary input to the GPU-TEE 
+system.
+8.3. Offline input processing
+We assume that the AI application does not require additional 
+CPU-side logic to preprocess input data at runtime, such as image 
+transformations or tokenization. This assumption is reasonable because 
+such preprocessing can be performed offline prior to execution, or 
+alternatively offloaded to the GPU, where it can be executed more 
+efficiently. Including input transformation logic within the TEE would 
+not only unnecessarily enlarge the TCB, but also introduce significant 
+engineering complexity.
+8.4. Dynamism support
+AI applications inherently exhibit dynamism during execution. We 
+identify two sources of dynamism with different causes. Input-shape 
+dynamism arises from shape dependence: different input shapes lead 
+the runtime to select different kernel implementations for the best 
+performance. Control-flow dynamism arises from content dependence: 
+different content in the inputs or intermediate results steers the AI 
+application into different branches.
+Input-shape dynamism. For best performance, the AI runtime per
+forms kernel selection per launch based on the input shape. For example, 
+the runtime picks different GEMM tile sizes or Winograd variants for 
+different convolution shapes. This selection depends only on the shape 
+and is independent of tensor contents.
+LGT4CG therefore verifies each launch against pre-recorded meta
+data indexed by input shape. In the offline preparing stage, LGT4CG 
+enumerates the admissible input shapes and records the details of each 
+kernel. At runtime, LGT4CG looks up the kernel set for the reported 
+shape and admits a launch only when every parameter matches.
+For AI applications using DNNs, the model fixes every dimension 
+except batch size. DNN training typically uses a single batch size 
+throughout, so LGT4CG records one metadata variant. DNN inference, 
+in contrast, may serve requests with different batch sizes, so LGT4CG 
+records one metadata variant per admissible batch size.
+For AI applications using LLMs, we focus on the inference scenario. 
+LLM inference involves more dimensions, such as batch size, prompt 
+length, and the number of generated tokens. These dimensions pro
+duce an explosion of combinations that is impractical to enumerate 
+offline. However, we observe that only two factors actually drive 
+kernel selection: batch size and the number of tokens in the batch 
+(total_tokens), and their influence varies across the forward pass. 
+Attention and sampling kernels depend on batch size, while the other 
+kernels depend only on total_tokens. LGT4CG therefore collects 
+10 
+F. Yu et al.
+Journal of Systems Architecture 178 (2026) 103886 
+metadata by emulating different factors for each part of the forward 
+pass.
+Control-flow dynamism. The current prototype does not support 
+applications with dynamic control flow such as early exits or data
+dependent branches. We acknowledge this as a limitation of the present 
+design, and we leave support for future work.
+9. Related work
+9.1. GPU-TEE
+There is growing interest in GPU-TEEs from both academia and 
+industry [13–22,24,56,57]. We categorize existing solutions into two 
+types. Type-I GPU-TEE solutions [13–18] are hindered by a large TCB. 
+Type-II GPU-TEE solutions [19–22] leverage pre-captured execution 
+metadata to protect AI applications. However, there is currently no 
+reference implementation of a lightweight Type-II GPU-TEE target
+ing dGPUs. This paper presents LGT4CG, a lightweight and practical 
+GPU-TEE system for dGPUs.
+9.2. GPU attacks
+GPU attacks can be categorized into hardware-based physical at
+tacks and software-based attacks. Researchers have proposed various 
+memory encryption schemes to defend against physical attacks [58
+63]. Software attacks against GPUs exploit buffer overflows to execute 
+malicious functions [64–66]. LGT4CG is orthogonal to the above at
+tacks and solutions, and can be combined with existing approaches to 
+defend against a broader range of potential attacks.
+9.3. AI attacks
+In recent years, the security of deep learning has attracted con
+siderable attention from researchers and practitioners. Prior work has 
+explored potential attacks against AI tasks as well as corresponding 
+defense techniques [67–69]. To prevent adversaries from extracting 
+private information, AI computations often incorporate add-on com
+ponents such as anomaly detection modules and adversarial training 
+networks. LGT4CG protects the integrity of every stage of AI execution, 
+and the above defenses against AI attacks remain fully compatible with 
+our approach.
+10. Conclusion
+This paper analyzes existing GPU-TEE systems and categorizes them 
+into Type-I and Type-II designs. Type-I GPU-TEEs incur a large TCB 
+that encompasses the entire AI runtime. Type-II systems execute AI 
+applications in two phases, removing the AI runtime from the runtime 
+TCB. The first phase generates execution metadata, and the second 
+phase verifies GPU execution against the metadata generated offline. 
+However, existing Type-II GPU-TEE implementations have primarily 
+targeted mobile or edge platforms with integrated GPUs (iGPUs). Dis
+crete GPUs (dGPUs), which dominate cloud computing environments, 
+have received little attention in the design of lightweight GPU-TEEs. To 
+bridge this gap, we design LGT4CG, a lightweight GPU-TEE specifically 
+tailored for dGPUs. We implement a prototype of LGT4CG on an ARM
+based platform with an NVIDIA RTX 3090 GPU, and the runtime TCB 
+of LGT4CG is limited to approximately about 6K lines of C code. We 
+evaluate the performance of LGT4CG using widely adopted AI models. 
+The results show an average overhead of 4.16% for DNN inference and 
+0.34% for DNN training. On LLMs, the average overhead is 7.10% for 
+TTFT and 6.05% for output throughput.
+CRediT authorship contribution statement
+Fengyuan Yu: Writing – review & editing, Writing – original draft, 
+Validation, Software, Methodology, Investigation, Data curation, Con
+ceptualization. Chenlin Huang: Writing – review & editing, Supervi
+sion, Resources, Funding acquisition. Zhichao Hua: Writing – review 
+& editing, Visualization, Supervision, Methodology, Conceptualization. 
+Yan Ding: Writing – review & editing, Supervision, Resources, Funding 
+acquisition. Keming Wang: Visualization, Investigation, Data cura
+tion. Renyu Yang: Supervision, Funding acquisition, Conceptualiza
+tion. Hua Cheng: Supervision, Resources, Investigation, Conceptual
+ization. Bo Yu: Writing – review & editing, Supervision, Software, 
+Resources, Conceptualization.
+Declaration of competing interest
+The authors declare that they have no known competing finan
+cial interests or personal relationships that could have appeared to 
+influence the work reported in this paper.
+Acknowledgments
+This work was supported by the National Natural Science Founda
+tion of China (62472432).
+Data availability
+Data will be made available on request.
+References
+[1] Confirmed: the new bing runs on openai’s GPT-4, 2023, https://blogs.bing.com/
+search/march_2023/Confirmed-the-new-Bing-runs-on-OpenAI%E2%80%99s-GPT
+4.
+[2] Introducing microsoft 365 copilot - your copilot for work, 2023, 
+https://blogs.microsoft.com/blog/2023/03/16/introducing-microsoft-365
+copilot-your-copilot-for-work/.
+[3] Artificial intelligence in financial services: Applications and benefits of AI in 
+finance, 2023, https://www.insiderintelligence.com/insights/ai-in-finance/.
+[4] Cost of a data breach report 2023, 2023, https://www.ibm.com/security/data
+breach.
+[5] G. Pan, X. Lin, X. Ying, J. Wang, C. Wu, Scavenger: Misuse error handling leading 
+to QEMU/KVM escape, 2021, Black Hat Asia.
+[6] B. Singh, R. Kashyap, Back to the future: A radical insecure design of KVM on 
+ARM, 2018, Black Hat USA.
+[7] F. Zhang, J. Chen, H. Chen, B. Zang, CloudVisor: retrofitting protection of virtual 
+machines in multi-tenant cloud with nested virtualization, in: Proceedings of the 
+Twenty-Third ACM Symposium on Operating Systems Principles, ACM, 2011, pp. 
+203–216.
+[8] Z. Hua, J. Gu, Y. Xia, H. Chen, B. Zang, H. Guan, vTZ: Virtualizing ARM 
+TrustZone, in: 26th USENIX Security Symposium (USENIX Security 17), USENIX 
+Association, 2017, pp. 541–556.
+[9] U. Lee, C. Park, SofTEE: Software-based trusted execution environment for user 
+applications, IEEE Access 8 (2020) 121874–121888.
+[10] Y. Jia, S. Liu, W. Wang, Y. Chen, Z. Zhai, S. Yan, Z. He, HyperEnclave: An 
+open and cross-platform trusted execution environment, in: 2022 USENIX Annual 
+Technical Conference (USENIX ATC 22), 2022, pp. 437–454.
+[11] Y. Xia, Z. Hua, Y. Yu, J. Gu, H. Chen, B. Zang, H. Guan, Colony: A privileged 
+trusted execution environment with extensibility, IEEE Trans. Comput. 71 (2) 
+(2021) 479–492.
+[12] Z. Hua, Y. Yu, J. Gu, Y. Xia, H. Chen, B. Zang, TZ-container: Protecting container 
+from untrusted OS with ARM TrustZone, Sci. China Inf. Sci. 64 (9) (2021) 
+192101.
+[13] I. Jang, A. Tang, T. Kim, S. Sethumadhavan, J. Huh, Heterogeneous isolated ex
+ecution for commodity GPUs, in: Proceedings of the Twenty-Fourth International 
+Conference on Architectural Support for Programming Languages and Operating 
+Systems, ASPLOS 2019, Providence, RI, USA, April 13-17, 2019, ACM, 2019, pp. 
+455–468.
+[14] A. Ivanov, B. Rothenberger, A. Dethise, M. Canini, T. Hoefler, A. Perrig, SAGE: 
+software-based attestation for GPU execution, in: 2023 USENIX Annual Technical 
+Conference, USENIX ATC 2023, Boston, MA, USA, July 10-12, 2023, USENIX 
+Association, 2023, pp. 485–499.
+11 
+F. Yu et al.
+Journal of Systems Architecture 178 (2026) 103886 
+[15] J. Jiang, J. Qi, T. Shen, X. Chen, S. Zhao, S. Wang, L. Chen, G. Zhang, X. 
+Luo, H. Cui, CRONUS: fault-isolated, secure and high-performance heterogeneous 
+computing for trusted execution environment, in: 55th IEEE/ACM International 
+Symposium on Microarchitecture, MICRO 2022, Chicago, IL, USA, October 1-5, 
+2022, IEEE, 2022, pp. 124–143.
+[16] X. Wu, D.J. Tian, C.H. Kim, Building GPU TEEs using CPU secure enclaves with 
+gevisor, in: Proceedings of the 2023 ACM Symposium on Cloud Computing, SoCC 
+2023, Santa Cruz, CA, USA, 30 October 2023 - 1 November 2023, ACM, 2023, 
+pp. 249–264.
+[17] H. Mai, J. Zhao, H. Zheng, Y. Zhao, Z. Liu, M. Gao, C. Wang, H. Cui, X. Feng, C. 
+Kozyrakis, Honeycomb: Secure and efficient GPU executions via static validation, 
+in: 17th USENIX Symposium on Operating Systems Design and Implementation, 
+OSDI 2023, Boston, MA, USA, July 10-12, 2023, USENIX Association, 2023, pp. 
+155–172.
+[18] S. Sridhara, A. Bertschi, B. Schlüter, M. Kuhne, F. Aliberti, S. Shinde, ACAI: 
+extending arm confidential computing architecture protection from CPUs to 
+accelerators, 2023, CoRR, arXiv:2305.15986.
+[19] Y. Deng, C. Wang, S. Yu, S. Liu, Z. Ning, K. Leach, J. Li, S. Yan, Z. He, J. Cao, 
+F. Zhang, StrongBox: A GPU TEE on arm endpoints, in: Proceedings of the 2022 
+ACM SIGSAC Conference on Computer and Communications Security, CCS 2022, 
+Los Angeles, CA, USA, November 7-11, 2022, ACM, 2022, pp. 769–783.
+[20] Y. Deng, C. Wang, S. Yu, S. Liu, Z. Ning, K. Leach, J. Li, S. Yan, Z. He, J. Cao, F. 
+Zhang, CAGE: Complementing arm CCA with GPU extensions, in: Proceedings of 
+the 2022 ACM SIGSAC Conference on Computer and Communications Security, 
+CCS 2022, Los Angeles, CA, USA, November 7-11, 2022, ACM, 2022, pp. 
+769–783.
+[21] H. Park, F.X. Lin, Gpureplay: a 50-KB GPU stack for client ML, in: ASPLOS ’22: 
+27th ACM International Conference on Architectural Support for Programming 
+Languages and Operating Systems, Lausanne, Switzerland, 28 February 2022 - 4 
+March 2022, ACM, 2022, pp. 157–170.
+[22] H. Park, F.X. Lin, Safe and practical GPU computation in TrustZone, in: Pro
+ceedings of the Eighteenth European Conference on Computer Systems, EuroSys 
+2023, Rome, Italy, May 8-12, 2023, ACM, 2023, pp. 505–520.
+[23] S. Fan, Z. Hua, Y. Xia, H. Chen, XpuTEE: A high-performance and practical 
+heterogeneous trusted execution environment for GPUs, ACM Trans. Comput. 
+Syst. 43 (1–2) (2025) 1–27.
+[24] NVIDIA confidential computing, 2024, https://www.nvidia.com/en-us/data
+center/solutions/confidential-computing/.
+[25] Nvidiaopen GPU documentation, 2023, https://github.com/NVIDIA/open-gpu
+doc.
+[26] Linux cves., 2023, https://www.cvedetails.com/product/47/Linux-Linux-Kernel.
+html?vendor_id=33.
+[27] 5 of the worst examples of data theft by employees, 2023, https://www.
+currentware.com/blog/examples-of-data-theft-by-employees/.
+[28] Ex-amazon employee convicted over data breach of 100 million CapitalOne 
+customers, 2023, https://techcrunch.com/2022/06/21/amazon-paige-thompson
+capitalone-breach/.
+[29] S. Volos, K. Vaswani, R. Bruno, Graviton: Trusted execution environments 
+on GPUs, in: 13th USENIX Symposium on Operating Systems Design and 
+Implementation, OSDI 2018, Carlsbad, CA, USA, October 8-10, 2018, USENIX 
+Association, 2018, pp. 681–696.
+[30] J. Zhu, R. Hou, X. Wang, W. Wang, J. Cao, B. Zhao, Z. Wang, Y. Zhang, 
+J. Ying, L. Zhang, D. Meng, Enabling rack-scale confidential computing using 
+heterogeneous trusted execution environment, in: 2020 IEEE Symposium on 
+Security and Privacy, SP 2020, San Francisco, CA, USA, May 18-21, 2020, IEEE, 
+2020, pp. 1450–1465.
+[31] PyTorch, https://pytorch.org/.
+[32] Tensorflow, https://www.tensorflow.org/.
+[33] K. He, X. Zhang, S. Ren, J. Sun, Deep residual learning for image recognition, 
+in: 2016 IEEE Conference on Computer Vision and Pattern Recognition, CVPR, 
+2016, pp. 770–778.
+[34] PyTorch Models and pre-trained weights: ResNet, https://docs.pytorch.org/
+vision/main/models/resnet.html.
+[35] G. Huang, Z. Liu, L. Van Der Maaten, K.Q. Weinberger, Densely connected 
+convolutional networks, in: 2017 IEEE Conference on Computer Vision and 
+Pattern Recognition, CVPR, 2017, pp. 2261–2269.
+[36] PyTorch Models and pre-trained weights: DenseNet, https://docs.pytorch.org/
+vision/main/models/densenet.html.
+[37] K. Simonyan, A. Zisserman, Very deep convolutional networks for large-scale 
+image recognition, in: International Conference on Learning Representations, 
+2015.
+[38] PyTorch Models and pre-trained weights: VGG, https://docs.pytorch.org/vision/
+main/models/vgg.html.
+[39] A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, T. Unterthiner, 
+M. Dehghani, M. Minderer, G. Heigold, S. Gelly, J. Uszkoreit, N. Houlsby, An 
+image is worth 16x16 words: Transformers for image recognition at scale, in: 
+International Conference on Learning Representations, 2021.
+[40] PyTorch Models and pre-trained weights: VisionTransformer, https://docs.
+pytorch.org/vision/main/models/vision_transformer.html.
+[41] M. Tan, Q.V. Le, EfficientNet: Rethinking model scaling for convolutional neural 
+networks, in: Proceedings of the 36th International Conference on Machine 
+Learning, ICML 2019, 9-15 June 2019, Long Beach, California, USA, in: 
+Proceedings of Machine Learning Research, vol. 97, PMLR, 2019, pp. 6105–6114.
+[42] PyTorch Models and pre-trained weights: EfficientNet, https://docs.pytorch.org/
+vision/main/models/efficientnet.html.
+[43] Z. Liu, H. Hu, Y. Lin, Z. Yao, Z. Xie, Y. Wei, J. Ning, Y. Cao, Z. Zhang, L. Dong, 
+F. Wei, B. Guo, Swin transformer V2: Scaling up capacity and resolution., in: 
+CVPR, IEEE, 2022, pp. 11999–12009.
+[44] PyTorch Models and pre-trained weights: SwinTransformer, https://docs.pytorch.
+org/vision/main/models/swin_transforme.html.
+[45] L. Team, The llama 3 herd of models, 2024, http://dx.doi.org/10.48550/ARXIV.
+2407.21783, CoRR, arXiv:2407.21783.
+[46] Llama 3.2 Model published on Huggingface, https://huggingface.co/meta-llama/
+Llama-3.2-1B.
+[47] E. Almazrouei, H. Alobeidli, A. Alshamsi, A. Cappelli, R. Cojocaru, M. Debbah, É. 
+Goffinet, D. Hesslow, J. Launay, Q. Malartic, D. Mazzotta, B. Noune, B. Pannier, 
+G. Penedo, The falcon series of open language models, 2023, arXiv:2311.16867.
+[48] Falcon 3 Model published on Huggingface, https://huggingface.co/tiiuae/
+Falcon3-3B-Base.
+[49] S. Zhang, S. Roller, N. Goyal, M. Artetxe, M. Chen, S. Chen, C. Dewan, M. Diab, 
+X. Li, X.V. Lin, T. Mihaylov, M. Ott, S. Shleifer, K. Shuster, D. Simig, P.S. Koura, 
+A. Sridhar, T. Wang, L. Zettlemoyer, OPT: Open pre-trained transformer language 
+models, 2022, arXiv:2205.01068.
+[50] OPT Model published on Huggingface, https://huggingface.co/facebook/opt-2.
+7b.
+[51] Qwen, A. Yang, B. Yang, B. Zhang, B. Hui, B. Zheng, B. Yu, C. Li, D. Liu, F. 
+Huang, H. Wei, H. Lin, J. Yang, J. Tu, J. Zhang, J. Yang, J. Yang, J. Zhou, 
+J. Lin, K. Dang, K. Lu, K. Bao, K. Yang, L. Yu, M. Li, M. Xue, P. Zhang, Q. 
+Zhu, R. Men, R. Lin, T. Li, T. Tang, T. Xia, X. Ren, X. Ren, Y. Fan, Y. Su, Y. 
+Zhang, Y. Wan, Y. Liu, Z. Cui, Z. Zhang, Z. Qiu, Qwen2.5 technical report, 2025, 
+arXiv:2412.15115.
+[52] Qwen 2.5 Model published on Huggingface, https://huggingface.co/Qwen/
+Qwen2.5-1.5B.
+[53] A. Radford, J. Wu, R. Child, D. Luan, D. Amodei, I. Sutskever, 
+Language models are unsupervised multitask learners, OpenAI (2019) 
+URL 
+https://cdn.openai.com/better-language-models/language_models_are_
+unsupervised_multitask_learners.pdf.
+[54] GPT 2 Model published on Huggingface, https://huggingface.co/openai
+community/gpt2.
+[55] L.W. McVoy, C. Staelin, Lmbench: Portable tools for performance analysis, in: 
+Proceedings of the USENIX Annual Technical Conference, San Diego, California, 
+USA, January 22-26, 1996, USENIX Association, 1996, pp. 279–294.
+[56] AMD SEV-TIO: Trusted I/O for secure encrypted virtualization, 2023, 
+https://www.amd.com/content/dam/amd/en/documents/developer/sev-tio
+whitepaper.pdf.
+[57] Learn the architecture - introducing arm confidential compute architecture, 2023, 
+https://developer.arm.com/documentation/den0125/latest/.
+[58] S. Yuan, A. Awad, A.W.B. Yudha, Y. Solihin, H. Zhou, Adaptive security support 
+for heterogeneous memory on GPUs, in: IEEE International Symposium on High
+Performance Computer Architecture, HPCA 2022, Seoul, South Korea, April 2-6, 
+2022, IEEE, 2022, pp. 213–228.
+[59] R. Abdullah, H. Zhou, A. Awad, Plutus: Bandwidth-efficient memory security 
+for GPUs, in: IEEE International Symposium on High-Performance Computer 
+Architecture, HPCA 2023, Montreal, QC, Canada, February 25 - March 1, 2023, 
+IEEE, 2023, pp. 543–555.
+[60] S. Yuan, A.W.B. Yudha, Y. Solihin, H. Zhou, Analyzing secure memory archi
+tecture for GPUs, in: IEEE International Symposium on Performance Analysis of 
+Systems and Software, ISPASS 2021, Stony Brook, NY, USA, March 28-30, 2021, 
+IEEE, 2021, pp. 59–69.
+[61] S. Yuan, Y. Solihin, H. Zhou, PSSM: achieving secure memory for GPUs with 
+partitioned and sectored security metadata, in: ICS ’21: 2021 International 
+Conference on Supercomputing, Virtual Event, USA, June 14-17, 2021, ACM, 
+2021, pp. 139–151.
+[62] S. Na, S. Lee, Y. Kim, J. Park, J. Huh, Common counters: Compressed encryption 
+counters for secure GPU memory, in: IEEE International Symposium on High
+Performance Computer Architecture, HPCA 2021, Seoul, South Korea, February 
+27 - March 3, 2021, IEEE, 2021, pp. 1–13.
+[63] Y. Zhu, Y. Cheng, H. Zhou, Y. Lu, Hermes attack: Steal DNN models with lossless 
+inference accuracy, in: 30th USENIX Security Symposium, USENIX Security 2021, 
+August 11-13, 2021, USENIX Association, 2021, pp. 1973–1988.
+[64] S. Park, O. Kwon, Y. Kim, S.K. Cha, H. Yoon, Mind control attack: Undermining 
+deep learning with GPU memory exploitation, Comput. Secur. 102 (2021) 
+102115.
+[65] A. Miele, Buffer overflow vulnerabilities in CUDA: a preliminary analysis, J. 
+Comput. Virol. Hacking Tech. 12 (2) (2016) 113–120.
+[66] Y. Guo, Z. Zhang, J. Yang, GPU memory exploitation for fun and profit, in: 33rd 
+USENIX Security Symposium, USENIX Security 2024, Philadelphia, PA, USA, 
+August 14-16, 2024, USENIX Association, 2024, pp. 4033–4050.
+[67] Y. He, G. Meng, K. Chen, X. Hu, J. He, Towards security threats of deep learning 
+systems: A survey, IEEE Trans. Softw. Eng. 48 (5) (2022) 1743–1770.
+[68] M. Barreno, B. Nelson, A.D. Joseph, J.D. Tygar, The security of machine learning, 
+Mach. Learn. 81 (2) (2010) 121–148.
+[69] K. Mo, P. Ye, X. Ren, S. Wang, W. Li, J. Li, Security and privacy issues in deep 
+reinforcement learning: Threats and countermeasures, ACM Comput. Surv. 56 
+(6) (2024) 152:1–152:39.

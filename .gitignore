@@ -10,7 +10,49 @@ latex/*.lot
 latex/*.fls
 latex/*.fdb_latexmk
 latex/*.synctex.gz
+latex/*.abs
+latex/buildlog.txt
+
+# LaTeX editing backups / staged snapshots
+latex/*.stageA_bak
+latex/*.stageB_bak
+*.bak
 
 # Python
 tools/__pycache__/
 *.pyc
+
+# Chinese-version manuscript (local only, not tracked)
+latex/main_zh.*
+
+# Temp / scratch scripts (underscore-prefixed or *_tmp)
+_*.py
+*_tmp.py
+
+# Large bundled tools (do NOT commit — hundreds of MB)
+*.jar
+
+# IDE
+.idea/
+
+# textidote / style-check outputs
+latex/textidote_output.txt
+latex/textidote_report.html
+
+# Document conversion intermediates
+latex/_main_pandoc.tex
+latex/main_prose.txt
+latex/main.docx
+
+# Figure debug residue (keep fig*_tikz.tex sources; ignore their compiled output)
+latex/fig*_tikz.pdf
+latex/fig1test*
+latex/fig1view*
+latex/fig1new*
+latex/fig1hd*
+latex/fig1check.py
+latex/compile_fig*
+figures/*view.png
+
+# Misc scratch output
+ratio_report.txt

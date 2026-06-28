@@ -69,30 +69,35 @@ HALT
 
 ## 4. 闭环相关 lowering 约定
 
-`readback` 和 `retry` 在 v0.1 中采用分阶段处理：
+`readback` 和 `retry` 在当前实现中**已完整 lowering 为 bytecode**（不再停留在宿主/控制层）。
 
 ### 4.1 `readback <device> expect <value>`
 
-可拆分为两层：
+lowering 为三条基础指令序列：
 
-1. bytecode 层：
-   - `IOR <device_id>`
-2. 宿主/控制层：
-   - 比较读回值与目标值
+```text
+IOR <device_id> ; LIT <value> ; EQ
+```
 
-也就是说，`readback` 目前是 **IR-level control intent**，还不是单条固定 bytecode 指令。
+即读回设备状态、压入期望值、比较，比较结果（0/1）留在栈顶供后续 `retry`/`JZ` 消费。`readback` 没有独立 opcode；它复用 `IOR` 的字节码，差异仅在 host 侧执行计划（execution plan）中记录为「闭环验证读」以便故障分级。
+
+示例（`set relay1 = 1` 后 `readback relay1 expect 1`）实测 hex：
+
+```text
+50 05  1e 02  46 05   GTWAY 5 ; LIT 1 ; IOW 5
+47 05  1e 02  2c      IOR 5 ; LIT 1 ; EQ
+52                    HALT
+```
 
 ### 4.2 `retry n times { ... }`
 
-v0.1 建议先不 lowering 为纯 bytecode loop，而采用：
+lowering 为显式 bytecode 控制流，由 `LIT/DUP/JZ/JMP/SUB/DRP` 组成的递减计数循环：
 
-1. 宿主循环控制
-2. 或实验脚本中的重试逻辑
+1. `LIT n` 初始化重试计数；
+2. 循环体 `B`（要求以 `readback` 或嵌套 `retry` 结尾，产生布尔结果）；
+3. 计数递减（`SUB`）并按布尔/计数条件回跳（`JZ`/`JMP`）。
 
-原因：
-
-- 当前论文后端已经对闭环策略有实验数据
-- 但统一 compiler 还未把 retry 机制编译进 branch 子集
+计数为编译期常量；循环体每次迭代使全局 step 计数 +1，故要么在 `n` 次内终止，要么触发 step-limit 故障（见论文 Proposition「Bounded execution」与附录 RETRY 编译策略）。`retry` 同样没有独立 opcode，完全展开为上述基础指令。
 
 ---
 

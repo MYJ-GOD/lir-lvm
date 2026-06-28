@@ -1,0 +1,31 @@
+﻿task_id,category,ir_valid,structural_ok,execution_pass,task_success,error_stage,error_code,hint,raw_bytes,compact_bytes,zlib_bytes,cbor_bytes,m_bytecode_bytes
+RW_001,threshold_on_off,1,1,1,1,,,,301,254,129,184,20
+RW_002,threshold_on_off,1,1,1,1,,,,290,243,125,173,20
+RW_003,threshold_on_off,1,1,1,1,,,,302,255,129,184,21
+RW_004,timed_pulse,1,1,1,1,,,,188,152,104,101,15
+RW_005,timed_pulse,1,1,1,1,,,,189,153,104,103,15
+RW_006,emergency_shutoff,1,1,1,1,,,,224,186,115,132,17
+RW_007,emergency_shutoff,1,1,1,1,,,,204,167,119,117,15
+RW_008,multi_sensor,1,1,1,1,,,,292,248,130,183,21
+RW_009,sequenced_startup,1,1,1,1,,,,197,160,106,108,16
+RW_010,threshold_timed_pulse,1,1,1,1,,,,276,229,127,157,23
+RW_011,retry_verify,1,1,1,1,,,,260,207,138,144,40
+RW_012,retry_verify,1,1,1,1,,,,260,207,138,144,40
+RW_013,retry_verify,1,1,0,0,execute,JSON_RETRY_BODY_ERROR,retry body must end with readback.,327,0,0,0,0
+RW_014,retry_verify,1,1,1,1,,,,332,265,146,182,47
+RW_015,retry_verify,1,1,0,0,execute,JSON_INVALID_VALUE,"readback 'expect' must be 0 or 1, got 24.",323,0,0,0,0
+RW_016,zone_cycle,1,1,1,1,,,,577,472,173,320,95
+RW_017,retry_watering,1,1,0,0,execute,JSON_RETRY_BODY_ERROR,retry body must end with readback.,471,0,0,0,0
+RW_018,pulse_with_verify,1,1,1,1,,,,422,355,142,239,38
+RW_019,threshold_hysteresis,1,1,1,1,,,,302,255,128,184,20
+RW_020,threshold_hysteresis,1,1,1,1,,,,302,255,128,184,20
+RW_021,timed_pulse,1,1,1,1,,,,256,214,128,152,19
+RW_022,multi_device_sequence,1,1,1,1,,,,466,376,156,257,82
+RW_023,threshold_timed_off,1,1,1,1,,,,256,214,128,152,19
+RW_024,readback_confirm,1,1,1,1,,,,230,189,120,130,12
+RW_025,multi_relay_sequence,1,1,1,1,,,,335,278,116,184,30
+RW_026,safety_shutoff,1,1,0,0,execute,JSON_INVALID_VALUE,"readback 'expect' must be 0 or 1, got 24.",346,0,0,0,0
+RW_027,threshold_with_timeout,1,1,1,1,,,,252,210,128,148,20
+RW_028,motion_light,1,1,1,1,,,,188,152,104,101,15
+RW_029,multi_relay_control,1,1,1,1,,,,376,318,137,220,31
+RW_030,retry_with_readback,1,1,1,1,,,,546,446,166,303,91

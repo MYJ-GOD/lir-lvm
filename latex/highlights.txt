@@ -1,0 +1,7 @@
+Highlights
+
+- LIR: a structured DSL with EBNF grammar for stable LLM-to-MCU control generation
+- LVM (~2 KB RAM): capability-gated, step-limited execution with proven safety bounds
+- Adversarial fuzzing (8,000 payloads): UABR = 1.000, no escapes; 13.8x over zlib-JSON
+- Empirically measured best-of-K (K=3) restores temperature = 1.0 reliability to 0.982
+- Validated on ESP8266 (Xtensa) and STM32F103 (Cortex-M3); <50-line I/O adapter

@@ -1,0 +1,4499 @@
+﻿task_id,category,attempt,ir_valid,compile_pass,verify_pass,execution_pass,task_success,payload_hex,error_stage,error_code,hint,candidate_mir
+RND_0001,single_set,1,1,1,1,1,1,50051e00460552,,,,"task RND_0001 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+RND_0002,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0002 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+RND_0003,set_wait_halt,1,1,1,1,1,1,50051e004605516452,,,,"task RND_0003 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  halt
+}"
+RND_0004,wait_read,1,1,1,1,1,1,500551e807470552,,,,"task RND_0004 {
+    require cap(relay1)
+    wait 1000ms
+    read relay1
+    halt
+}"
+RND_0005,set_wait_read,1,1,1,1,1,1,500550031e0246055132470352,,,,"task RND_0005 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 50ms
+  read humidity_sensor
+  halt
+}"
+RND_0006,multi_read,1,1,1,1,1,1,500550064705470652,,,,"task RND_0006 {
+  require cap(relay1)
+  require cap(relay2)
+  read relay1
+  read relay2
+  halt
+}"
+RND_0007,pulse,1,1,1,1,1,1,50051e02460551f4031e00460552,,,,"task RND_0007 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    set relay1 = 0
+    halt
+}"
+RND_0008,set_read_multi,1,1,1,1,1,1,500550031e004605470352,,,,"task RND_0008 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0009,multi_set,1,1,1,1,1,1,500650051e0046061e00460552,,,,"task RND_0009 {
+    require cap(relay2)
+    require cap(relay1)
+    set relay2 = 0
+    set relay1 = 0
+    halt
+}"
+RND_0010,set_wait_multi_read,1,1,1,1,1,1,5006500150031e02460651c8014701470352,,,,"task RND_0010 {
+  require cap(relay2)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 200ms
+  read water_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0011,long_sequence,1,1,1,1,1,1,5006500150031e02460651d00f47011e00460651c801470352,,,,"task RND_0011 {
+  require cap(relay2)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 2000ms
+  read water_sensor
+  set relay2 = 0
+  wait 200ms
+  read humidity_sensor
+  halt
+}"
+RND_0012,pulse_read,1,1,1,1,1,1,500550011e02460551ac021e004605470152,,,,"task RND_0012 {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 1
+  wait 300ms
+  set relay1 = 0
+  read water_sensor
+  halt
+}"
+RND_0013,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0013 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0014,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0014 {
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+RND_0015,set_wait_halt,1,1,1,1,1,1,50061e00460651e80752,,,,"task RND_0015 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 1000ms
+  halt
+}"
+RND_0016,wait_read,1,1,1,1,1,1,500251f403470252,,,,"task RND_0016 {
+    require cap(temperature_sensor)
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+RND_0017,set_wait_read,1,1,1,1,1,1,500550021e00460551f403470252,,,,"task RND_0017 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 0
+  wait 500ms
+  read temperature_sensor
+  halt
+}"
+RND_0018,multi_read,1,1,1,1,1,1,50035001500247034701470252,,,,"task RND_0018 {
+  require cap(humidity_sensor)
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  read humidity_sensor
+  read water_sensor
+  read temperature_sensor
+  halt
+}"
+RND_0019,pulse,1,1,1,1,1,1,50051e02460551e8071e00460552,,,,"task RND_0019 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 1000ms
+  set relay1 = 0
+  halt
+}"
+RND_0020,set_read_multi,1,1,1,1,1,1,500550011e004605470152,,,,"task RND_0020 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 0
+    read water_sensor
+    halt
+}"
+RND_0021,multi_set,1,1,1,1,1,1,500650051e0246061e02460552,,,,"task RND_0021 {
+    require cap(relay2)
+    require cap(relay1)
+    set relay2 = 1
+    set relay1 = 1
+    halt
+}"
+RND_0022,set_wait_multi_read,1,1,1,1,1,1,5005500250031e02460551e8074702470352,,,,"task RND_0022 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 1000ms
+  read temperature_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0023,long_sequence,1,1,1,1,1,1,5006500150021e02460651c80147011e0046065164470252,,,,"task RND_0023 {
+    require cap(relay2)
+    require cap(water_sensor)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 200ms
+    read water_sensor
+    set relay2 = 0
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+RND_0024,pulse_read,1,1,1,1,1,1,500650031e02460651e8071e004606470352,,,,"task RND_0024 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 1000ms
+    set relay2 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0025,single_set,1,1,1,1,1,1,50051e00460552,,,,"task RND_0025 {
+    require cap(relay1)
+    set relay1 = 0
+    halt
+}"
+RND_0026,single_read,1,1,1,1,1,1,5003470352,,,,"task RND_0026 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+RND_0027,set_wait_halt,1,1,1,1,1,1,50051e00460551ac0252,,,,"task RND_0027 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 300ms
+  halt
+}"
+RND_0028,wait_read,1,1,1,1,1,1,500251c801470252,,,,"task RND_0028 {
+    require cap(temperature_sensor)
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+RND_0029,set_wait_read,1,1,1,1,1,1,500550031e02460551d00f470352,,,,"task RND_0029 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    set relay1 = 1
+    wait 2000ms
+    read humidity_sensor
+    halt
+}"
+RND_0030,multi_read,1,1,1,1,1,1,500650054706470552,,,,"task RND_0030 {
+    require cap(relay2)
+    require cap(relay1)
+    read relay2
+    read relay1
+    halt
+}"
+RND_0031,pulse,1,1,1,1,1,1,50061e02460651ac021e00460652,,,,"task RND_0031 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 300ms
+  set relay2 = 0
+  halt
+}"
+RND_0032,set_read_multi,1,1,1,1,1,1,500650011e004606470152,,,,"task RND_0032 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  read water_sensor
+  halt
+}"
+RND_0033,multi_set,1,1,1,1,1,1,500650051e0246061e00460552,,,,"task RND_0033 {
+  require cap(relay2)
+  require cap(relay1)
+  set relay2 = 1
+  set relay1 = 0
+  halt
+}"
+RND_0034,set_wait_multi_read,1,1,1,1,1,1,5006500250031e00460651c8014702470352,,,,"task RND_0034 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    set relay2 = 0
+    wait 200ms
+    read temperature_sensor
+    read humidity_sensor
+    halt
+}"
+RND_0035,long_sequence,1,1,1,1,1,1,5005500150021e02460551e80747011e00460551f403470252,,,,"task RND_0035 {
+require cap(relay1)
+require cap(water_sensor)
+require cap(temperature_sensor)
+set relay1 = 1
+wait 1000ms
+read water_sensor
+set relay1 = 0
+wait 500ms
+read temperature_sensor
+halt
+}"
+RND_0036,pulse_read,1,1,1,1,1,1,500650031e02460651ac021e004606470352,,,,"task RND_0036 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 300ms
+    set relay2 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0037,single_set,1,1,1,1,1,1,50061e00460652,,,,"task RND_0037 {
+    require cap(relay2)
+    set relay2 = 0
+    halt
+}"
+RND_0038,single_read,1,1,1,1,1,1,5006470652,,,,"task RND_0038 {
+  require cap(relay2)
+  read relay2
+  halt
+}"
+RND_0039,set_wait_halt,1,1,1,1,1,1,50061e00460651d00f52,,,,"task RND_0039 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 2000ms
+  halt
+}"
+RND_0040,wait_read,1,1,1,1,1,1,500551d00f470552,,,,"task RND_0040 {
+  require cap(relay1)
+  wait 2000ms
+  read relay1
+  halt
+}"
+RND_0041,set_wait_read,1,1,1,1,1,1,500550011e00460551d00f470152,,,,"task RND_0041 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 0
+    wait 2000ms
+    read water_sensor
+    halt
+}"
+RND_0042,multi_read,1,1,1,1,1,1,50035005500647034705470652,,,,"task RND_0042 {
+    require cap(humidity_sensor)
+    require cap(relay1)
+    require cap(relay2)
+    read humidity_sensor
+    read relay1
+    read relay2
+    halt
+}"
+RND_0043,pulse,1,1,1,1,1,1,50061e02460651f4031e00460652,,,,"task RND_0043 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  halt
+}"
+RND_0044,set_read_multi,1,1,1,1,1,1,500650031e024606470352,,,,"task RND_0044 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    read humidity_sensor
+    halt
+}"
+RND_0045,multi_set,1,1,1,1,1,1,500550061e0246051e00460652,,,,"task RND_0045 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 1
+  set relay2 = 0
+  halt
+}"
+RND_0046,set_wait_multi_read,1,1,1,1,1,1,5006500350021e00460651c8014703470252,,,,"task RND_0046 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  require cap(temperature_sensor)
+  set relay2 = 0
+  wait 200ms
+  read humidity_sensor
+  read temperature_sensor
+  halt
+}"
+RND_0047,long_sequence,1,1,1,1,1,1,5006500150021e024606513247011e00460651e807470252,,,,"task RND_0047 {
+  require cap(relay2)
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  set relay2 = 1
+  wait 50ms
+  read water_sensor
+  set relay2 = 0
+  wait 1000ms
+  read temperature_sensor
+  halt
+}"
+RND_0048,pulse_read,1,1,1,1,1,1,500650031e02460651d00f1e004606470352,,,,"task RND_0048 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 2000ms
+    set relay2 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0049,single_set,1,1,1,1,1,1,50051e00460552,,,,"task RND_0049 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+RND_0050,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0050 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+RND_0051,set_wait_halt,1,1,1,1,1,1,50051e00460551c80152,,,,"task RND_0051 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  halt
+}"
+RND_0052,wait_read,1,1,1,1,1,1,500651f403470652,,,,"task RND_0052 {
+    require cap(relay2)
+    wait 500ms
+    read relay2
+    halt
+}"
+RND_0053,set_wait_read,1,1,1,1,1,1,500550031e02460551ac02470352,,,,"task RND_0053 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 300ms
+  read humidity_sensor
+  halt
+}"
+RND_0054,multi_read,1,1,1,1,1,1,500550014705470152,,,,"task RND_0054 {
+  require cap(relay1)
+  require cap(water_sensor)
+  read relay1
+  read water_sensor
+  halt
+}"
+RND_0055,pulse,1,1,1,1,1,1,50061e02460651641e00460652,,,,"task RND_0055 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    set relay2 = 0
+    halt
+}"
+RND_0056,set_read_multi,1,1,1,1,1,1,500550011e004605470152,,,,"task RND_0056 {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 0
+  read water_sensor
+  halt
+}"
+RND_0057,multi_set,1,1,1,1,1,1,500550061e0246051e02460652,,,,"task RND_0057 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 1
+  set relay2 = 1
+  halt
+}"
+RND_0058,set_wait_multi_read,1,1,1,1,1,1,5005500150021e00460551c8014701470252,,,,"task RND_0058 {
+    require cap(relay1)
+    require cap(water_sensor)
+    require cap(temperature_sensor)
+    set relay1 = 0
+    wait 200ms
+    read water_sensor
+    read temperature_sensor
+    halt
+}"
+RND_0059,long_sequence,1,1,1,1,1,1,5006500150031e02460651e80747011e00460651c801470352,,,,"task RND_0059 {
+  require cap(relay2)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 1000ms
+  read water_sensor
+  set relay2 = 0
+  wait 200ms
+  read humidity_sensor
+  halt
+}"
+RND_0060,pulse_read,1,1,1,1,1,1,500650031e02460651e8071e004606470352,,,,"task RND_0060 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 1000ms
+    set relay2 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0061,single_set,1,1,1,1,1,1,50061e02460652,,,,"task RND_0061 {
+    require cap(relay2)
+    set relay2 = 1
+    halt
+}"
+RND_0062,single_read,1,1,1,1,1,1,5003470352,,,,"task RND_0062 {
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+RND_0063,set_wait_halt,1,1,1,1,1,1,50061e004606516452,,,,"task RND_0063 {
+    require cap(relay2)
+    set relay2 = 0
+    wait 100ms
+    halt
+}"
+RND_0064,wait_read,1,1,1,1,1,1,50065132470652,,,,"task RND_0064 {
+    require cap(relay2)
+    wait 50ms
+    read relay2
+    halt
+}"
+RND_0065,set_wait_read,1,1,1,1,1,1,500650011e00460651f403470152,,,,"task RND_0065 {
+    require cap(relay2)
+    require cap(water_sensor)
+    set relay2 = 0
+    wait 500ms
+    read water_sensor
+    halt
+}"
+RND_0066,multi_read,1,1,1,1,1,1,500550034705470352,,,,"task RND_0066 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    read relay1
+    read humidity_sensor
+    halt
+}"
+RND_0067,pulse,1,1,1,1,1,1,50051e02460551641e00460552,,,,"task RND_0067 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  set relay1 = 0
+  halt
+}"
+RND_0068,set_read_multi,1,1,1,1,1,1,500550011e024605470152,,,,"task RND_0068 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 1
+    read water_sensor
+    halt
+}"
+RND_0069,multi_set,1,1,1,1,1,1,500550061e0046051e00460652,,,,"task RND_0069 {
+    require cap(relay1)
+    require cap(relay2)
+    set relay1 = 0
+    set relay2 = 0
+    halt
+}"
+RND_0070,set_wait_multi_read,1,1,1,1,1,1,5006500150031e02460651644701470352,,,,"task RND_0070 {
+  require cap(relay2)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 100ms
+  read water_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0071,long_sequence,1,1,1,1,1,1,5006500250011e024606513247021e00460651d00f470152,,,,"task rnd_0071 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 50ms
+  read temperature_sensor
+  set relay2 = 0
+  wait 2000ms
+  read water_sensor
+  halt
+}"
+RND_0072,pulse_read,1,1,1,1,1,1,500650021e02460651ac021e004606470252,,,,"task RND_0072 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 300ms
+    set relay2 = 0
+    read temperature_sensor
+    halt
+}"
+RND_0073,single_set,1,1,1,1,1,1,50061e02460652,,,,"task RND_0073 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}"
+RND_0074,single_read,1,1,1,1,1,1,5005470552,,,,"task RND_0074 {
+    require cap(relay1)
+    read relay1
+    halt
+}"
+RND_0075,set_wait_halt,1,1,1,1,1,1,50051e00460551ac0252,,,,"task RND_0075 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 300ms
+    halt
+}"
+RND_0076,wait_read,1,1,1,1,1,1,500151d00f470152,,,,"task RND_0076 {
+    require cap(water_sensor)
+    wait 2000ms
+    read water_sensor
+    halt
+}"
+RND_0077,set_wait_read,1,1,1,1,1,1,500550011e0046055164470152,,,,"task RND_0077 {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 0
+  wait 100ms
+  read water_sensor
+  halt
+}"
+RND_0078,multi_read,1,1,1,1,1,1,50065002500547064702470552,,,,"task RND_0078 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  require cap(relay1)
+  read relay2
+  read temperature_sensor
+  read relay1
+  halt
+}"
+RND_0079,pulse,1,1,1,1,1,1,50061e02460651ac021e00460652,,,,"task rnd_0079 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 300ms
+  set relay2 = 0
+  halt
+}"
+RND_0080,set_read_multi,1,1,1,1,1,1,500550011e024605470152,,,,"task RND_0080 {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 1
+  read water_sensor
+  halt
+}"
+RND_0081,multi_set,1,1,1,1,1,1,500550061e0246051e00460652,,,,"task RND_0081 {
+    require cap(relay1)
+    require cap(relay2)
+    set relay1 = 1
+    set relay2 = 0
+    halt
+}"
+RND_0082,set_wait_multi_read,1,1,1,1,1,1,5005500150031e00460551ac024701470352,,,,"task RND_0082 {
+  require cap(relay1)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 0
+  wait 300ms
+  read water_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0083,long_sequence,1,1,1,1,1,1,5006500250011e02460651d00f47021e00460651ac02470152,,,,"task RND_0083 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    set relay2 = 1
+    wait 2000ms
+    read temperature_sensor
+    set relay2 = 0
+    wait 300ms
+    read water_sensor
+    halt
+}"
+RND_0084,pulse_read,1,1,1,1,1,1,500550011e02460551ac021e004605470152,,,,"task RND_0084 {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 1
+  wait 300ms
+  set relay1 = 0
+  read water_sensor
+  halt
+}"
+RND_0085,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0085 {
+    require cap(relay1)
+    set relay1 = 1
+    halt
+}"
+RND_0086,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0086 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+RND_0087,set_wait_halt,1,1,1,1,1,1,50061e02460651ac0252,,,,"task RND_0087 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 300ms
+    halt
+}"
+RND_0088,wait_read,1,1,1,1,1,1,500351e807470352,,,,"task RND_0088 {
+  require cap(humidity_sensor)
+  wait 1000ms
+  read humidity_sensor
+  halt
+}"
+RND_0089,set_wait_read,1,1,1,1,1,1,500650011e00460651c801470152,,,,"task RND_0089 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  wait 200ms
+  read water_sensor
+  halt
+}"
+RND_0090,multi_read,1,1,1,1,1,1,500550034705470352,,,,"task RND_0090 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  read relay1
+  read humidity_sensor
+  halt
+}"
+RND_0091,pulse,1,1,1,1,1,1,50061e02460651321e00460652,,,,"task RND_0091 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 50ms
+    set relay2 = 0
+    halt
+}"
+RND_0092,set_read_multi,1,1,1,1,1,1,500550031e024605470352,,,,"task RND_0092 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  read humidity_sensor
+  halt
+}"
+RND_0093,multi_set,1,1,1,1,1,1,500550061e0246051e00460652,,,,"task RND_0093 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 1
+  set relay2 = 0
+  halt
+}"
+RND_0094,set_wait_multi_read,1,1,1,1,1,1,5005500150031e00460551e8074701470352,,,,"task RND_0094 {
+  require cap(relay1)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 0
+  wait 1000ms
+  read water_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0095,long_sequence,1,1,1,1,1,1,5005500250011e02460551f40347021e0046055164470152,,,,"task RND_0095 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    set relay1 = 1
+    wait 500ms
+    read temperature_sensor
+    set relay1 = 0
+    wait 100ms
+    read water_sensor
+    halt
+}"
+RND_0096,pulse_read,1,1,1,1,1,1,500550031e02460551321e004605470352,,,,"task RND_0096 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 50ms
+  set relay1 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0097,single_set,1,1,1,1,1,1,50061e02460652,,,,"task RND_0097 {
+    require cap(relay2)
+    set relay2 = 1
+    halt
+}"
+RND_0098,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0098 {
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+RND_0099,set_wait_halt,1,1,1,1,1,1,50051e024605516452,,,,"task RND_0099 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  halt
+}"
+RND_0100,wait_read,1,1,1,1,1,1,500151ac02470152,,,,"task RND_0100 {
+  require cap(water_sensor)
+  wait 300ms
+  read water_sensor
+  halt
+}"
+RND_0101,set_wait_read,1,1,1,1,1,1,500550031e02460551ac02470352,,,,"task RND_0101 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 300ms
+  read humidity_sensor
+  halt
+}"
+RND_0102,multi_read,1,1,1,1,1,1,50055003500647054703470652,,,,"task RND_0102 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  require cap(relay2)
+  read relay1
+  read humidity_sensor
+  read relay2
+  halt
+}"
+RND_0103,pulse,1,1,1,1,1,1,50051e02460551321e00460552,,,,"task RND_0103 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 50ms
+    set relay1 = 0
+    halt
+}"
+RND_0104,set_read_multi,1,1,1,1,1,1,500550031e024605470352,,,,"task RND_0104 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    set relay1 = 1
+    read humidity_sensor
+    halt
+}"
+RND_0105,multi_set,1,1,1,1,1,1,500550061e0246051e02460652,,,,"task rnd_0105 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 1
+  set relay2 = 1
+  halt
+}"
+RND_0106,set_wait_multi_read,1,1,1,1,1,1,5005500250031e00460551ac024702470352,,,,"task RND_0106 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    set relay1 = 0
+    wait 300ms
+    read temperature_sensor
+    read humidity_sensor
+    halt
+}"
+RND_0107,long_sequence,1,1,1,1,1,1,5006500350011e02460651e80747031e00460651f403470152,,,,"task RND_0107 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 1000ms
+  read humidity_sensor
+  set relay2 = 0
+  wait 500ms
+  read water_sensor
+  halt
+}"
+RND_0108,pulse_read,1,1,1,1,1,1,500650031e02460651321e004606470352,,,,"task RND_0108 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 50ms
+  set relay2 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0109,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0109 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0110,single_read,1,1,1,1,1,1,5005470552,,,,"task RND_0110 {
+  require cap(relay1)
+  read relay1
+  halt
+}"
+RND_0111,set_wait_halt,1,1,1,1,1,1,50051e00460551c80152,,,,"task RND_0111 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 200ms
+  halt
+}"
+RND_0112,wait_read,1,1,1,1,1,1,500151f403470152,,,,"task RND_0112 {
+  require cap(water_sensor)
+  wait 500ms
+  read water_sensor
+  halt
+}"
+RND_0113,set_wait_read,1,1,1,1,1,1,500550031e0246055164470352,,,,"task RND_0113 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+RND_0114,multi_read,1,1,1,1,1,1,50035002500647034702470652,,,,"task RND_0114 {
+    require cap(humidity_sensor)
+    require cap(temperature_sensor)
+    require cap(relay2)
+    read humidity_sensor
+    read temperature_sensor
+    read relay2
+    halt
+}"
+RND_0115,pulse,1,1,1,1,1,1,50051e02460551321e00460552,,,,"task RND_0115 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  set relay1 = 0
+  halt
+}"
+RND_0116,set_read_multi,1,1,1,1,1,1,500650021e004606470252,,,,"task RND_0116 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 0
+    read temperature_sensor
+    halt
+}"
+RND_0117,multi_set,1,1,1,1,1,1,500550061e0246051e02460652,,,,"task RND_0117 {
+    require cap(relay1)
+    require cap(relay2)
+    set relay1 = 1
+    set relay2 = 1
+    halt
+}"
+RND_0118,set_wait_multi_read,1,1,1,1,1,1,5006500150021e02460651f4034701470252,,,,"task RND_0118 {
+  require cap(relay2)
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  set relay2 = 1
+  wait 500ms
+  read water_sensor
+  read temperature_sensor
+  halt
+}"
+RND_0119,long_sequence,1,1,1,1,1,1,5005500150031e02460551e80747011e0046055164470352,,,,"task RND_0119 {
+  require cap(relay1)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 1000ms
+  read water_sensor
+  set relay1 = 0
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+RND_0120,pulse_read,1,1,1,1,1,1,500550021e02460551f4031e004605470252,,,,"task RND_0120 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 500ms
+    set relay1 = 0
+    read temperature_sensor
+    halt
+}"
+RND_0121,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0121 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0122,single_read,1,1,1,1,1,1,5006470652,,,,"task RND_0122 {
+  require cap(relay2)
+  read relay2
+  halt
+}"
+RND_0123,set_wait_halt,1,1,1,1,1,1,50051e02460551c80152,,,,"task RND_0123 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  halt
+}"
+RND_0124,wait_read,1,1,1,1,1,1,500551c801470552,,,,"task RND_0124 {
+  require cap(relay1)
+  wait 200ms
+  read relay1
+  halt
+}"
+RND_0125,set_wait_read,1,1,1,1,1,1,500550031e00460551e807470352,,,,"task RND_0125 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 0
+  wait 1000ms
+  read humidity_sensor
+  halt
+}"
+RND_0126,multi_read,1,1,1,1,1,1,500150024701470252,,,,"task RND_0126 {
+    require cap(water_sensor)
+    require cap(temperature_sensor)
+    read water_sensor
+    read temperature_sensor
+    halt
+}"
+RND_0127,pulse,1,1,1,1,1,1,50051e02460551641e00460552,,,,"task RND_0127 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    set relay1 = 0
+    halt
+}"
+RND_0128,set_read_multi,1,1,1,1,1,1,500550011e024605470152,,,,"task RND_0128 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 1
+    read water_sensor
+    halt
+}"
+RND_0129,multi_set,1,1,1,1,1,1,500550061e0246051e00460652,,,,"task RND_0129 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 1
+  set relay2 = 0
+  halt
+}"
+RND_0130,set_wait_multi_read,1,1,1,1,1,1,5006500250011e02460651644702470152,,,,"task RND_0130 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    set relay2 = 1
+    wait 100ms
+    read temperature_sensor
+    read water_sensor
+    halt
+}"
+RND_0131,long_sequence,1,1,1,1,1,1,5005500250011e02460551d00f47021e00460551ac02470152,,,,"task RND_0131 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    set relay1 = 1
+    wait 2000ms
+    read temperature_sensor
+    set relay1 = 0
+    wait 300ms
+    read water_sensor
+    halt
+}"
+RND_0132,pulse_read,1,1,1,1,1,1,500550011e02460551d00f1e004605470152,,,,"task RND_0132 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 1
+    wait 2000ms
+    set relay1 = 0
+    read water_sensor
+    halt
+}"
+RND_0133,single_set,1,1,1,1,1,1,50061e02460652,,,,"task RND_0133 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}"
+RND_0134,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0134 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+RND_0135,set_wait_halt,1,1,1,1,1,1,50051e004605513252,,,,"task RND_0135 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 50ms
+  halt
+}"
+RND_0136,wait_read,1,1,1,1,1,1,500651ac02470652,,,,"task RND_0136 {
+  require cap(relay2)
+  wait 300ms
+  read relay2
+  halt
+}"
+RND_0137,set_wait_read,1,1,1,1,1,1,500650021e00460651d00f470252,,,,"task RND_0137 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  set relay2 = 0
+  wait 2000ms
+  read temperature_sensor
+  halt
+}"
+RND_0138,multi_read,1,1,1,1,1,1,50015002500347014702470352,,,,"task RND_0138 {
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  read water_sensor
+  read temperature_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0139,pulse,1,1,1,1,1,1,50061e02460651321e00460652,,,,"task RND_0139 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 50ms
+    set relay2 = 0
+    halt
+}"
+RND_0140,set_read_multi,1,1,1,1,1,1,500550021e004605470252,,,,"task RND_0140 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 0
+  read temperature_sensor
+  halt
+}"
+RND_0141,multi_set,1,1,1,1,1,1,500550061e0246051e02460652,,,,"task RND_0141 {
+require cap(relay1)
+require cap(relay2)
+set relay1 = 1
+set relay2 = 1
+halt
+}"
+RND_0142,set_wait_multi_read,1,1,1,1,1,1,5006500250031e02460651f4034702470352,,,,"task RND_0142 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 500ms
+  read temperature_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0143,long_sequence,1,1,1,1,1,1,5005500250011e02460551c80147021e0046055132470152,,,,"task RND_0143 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    set relay1 = 1
+    wait 200ms
+    read temperature_sensor
+    set relay1 = 0
+    wait 50ms
+    read water_sensor
+    halt
+}"
+RND_0144,pulse_read,1,1,1,1,1,1,500650011e02460651f4031e004606470152,,,,"task RND_0144 {
+    require cap(relay2)
+    require cap(water_sensor)
+    set relay2 = 1
+    wait 500ms
+    set relay2 = 0
+    read water_sensor
+    halt
+}"
+RND_0145,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0145 {
+    require cap(relay1)
+    set relay1 = 1
+    halt
+}"
+RND_0146,single_read,1,1,1,1,1,1,5002470252,,,,"task RND_0146 {
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+RND_0147,set_wait_halt,1,1,1,1,1,1,50051e02460551f40352,,,,"task RND_0147 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 500ms
+  halt
+}"
+RND_0148,wait_read,1,1,1,1,1,1,500151e807470152,,,,"task RND_0148 {
+    require cap(water_sensor)
+    wait 1000ms
+    read water_sensor
+    halt
+}"
+RND_0149,set_wait_read,1,1,1,1,1,1,500550031e02460551f403470352,,,,"task RND_0149 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 500ms
+  read humidity_sensor
+  halt
+}"
+RND_0150,multi_read,1,1,1,1,1,1,50025001500647024701470652,,,,"task RND_0150 {
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    require cap(relay2)
+    read temperature_sensor
+    read water_sensor
+    read relay2
+    halt
+}"
+RND_0151,pulse,1,1,1,1,1,1,50061e02460651f4031e00460652,,,,"task RND_0151 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  halt
+}"
+RND_0152,set_read_multi,1,1,1,1,1,1,500550011e024605470152,,,,"task RND_0152 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 1
+    read water_sensor
+    halt
+}"
+RND_0153,multi_set,1,1,1,1,1,1,500650051e0246061e00460552,,,,"task RND_0153 {
+require cap(relay2)
+require cap(relay1)
+set relay2 = 1
+set relay1 = 0
+halt
+}"
+RND_0154,set_wait_multi_read,1,1,1,1,1,1,5006500250011e02460651c8014702470152,,,,"task RND_0154 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 200ms
+  read temperature_sensor
+  read water_sensor
+  halt
+}"
+RND_0155,long_sequence,1,1,1,1,1,1,5005500250031e02460551ac0247021e00460551d00f470352,,,,"task RND_0155 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 300ms
+  read temperature_sensor
+  set relay1 = 0
+  wait 2000ms
+  read humidity_sensor
+  halt
+}"
+RND_0156,pulse_read,1,1,1,1,1,1,500650031e02460651641e004606470352,,,,"task RND_0156 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 100ms
+    set relay2 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0157,single_set,1,1,1,1,1,1,50061e00460652,,,,"task RND_0157 {
+  require cap(relay2)
+  set relay2 = 0
+  halt
+}"
+RND_0158,single_read,1,1,1,1,1,1,5005470552,,,,"task RND_0158 {
+    require cap(relay1)
+    read relay1
+    halt
+}"
+RND_0159,set_wait_halt,1,1,1,1,1,1,50061e024606513252,,,,"task RND_0159 {
+require cap(relay2)
+set relay2 = 1
+wait 50ms
+halt
+}"
+RND_0160,wait_read,1,1,1,1,1,1,500651e807470652,,,,"task RND_0160 {
+  require cap(relay2)
+  wait 1000ms
+  read relay2
+  halt
+}"
+RND_0161,set_wait_read,1,1,1,1,1,1,500650011e0046065164470152,,,,"task RND_0161 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  wait 100ms
+  read water_sensor
+  halt
+}"
+RND_0162,multi_read,1,1,1,1,1,1,500550064705470652,,,,"task RND_0162 {
+    require cap(relay1)
+    require cap(relay2)
+    read relay1
+    read relay2
+    halt
+}"
+RND_0163,pulse,1,1,1,1,1,1,50061e02460651f4031e00460652,,,,"task RND_0163 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  halt
+}"
+RND_0164,set_read_multi,1,1,1,1,1,1,500550021e024605470252,,,,"task RND_0164 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  read temperature_sensor
+  halt
+}"
+RND_0165,multi_set,1,1,1,1,1,1,500550061e0046051e00460652,,,,"task RND_0165 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 0
+  set relay2 = 0
+  halt
+}"
+RND_0166,set_wait_multi_read,1,1,1,1,1,1,5006500150031e00460651d00f4701470352,,,,"task RND_0166 {
+    require cap(relay2)
+    require cap(water_sensor)
+    require cap(humidity_sensor)
+    set relay2 = 0
+    wait 2000ms
+    read water_sensor
+    read humidity_sensor
+    halt
+}"
+RND_0167,long_sequence,1,1,1,1,1,1,5005500250011e024605516447021e00460551e807470152,,,,"task RND_0167 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    set relay1 = 1
+    wait 100ms
+    read temperature_sensor
+    set relay1 = 0
+    wait 1000ms
+    read water_sensor
+    halt
+}"
+RND_0168,pulse_read,1,1,1,1,1,1,500650011e02460651f4031e004606470152,,,,"task RND_0168 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  read water_sensor
+  halt
+}"
+RND_0169,single_set,1,1,1,1,1,1,50051e00460552,,,,"task RND_0169 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+RND_0170,single_read,1,1,1,1,1,1,5002470252,,,,"task RND_0170 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+RND_0171,set_wait_halt,1,1,1,1,1,1,50051e02460551e80752,,,,"task RND_0171 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 1000ms
+    halt
+}"
+RND_0172,wait_read,1,1,1,1,1,1,500351f403470352,,,,"task rnd_0172 {
+  require cap(humidity_sensor)
+  wait 500ms
+  read humidity_sensor
+  halt
+}"
+RND_0173,set_wait_read,1,1,1,1,1,1,500650021e02460651d00f470252,,,,"task RND_0173 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 2000ms
+    read temperature_sensor
+    halt
+}"
+RND_0174,multi_read,1,1,1,1,1,1,50065002500347064702470352,,,,"task RND_0174 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    read relay2
+    read temperature_sensor
+    read humidity_sensor
+    halt
+}"
+RND_0175,pulse,1,1,1,1,1,1,50061e02460651d00f1e00460652,,,,"task RND_0175 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 2000ms
+    set relay2 = 0
+    halt
+}"
+RND_0176,set_read_multi,1,1,1,1,1,1,500550031e024605470352,,,,"task RND_0176 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  read humidity_sensor
+  halt
+}"
+RND_0177,multi_set,1,1,1,1,1,1,500650051e0046061e00460552,,,,"task RND_0177 {
+  require cap(relay2)
+  require cap(relay1)
+  set relay2 = 0
+  set relay1 = 0
+  halt
+}"
+RND_0178,set_wait_multi_read,1,1,1,1,1,1,5006500150021e00460651c8014701470252,,,,"task RND_0178 {
+  require cap(relay2)
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  set relay2 = 0
+  wait 200ms
+  read water_sensor
+  read temperature_sensor
+  halt
+}"
+RND_0179,long_sequence,1,1,1,1,1,1,5006500250011e024606516447021e00460651d00f470152,,,,"task RND_0179 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 100ms
+  read temperature_sensor
+  set relay2 = 0
+  wait 2000ms
+  read water_sensor
+  halt
+}"
+RND_0180,pulse_read,1,1,1,1,1,1,500550021e02460551e8071e004605470252,,,,"task RND_0180 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 1000ms
+    set relay1 = 0
+    read temperature_sensor
+    halt
+}"
+RND_0181,single_set,1,1,1,1,1,1,50051e00460552,,,,"task RND_0181 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+RND_0182,single_read,1,1,1,1,1,1,5005470552,,,,"task RND_0182 {
+    require cap(relay1)
+    read relay1
+    halt
+}"
+RND_0183,set_wait_halt,1,1,1,1,1,1,50061e02460651c80152,,,,"task RND_0183 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    halt
+}"
+RND_0184,wait_read,1,1,1,1,1,1,500351ac02470352,,,,"task RND_0184 {
+    require cap(humidity_sensor)
+    wait 300ms
+    read humidity_sensor
+    halt
+}"
+RND_0185,set_wait_read,1,1,1,1,1,1,500650011e00460651d00f470152,,,,"task RND_0185 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  wait 2000ms
+  read water_sensor
+  halt
+}"
+RND_0186,multi_read,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task rnd_0186 {
+  require cap(temperature_sensor, relay1, water_sensor)
+  read temperature_sensor
+  read relay1
+  read water_sensor
+  halt
+}"
+RND_0187,pulse,1,1,1,1,1,1,50061e02460651ac021e00460652,,,,"task RND_0187 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 300ms
+  set relay2 = 0
+  halt
+}"
+RND_0188,set_read_multi,1,1,1,1,1,1,500550021e024605470252,,,,"task RND_0188 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  read temperature_sensor
+  halt
+}"
+RND_0189,multi_set,1,1,1,1,1,1,500650051e0246061e00460552,,,,"task RND_0189 {
+    require cap(relay2)
+    require cap(relay1)
+    set relay2 = 1
+    set relay1 = 0
+    halt
+}"
+RND_0190,set_wait_multi_read,1,1,1,1,1,1,5005500250011e02460551ac024702470152,,,,"task RND_0190 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  require cap(water_sensor)
+  set relay1 = 1
+  wait 300ms
+  read temperature_sensor
+  read water_sensor
+  halt
+}"
+RND_0191,long_sequence,1,1,1,1,1,1,5006500150021e02460651c80147011e00460651e807470252,,,,"task RND_0191 {
+  require cap(relay2)
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  set relay2 = 1
+  wait 200ms
+  read water_sensor
+  set relay2 = 0
+  wait 1000ms
+  read temperature_sensor
+  halt
+}"
+RND_0192,pulse_read,1,1,1,1,1,1,500650031e02460651641e004606470352,,,,"task RND_0192 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 100ms
+    set relay2 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0193,single_set,1,1,1,1,1,1,50061e00460652,,,,"task RND_0193 {
+  require cap(relay2)
+  set relay2 = 0
+  halt
+}"
+RND_0194,single_read,1,1,1,1,1,1,5003470352,,,,"task RND_0194 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+RND_0195,set_wait_halt,1,1,1,1,1,1,50051e02460551f40352,,,,"task RND_0195 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    halt
+}"
+RND_0196,wait_read,1,1,1,1,1,1,500351e807470352,,,,"task RND_0196 {
+require cap(humidity_sensor)
+wait 1000ms
+read humidity_sensor
+halt
+}"
+RND_0197,set_wait_read,1,1,1,1,1,1,500550011e0246055164470152,,,,"task RND_0197 {
+require cap(relay1)
+require cap(water_sensor)
+set relay1 = 1
+wait 100ms
+read water_sensor
+halt
+}"
+RND_0198,multi_read,1,1,1,1,1,1,50065005500347064705470352,,,,"task RND_0198 {
+    require cap(relay2)
+    require cap(relay1)
+    require cap(humidity_sensor)
+    read relay2
+    read relay1
+    read humidity_sensor
+    halt
+}"
+RND_0199,pulse,1,1,1,1,1,1,50061e02460651c8011e00460652,,,,"task RND_0199 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 200ms
+  set relay2 = 0
+  halt
+}"
+RND_0200,set_read_multi,1,1,1,1,1,1,500550021e024605470252,,,,"task RND_0200 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  read temperature_sensor
+  halt
+}"
+RND_0201,multi_set,1,1,1,1,1,1,500650051e0046061e00460552,,,,"task RND_0201 {
+  require cap(relay2)
+  require cap(relay1)
+  set relay2 = 0
+  set relay1 = 0
+  halt
+}"
+RND_0202,set_wait_multi_read,1,1,1,1,1,1,5006500250011e02460651324702470152,,,,"task RND_0202 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 50ms
+  read temperature_sensor
+  read water_sensor
+  halt
+}"
+RND_0203,long_sequence,1,1,1,1,1,1,5005500250011e02460551e80747021e0046055132470152,,,,"task RND_0203 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    set relay1 = 1
+    wait 1000ms
+    read temperature_sensor
+    set relay1 = 0
+    wait 50ms
+    read water_sensor
+    halt
+}"
+RND_0204,pulse_read,1,1,1,1,1,1,500550011e02460551641e004605470152,,,,"task RND_0204 {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 1
+  wait 100ms
+  set relay1 = 0
+  read water_sensor
+  halt
+}"
+RND_0205,single_set,1,1,1,1,1,1,50051e00460552,,,,"task RND_0205 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+RND_0206,single_read,1,1,1,1,1,1,5003470352,,,,"task RND_0206 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+RND_0207,set_wait_halt,1,1,1,1,1,1,50051e004605516452,,,,"task RND_0207 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 100ms
+    halt
+}"
+RND_0208,wait_read,1,1,1,1,1,1,500251e807470252,,,,"task RND_0208 {
+  require cap(temperature_sensor)
+  wait 1000ms
+  read temperature_sensor
+  halt
+}"
+RND_0209,set_wait_read,1,1,1,1,1,1,500550031e00460551ac02470352,,,,"task RND_0209 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    set relay1 = 0
+    wait 300ms
+    read humidity_sensor
+    halt
+}"
+RND_0210,multi_read,1,1,1,1,1,1,50015006500347014706470352,,,,"task RND_0210 {
+  require cap(water_sensor)
+  require cap(relay2)
+  require cap(humidity_sensor)
+  read water_sensor
+  read relay2
+  read humidity_sensor
+  halt
+}"
+RND_0211,pulse,1,1,1,1,1,1,50051e02460551d00f1e00460552,,,,"task RND_0211 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 2000ms
+    set relay1 = 0
+    halt
+}"
+RND_0212,set_read_multi,1,1,1,1,1,1,500550021e004605470252,,,,"task RND_0212 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 0
+  read temperature_sensor
+  halt
+}"
+RND_0213,multi_set,1,1,1,1,1,1,500550061e0246051e00460652,,,,"task RND_0213 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 1
+  set relay2 = 0
+  halt
+}"
+RND_0214,set_wait_multi_read,1,1,1,1,1,1,5006500250011e00460651f4034702470152,,,,"task RND_0214 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    set relay2 = 0
+    wait 500ms
+    read temperature_sensor
+    read water_sensor
+    halt
+}"
+RND_0215,long_sequence,1,1,1,1,1,1,5005500150021e02460551d00f47011e00460551e807470252,,,,"task RND_0215 {
+  require cap(relay1)
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  wait 2000ms
+  read water_sensor
+  set relay1 = 0
+  wait 1000ms
+  read temperature_sensor
+  halt
+}"
+RND_0216,pulse_read,1,1,1,1,1,1,500550031e02460551d00f1e004605470352,,,,"task RND_0216 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    set relay1 = 1
+    wait 2000ms
+    set relay1 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0217,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0217 {
+    require cap(relay1)
+    set relay1 = 1
+    halt
+}"
+RND_0218,single_read,1,1,1,1,1,1,5003470352,,,,"task RND_0218 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+RND_0219,set_wait_halt,1,1,1,1,1,1,50061e024606513252,,,,"task RND_0219 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 50ms
+    halt
+}"
+RND_0220,wait_read,1,1,1,1,1,1,500351e807470352,,,,"task RND_0220 {
+  require cap(humidity_sensor)
+  wait 1000ms
+  read humidity_sensor
+  halt
+}"
+RND_0221,set_wait_read,1,1,1,1,1,1,500650011e02460651d00f470152,,,,"task RND_0221 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 2000ms
+  read water_sensor
+  halt
+}"
+RND_0222,multi_read,1,1,1,1,1,1,50055002500647054702470652,,,,"task RND_0222 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    require cap(relay2)
+    read relay1
+    read temperature_sensor
+    read relay2
+    halt
+}"
+RND_0223,pulse,1,1,1,1,1,1,50061e02460651e8071e00460652,,,,"task RND_0223 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 1000ms
+  set relay2 = 0
+  halt
+}"
+RND_0224,set_read_multi,1,1,1,1,1,1,500550021e004605470252,,,,"task RND_0224 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 0
+  read temperature_sensor
+  halt
+}"
+RND_0225,multi_set,1,1,1,1,1,1,500550061e0046051e00460652,,,,"task RND_0225 {
+require cap(relay1)
+require cap(relay2)
+set relay1 = 0
+set relay2 = 0
+halt
+}"
+RND_0226,set_wait_multi_read,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task RND_0226 {
+    require cap(relay2, humidity_sensor, temperature_sensor)
+    set relay2 = 1
+    wait 2000ms
+    read humidity_sensor
+    read temperature_sensor
+    halt
+}"
+RND_0227,long_sequence,1,1,1,1,1,1,5005500150021e02460551ac0247011e0046055164470252,,,,"task RND_0227 {
+  require cap(relay1)
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  wait 300ms
+  read water_sensor
+  set relay1 = 0
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+RND_0228,pulse_read,1,1,1,1,1,1,500650031e02460651f4031e004606470352,,,,"task RND_0228 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0229,single_set,1,1,1,1,1,1,50061e02460652,,,,"task RND_0229 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}"
+RND_0230,single_read,1,1,1,1,1,1,5005470552,,,,"task RND_0230 {
+  require cap(relay1)
+  read relay1
+  halt
+}"
+RND_0231,set_wait_halt,1,1,1,1,1,1,50061e024606516452,,,,"task RND_0231 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 100ms
+    halt
+}"
+RND_0232,wait_read,1,1,1,1,1,1,50025164470252,,,,"task RND_0232 {
+    require cap(temperature_sensor)
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+RND_0233,set_wait_read,1,1,1,1,1,1,500650021e02460651c801470252,,,,"task RND_0233 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+RND_0234,multi_read,1,1,1,1,1,1,50035005500147034705470152,,,,"task RND_0234 {
+  require cap(humidity_sensor)
+  require cap(relay1)
+  require cap(water_sensor)
+  read humidity_sensor
+  read relay1
+  read water_sensor
+  halt
+}"
+RND_0235,pulse,1,1,1,1,1,1,50051e02460551321e00460552,,,,"task RND_0235 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  set relay1 = 0
+  halt
+}"
+RND_0236,set_read_multi,1,1,1,1,1,1,500550031e024605470352,,,,"task RND_0236 {
+require cap(relay1)
+require cap(humidity_sensor)
+set relay1 = 1
+read humidity_sensor
+halt
+}"
+RND_0237,multi_set,1,1,1,1,1,1,500650051e0246061e00460552,,,,"task RND_0237 {
+    require cap(relay2)
+    require cap(relay1)
+    set relay2 = 1
+    set relay1 = 0
+    halt
+}"
+RND_0238,set_wait_multi_read,1,1,1,1,1,1,5006500350021e02460651d00f4703470252,,,,"task RND_0238 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 2000ms
+    read humidity_sensor
+    read temperature_sensor
+    halt
+}"
+RND_0239,long_sequence,1,1,1,1,1,1,5005500150021e024605516447011e00460551ac02470252,,,,"task RND_0239 {
+  require cap(relay1)
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  wait 100ms
+  read water_sensor
+  set relay1 = 0
+  wait 300ms
+  read temperature_sensor
+  halt
+}"
+RND_0240,pulse_read,1,1,1,1,1,1,500550021e02460551e8071e004605470252,,,,"task RND_0240 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 1000ms
+    set relay1 = 0
+    read temperature_sensor
+    halt
+}"
+RND_0241,single_set,1,1,1,1,1,1,50061e02460652,,,,"task RND_0241 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}"
+RND_0242,single_read,1,1,1,1,1,1,5003470352,,,,"task RND_0242 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+RND_0243,set_wait_halt,1,1,1,1,1,1,50061e02460651e80752,,,,"task RND_0243 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 1000ms
+    halt
+}"
+RND_0244,wait_read,1,1,1,1,1,1,500351c801470352,,,,"task RND_0244 {
+  require cap(humidity_sensor)
+  wait 200ms
+  read humidity_sensor
+  halt
+}"
+RND_0245,set_wait_read,1,1,1,1,1,1,500650031e02460651c801470352,,,,"task RND_0245 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 200ms
+    read humidity_sensor
+    halt
+}"
+RND_0246,multi_read,1,1,1,1,1,1,50015006500547014706470552,,,,"task RND_0246 {
+  require cap(water_sensor)
+  require cap(relay2)
+  require cap(relay1)
+  read water_sensor
+  read relay2
+  read relay1
+  halt
+}"
+RND_0247,pulse,1,1,1,1,1,1,50051e02460551c8011e00460552,,,,"task RND_0247 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  set relay1 = 0
+  halt
+}"
+RND_0248,set_read_multi,1,1,1,1,1,1,500550031e004605470352,,,,"task RND_0248 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0249,multi_set,1,1,1,1,1,1,500550061e0246051e00460652,,,,"task RND_0249 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 1
+  set relay2 = 0
+  halt
+}"
+RND_0250,set_wait_multi_read,1,1,1,1,1,1,5006500250031e00460651d00f4702470352,,,,"task RND_0250 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    set relay2 = 0
+    wait 2000ms
+    read temperature_sensor
+    read humidity_sensor
+    halt
+}"
+RND_0251,long_sequence,1,1,1,1,1,1,5005500250011e02460551c80147021e0046055164470152,,,,"task RND_0251 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  require cap(water_sensor)
+  set relay1 = 1
+  wait 200ms
+  read temperature_sensor
+  set relay1 = 0
+  wait 100ms
+  read water_sensor
+  halt
+}"
+RND_0252,pulse_read,1,1,1,1,1,1,500650011e02460651e8071e004606470152,,,,"task RND_0252 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 1000ms
+  set relay2 = 0
+  read water_sensor
+  halt
+}"
+RND_0253,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0253 {
+    require cap(relay1)
+    set relay1 = 1
+    halt
+}"
+RND_0254,single_read,1,1,1,1,1,1,5005470552,,,,"task RND_0254 {
+    require cap(relay1)
+    read relay1
+    halt
+}"
+RND_0255,set_wait_halt,1,1,1,1,1,1,50051e02460551e80752,,,,"task RND_0255 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 1000ms
+  halt
+}"
+RND_0256,wait_read,1,1,1,1,1,1,500651e807470652,,,,"task RND_0256 {
+    require cap(relay2)
+    wait 1000ms
+    read relay2
+    halt
+}"
+RND_0257,set_wait_read,1,1,1,1,1,1,500650011e00460651f403470152,,,,"task RND_0257 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  wait 500ms
+  read water_sensor
+  halt
+}"
+RND_0258,multi_read,1,1,1,1,1,1,50025003500647024703470652,,,,"task RND_0258 {
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    require cap(relay2)
+    read temperature_sensor
+    read humidity_sensor
+    read relay2
+    halt
+}"
+RND_0259,pulse,1,1,1,1,1,1,50061e02460651641e00460652,,,,"task RND_0259 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  set relay2 = 0
+  halt
+}"
+RND_0260,set_read_multi,1,1,1,1,1,1,500550021e024605470252,,,,"task RND_0260 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  read temperature_sensor
+  halt
+}"
+RND_0261,multi_set,1,1,1,1,1,1,500550061e0046051e00460652,,,,"task RND_0261 {
+require cap(relay1)
+require cap(relay2)
+set relay1 = 0
+set relay2 = 0
+halt
+}"
+RND_0262,set_wait_multi_read,1,1,1,1,1,1,5006500150031e00460651644701470352,,,,"task RND_0262 {
+require cap(relay2)
+require cap(water_sensor)
+require cap(humidity_sensor)
+set relay2 = 0
+wait 100ms
+read water_sensor
+read humidity_sensor
+halt
+}"
+RND_0263,long_sequence,1,1,1,1,1,1,5006500150031e024606513247011e00460651f403470352,,,,"task RND_0263 {
+    require cap(relay2)
+    require cap(water_sensor)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 50ms
+    read water_sensor
+    set relay2 = 0
+    wait 500ms
+    read humidity_sensor
+    halt
+}"
+RND_0264,pulse_read,1,1,1,1,1,1,500650031e02460651f4031e004606470352,,,,"task RND_0264 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 500ms
+    set relay2 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0265,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0265 {
+    require cap(relay1)
+    set relay1 = 1
+    halt
+}"
+RND_0266,single_read,1,1,1,1,1,1,5002470252,,,,"task RND_0266 {
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+RND_0267,set_wait_halt,1,1,1,1,1,1,50061e02460651d00f52,,,,"task RND_0267 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 2000ms
+    halt
+}"
+RND_0268,wait_read,1,1,1,1,1,1,500351ac02470352,,,,"task RND_0268 {
+    require cap(humidity_sensor)
+    wait 300ms
+    read humidity_sensor
+    halt
+}"
+RND_0269,set_wait_read,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task RND_0269 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  set relay2 = 0
+  wait 500 ms
+  read humidity_sensor
+  halt
+}"
+RND_0270,multi_read,1,1,1,1,1,1,500650034706470352,,,,"task RND_0270 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  read relay2
+  read humidity_sensor
+  halt
+}"
+RND_0271,pulse,1,1,1,1,1,1,50061e02460651e8071e00460652,,,,"task RND_0271 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 1000ms
+    set relay2 = 0
+    halt
+}"
+RND_0272,set_read_multi,1,1,1,1,1,1,500550011e004605470152,,,,"task RND_0272 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 0
+    read water_sensor
+    halt
+}"
+RND_0273,multi_set,1,1,1,1,1,1,500550061e0246051e02460652,,,,"task RND_0273 {
+    require cap(relay1)
+    require cap(relay2)
+    set relay1 = 1
+    set relay2 = 1
+    halt
+}"
+RND_0274,set_wait_multi_read,1,1,1,1,1,1,5005500250031e02460551c8014702470352,,,,"task RND_0274 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 200ms
+  read temperature_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0275,long_sequence,1,1,1,1,1,1,5005500150021e02460551e80747011e00460551c801470252,,,,"task RND_0275 {
+    require cap(relay1)
+    require cap(water_sensor)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 1000ms
+    read water_sensor
+    set relay1 = 0
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+RND_0276,pulse_read,1,1,1,1,1,1,500650011e02460651e8071e004606470152,,,,"task RND_0276 {
+    require cap(relay2)
+    require cap(water_sensor)
+    set relay2 = 1
+    wait 1000ms
+    set relay2 = 0
+    read water_sensor
+    halt
+}"
+RND_0277,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0277 {
+    require cap(relay1)
+    set relay1 = 1
+    halt
+}"
+RND_0278,single_read,1,1,1,1,1,1,5003470352,,,,"task RND_0278 {
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+RND_0279,set_wait_halt,1,1,1,1,1,1,50051e024605513252,,,,"task RND_0279 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 50ms
+    halt
+}"
+RND_0280,wait_read,1,1,1,1,1,1,50035164470352,,,,"task RND_0280 {
+    require cap(humidity_sensor)
+    wait 100ms
+    read humidity_sensor
+    halt
+}"
+RND_0281,set_wait_read,1,1,1,1,1,1,500550021e0046055132470252,,,,"task RND_0281 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 0
+  wait 50ms
+  read temperature_sensor
+  halt
+}"
+RND_0282,multi_read,1,1,1,1,1,1,500650014706470152,,,,"task RND_0282 {
+    require cap(relay2)
+    require cap(water_sensor)
+    read relay2
+    read water_sensor
+    halt
+}"
+RND_0283,pulse,1,1,1,1,1,1,50061e02460651ac021e00460652,,,,"task RND_0283 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 300ms
+  set relay2 = 0
+  halt
+}"
+RND_0284,set_read_multi,1,1,1,1,1,1,500550021e024605470252,,,,"task RND_0284 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  read temperature_sensor
+  halt
+}"
+RND_0285,multi_set,1,1,1,1,1,1,500650051e0246061e00460552,,,,"task RND_0285 {
+  require cap(relay2)
+  require cap(relay1)
+  set relay2 = 1
+  set relay1 = 0
+  halt
+}"
+RND_0286,set_wait_multi_read,1,1,1,1,1,1,5006500250011e00460651ac024702470152,,,,"task RND_0286 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  require cap(water_sensor)
+  set relay2 = 0
+  wait 300ms
+  read temperature_sensor
+  read water_sensor
+  halt
+}"
+RND_0287,long_sequence,1,1,1,1,1,1,5006500350021e024606513247031e00460651d00f470252,,,,"task RND_0287 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  require cap(temperature_sensor)
+  set relay2 = 1
+  wait 50ms
+  read humidity_sensor
+  set relay2 = 0
+  wait 2000ms
+  read temperature_sensor
+  halt
+}"
+RND_0288,pulse_read,1,1,1,1,1,1,500550031e02460551d00f1e004605470352,,,,"task RND_0288 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 2000ms
+  set relay1 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0289,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0289 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0290,single_read,1,1,1,1,1,1,5003470352,,,,"task RND_0290 {
+ require cap(humidity_sensor)
+ read humidity_sensor
+ halt
+}"
+RND_0291,set_wait_halt,1,1,1,1,1,1,50051e00460551ac0252,,,,"task RND_0291 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 300ms
+    halt
+}"
+RND_0292,wait_read,1,1,1,1,1,1,500351e807470352,,,,"task RND_0292 {
+    require cap(humidity_sensor)
+    wait 1000ms
+    read humidity_sensor
+    halt
+}"
+RND_0293,set_wait_read,1,1,1,1,1,1,500650021e00460651f403470252,,,,"task RND_0293 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  set relay2 = 0
+  wait 500ms
+  read temperature_sensor
+  halt
+}"
+RND_0294,multi_read,1,1,1,1,1,1,50025005500647024705470652,,,,"task RND_0294 {
+  require cap(temperature_sensor)
+  require cap(relay1)
+  require cap(relay2)
+  read temperature_sensor
+  read relay1
+  read relay2
+  halt
+}"
+RND_0295,pulse,1,1,1,1,1,1,50061e02460651ac021e00460652,,,,"task RND_0295 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 300ms
+  set relay2 = 0
+  halt
+}"
+RND_0296,set_read_multi,1,1,1,1,1,1,500650021e004606470252,,,,"task RND_0296 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 0
+    read temperature_sensor
+    halt
+}"
+RND_0297,multi_set,1,1,1,1,1,1,500550061e0046051e00460652,,,,"task RND_0297 {
+    require cap(relay1)
+    require cap(relay2)
+    set relay1 = 0
+    set relay2 = 0
+    halt
+}"
+RND_0298,set_wait_multi_read,1,1,1,1,1,1,5006500250031e00460651ac024702470352,,,,"task RND_0298 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    set relay2 = 0
+    wait 300ms
+    read temperature_sensor
+    read humidity_sensor
+    halt
+}"
+RND_0299,long_sequence,1,1,1,1,1,1,5005500250031e02460551c80147021e0046055132470352,,,,"task RND_0299 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 200ms
+  read temperature_sensor
+  set relay1 = 0
+  wait 50ms
+  read humidity_sensor
+  halt
+}"
+RND_0300,pulse_read,1,1,1,1,1,1,500650031e02460651d00f1e004606470352,,,,"task RND_0300 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 2000ms
+  set relay2 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0301,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0301 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0302,single_read,1,1,1,1,1,1,5002470252,,,,"task RND_0302 {
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+RND_0303,set_wait_halt,1,1,1,1,1,1,50051e00460551f40352,,,,"task RND_0303 {
+    require cap(relay1)
+    set relay1 = 0
+    wait 500ms
+    halt
+}"
+RND_0304,wait_read,1,1,1,1,1,1,500151f403470152,,,,"task RND_0304 {
+  require cap(water_sensor)
+  wait 500ms
+  read water_sensor
+  halt
+}"
+RND_0305,set_wait_read,1,1,1,1,1,1,500650031e02460651d00f470352,,,,"task RND_0305 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 2000ms
+  read humidity_sensor
+  halt
+}"
+RND_0306,multi_read,1,1,1,1,1,1,500650014706470152,,,,"task RND_0306 {
+  require cap(relay2)
+  require cap(water_sensor)
+  read relay2
+  read water_sensor
+  halt
+}"
+RND_0307,pulse,1,1,1,1,1,1,50051e02460551c8011e00460552,,,,"task RND_0307 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  set relay1 = 0
+  halt
+}"
+RND_0308,set_read_multi,1,1,1,1,1,1,500650031e024606470352,,,,"task RND_0308 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    read humidity_sensor
+    halt
+}"
+RND_0309,multi_set,1,1,1,1,1,1,500550061e0246051e00460652,,,,"task RND_0309 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 1
+  set relay2 = 0
+  halt
+}"
+RND_0310,set_wait_multi_read,1,1,1,1,1,1,5005500350011e02460551f4034703470152,,,,"task RND_0310 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    require cap(water_sensor)
+    set relay1 = 1
+    wait 500ms
+    read humidity_sensor
+    read water_sensor
+    halt
+}"
+RND_0311,long_sequence,1,1,1,1,1,1,5005500350021e024605513247031e0046055164470252,,,,"task RND_0311 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  wait 50ms
+  read humidity_sensor
+  set relay1 = 0
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+RND_0312,pulse_read,1,1,1,1,1,1,500550021e02460551321e004605470252,,,,"task RND_0312 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 50ms
+    set relay1 = 0
+    read temperature_sensor
+    halt
+}"
+RND_0313,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0313 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0314,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0314 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+RND_0315,set_wait_halt,1,1,1,1,1,1,50061e02460651d00f52,,,,"task RND_0315 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 2000ms
+  halt
+}"
+RND_0316,wait_read,1,1,1,1,1,1,500251ac02470252,,,,"task RND_0316 {
+  require cap(temperature_sensor)
+  wait 300ms
+  read temperature_sensor
+  halt
+}"
+RND_0317,set_wait_read,1,1,1,1,1,1,500550021e00460551ac02470252,,,,"task RND_0317 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 0
+    wait 300ms
+    read temperature_sensor
+    halt
+}"
+RND_0318,multi_read,1,1,1,1,1,1,500350064703470652,,,,"task RND_0318 {
+    require cap(humidity_sensor)
+    require cap(relay2)
+    read humidity_sensor
+    read relay2
+    halt
+}"
+RND_0319,pulse,1,1,1,1,1,1,50051e02460551c8011e00460552,,,,"task RND_0319 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 200ms
+    set relay1 = 0
+    halt
+}"
+RND_0320,set_read_multi,1,1,1,1,1,1,500650021e024606470252,,,,"task RND_0320 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  set relay2 = 1
+  read temperature_sensor
+  halt
+}"
+RND_0321,multi_set,1,1,1,1,1,1,500550061e0246051e00460652,,,,"task RND_0321 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 1
+  set relay2 = 0
+  halt
+}"
+RND_0322,set_wait_multi_read,1,1,1,1,1,1,5006500350021e00460651ac024703470252,,,,"task RND_0322 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    require cap(temperature_sensor)
+    set relay2 = 0
+    wait 300ms
+    read humidity_sensor
+    read temperature_sensor
+    halt
+}"
+RND_0323,long_sequence,1,1,1,1,1,1,5006500250031e02460651f40347021e00460651d00f470352,,,,"task RND_0323 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 500ms
+    read temperature_sensor
+    set relay2 = 0
+    wait 2000ms
+    read humidity_sensor
+    halt
+}"
+RND_0324,pulse_read,1,1,1,1,1,1,500650021e02460651c8011e004606470252,,,,"task RND_0324 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  set relay2 = 1
+  wait 200ms
+  set relay2 = 0
+  read temperature_sensor
+  halt
+}"
+RND_0325,single_set,1,1,1,1,1,1,50051e00460552,,,,"task RND_0325 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+RND_0326,single_read,1,1,1,1,1,1,5003470352,,,,"task RND_0326 {
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+RND_0327,set_wait_halt,1,1,1,1,1,1,50061e00460651d00f52,,,,"task RND_0327 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 2000ms
+  halt
+}"
+RND_0328,wait_read,1,1,1,1,1,1,50025132470252,,,,"task RND_0328 {
+    require cap(temperature_sensor)
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+RND_0329,set_wait_read,1,1,1,1,1,1,500650031e02460651e807470352,,,,"task RND_0329 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 1000ms
+    read humidity_sensor
+    halt
+}"
+RND_0330,multi_read,1,1,1,1,1,1,50025006500347024706470352,,,,"task RND_0330 {
+  require cap(temperature_sensor)
+  require cap(relay2)
+  require cap(humidity_sensor)
+  read temperature_sensor
+  read relay2
+  read humidity_sensor
+  halt
+}"
+RND_0331,pulse,1,1,1,1,1,1,50051e02460551641e00460552,,,,"task RND_0331 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 100ms
+    set relay1 = 0
+    halt
+}"
+RND_0332,set_read_multi,1,1,1,1,1,1,500650011e024606470152,,,,"task RND_0332 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 1
+  read water_sensor
+  halt
+}"
+RND_0333,multi_set,1,1,1,1,1,1,500550061e0246051e02460652,,,,"task RND_0333 {
+    require cap(relay1)
+    require cap(relay2)
+    set relay1 = 1
+    set relay2 = 1
+    halt
+}"
+RND_0334,set_wait_multi_read,1,1,1,1,1,1,5005500250011e00460551ac024702470152,,,,"task RND_0334 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    set relay1 = 0
+    wait 300ms
+    read temperature_sensor
+    read water_sensor
+    halt
+}"
+RND_0335,long_sequence,1,1,1,1,1,1,5006500250031e02460651e80747021e0046065132470352,,,,"task RND_0335 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 1000ms
+    read temperature_sensor
+    set relay2 = 0
+    wait 50ms
+    read humidity_sensor
+    halt
+}"
+RND_0336,pulse_read,1,1,1,1,1,1,500650031e02460651d00f1e004606470352,,,,"task RND_0336 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 2000ms
+    set relay2 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0337,single_set,1,1,1,1,1,1,50061e02460652,,,,"task RND_0337 {
+    require cap(relay2)
+    set relay2 = 1
+    halt
+}"
+RND_0338,single_read,1,1,1,1,1,1,5002470252,,,,"task RND_0338 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+RND_0339,set_wait_halt,1,1,1,1,1,1,50051e004605516452,,,,"task RND_0339 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 100ms
+  halt
+}"
+RND_0340,wait_read,1,1,1,1,1,1,50015164470152,,,,"task RND_0340 {
+  require cap(water_sensor)
+  wait 100ms
+  read water_sensor
+  halt
+}"
+RND_0341,set_wait_read,1,1,1,1,1,1,500550021e00460551d00f470252,,,,"task RND_0341 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 0
+  wait 2000ms
+  read temperature_sensor
+  halt
+}"
+RND_0342,multi_read,1,1,1,1,1,1,500250064702470652,,,,"task RND_0342 {
+    require cap(temperature_sensor)
+    require cap(relay2)
+    read temperature_sensor
+    read relay2
+    halt
+}"
+RND_0343,pulse,1,1,1,1,1,1,50061e02460651321e00460652,,,,"task RND_0343 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  set relay2 = 0
+  halt
+}"
+RND_0344,set_read_multi,1,1,1,1,1,1,500550021e004605470252,,,,"task RND_0344 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 0
+  read temperature_sensor
+  halt
+}"
+RND_0345,multi_set,1,1,1,1,1,1,500650051e0046061e00460552,,,,"task RND_0345 {
+    require cap(relay2)
+    require cap(relay1)
+    set relay2 = 0
+    set relay1 = 0
+    halt
+}"
+RND_0346,set_wait_multi_read,1,1,1,1,1,1,5006500150031e02460651f4034701470352,,,,"task RND_0346 {
+  require cap(relay2)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 500ms
+  read water_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0347,long_sequence,1,1,1,1,1,1,5005500150031e024605513247011e00460551f403470352,,,,"task RND_0347 {
+  require cap(relay1)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 50ms
+  read water_sensor
+  set relay1 = 0
+  wait 500ms
+  read humidity_sensor
+  halt
+}"
+RND_0348,pulse_read,1,1,1,1,1,1,500650031e02460651e8071e004606470352,,,,"task RND_0348 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 1000ms
+  set relay2 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0349,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0349 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0350,single_read,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task RND_0350 {
+    require cap(humidity_sensor);
+    read humidity_sensor;
+    halt;
+}"
+RND_0351,set_wait_halt,1,1,1,1,1,1,50051e00460551ac0252,,,,"task RND_0351 {
+  require cap(relay1)
+  set relay1 = 0
+  wait 300ms
+  halt
+}"
+RND_0352,wait_read,1,1,1,1,1,1,500151ac02470152,,,,"task RND_0352 {
+  require cap(water_sensor)
+  wait 300ms
+  read water_sensor
+  halt
+}"
+RND_0353,set_wait_read,1,1,1,1,1,1,500650031e00460651d00f470352,,,,"task RND_0353 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  set relay2 = 0
+  wait 2000ms
+  read humidity_sensor
+  halt
+}"
+RND_0354,multi_read,1,1,1,1,1,1,50015006500547014706470552,,,,"task RND_0354 {
+  require cap(water_sensor)
+  require cap(relay2)
+  require cap(relay1)
+  read water_sensor
+  read relay2
+  read relay1
+  halt
+}"
+RND_0355,pulse,1,1,1,1,1,1,50061e02460651c8011e00460652,,,,"task RND_0355 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 200ms
+    set relay2 = 0
+    halt
+}"
+RND_0356,set_read_multi,1,1,1,1,1,1,500650031e024606470352,,,,"task RND_0356 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    read humidity_sensor
+    halt
+}"
+RND_0357,multi_set,1,1,1,1,1,1,500650051e0046061e00460552,,,,"task rnd_0357 {
+  require cap(relay2)
+  require cap(relay1)
+  set relay2 = 0
+  set relay1 = 0
+  halt
+}"
+RND_0358,set_wait_multi_read,1,1,1,1,1,1,5005500250031e00460551644702470352,,,,"task RND_0358 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 0
+  wait 100ms
+  read temperature_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0359,long_sequence,1,1,1,1,1,1,5006500350021e02460651f40347031e00460651c801470252,,,,"task RND_0359 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 500ms
+    read humidity_sensor
+    set relay2 = 0
+    wait 200ms
+    read temperature_sensor
+    halt
+}"
+RND_0360,pulse_read,1,1,1,1,1,1,500650011e02460651d00f1e004606470152,,,,"task RND_0360 {
+    require cap(relay2)
+    require cap(water_sensor)
+    set relay2 = 1
+    wait 2000ms
+    set relay2 = 0
+    read water_sensor
+    halt
+}"
+RND_0361,single_set,1,1,1,1,1,1,50061e02460652,,,,"task RND_0361 {
+    require cap(relay2)
+    set relay2 = 1
+    halt
+}"
+RND_0362,single_read,1,1,1,1,1,1,5005470552,,,,"task RND_0362 {
+    require cap(relay1)
+    read relay1
+    halt
+}"
+RND_0363,set_wait_halt,1,1,1,1,1,1,50051e02460551d00f52,,,,"task RND_0363 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 2000ms
+  halt
+}"
+RND_0364,wait_read,1,1,1,1,1,1,500151d00f470152,,,,"task RND_0364 {
+  require cap(water_sensor)
+  wait 2000ms
+  read water_sensor
+  halt
+}"
+RND_0365,set_wait_read,1,1,1,1,1,1,500550031e0246055164470352,,,,"task RND_0365 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+RND_0366,multi_read,1,1,1,1,1,1,500350014703470152,,,,"task RND_0366 {
+    require cap(humidity_sensor)
+    require cap(water_sensor)
+    read humidity_sensor
+    read water_sensor
+    halt
+}"
+RND_0367,pulse,1,1,1,1,1,1,50051e02460551e8071e00460552,,,,"task RND_0367 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 1000ms
+  set relay1 = 0
+  halt
+}"
+RND_0368,set_read_multi,1,1,1,1,1,1,500550031e004605470352,,,,"task RND_0368 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0369,multi_set,1,1,1,1,1,1,500550061e0246051e02460652,,,,"task RND_0369 {
+    require cap(relay1)
+    require cap(relay2)
+    set relay1 = 1
+    set relay2 = 1
+    halt
+}"
+RND_0370,set_wait_multi_read,1,1,1,1,1,1,5006500350011e00460651c8014703470152,,,,"task RND_0370 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  require cap(water_sensor)
+  set relay2 = 0
+  wait 200ms
+  read humidity_sensor
+  read water_sensor
+  halt
+}"
+RND_0371,long_sequence,1,1,1,1,1,1,5006500350021e024606516447031e00460651d00f470252,,,,"task RND_0371 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  require cap(temperature_sensor)
+  set relay2 = 1
+  wait 100ms
+  read humidity_sensor
+  set relay2 = 0
+  wait 2000ms
+  read temperature_sensor
+  halt
+}"
+RND_0372,pulse_read,1,1,1,1,1,1,500550031e02460551c8011e004605470352,,,,"task RND_0372 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    set relay1 = 1
+    wait 200ms
+    set relay1 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0373,single_set,1,1,1,1,1,1,50061e00460652,,,,"task RND_0373 {
+    require cap(relay2)
+    set relay2 = 0
+    halt
+}"
+RND_0374,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0374 {
+    require cap(water_sensor)
+    read water_sensor
+    halt
+}"
+RND_0375,set_wait_halt,1,1,1,1,1,1,50061e02460651e80752,,,,"task RND_0375 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 1000ms
+  halt
+}"
+RND_0376,wait_read,1,1,1,1,1,1,500151d00f470152,,,,"task RND_0376 {
+  require cap(water_sensor)
+  wait 2000ms
+  read water_sensor
+  halt
+}"
+RND_0377,set_wait_read,1,1,1,1,1,1,500550021e0046055164470252,,,,"task RND_0377 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 0
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+RND_0378,multi_read,1,1,1,1,1,1,500250014702470152,,,,"task RND_0378 {
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    read temperature_sensor
+    read water_sensor
+    halt
+}"
+RND_0379,pulse,1,1,1,1,1,1,50051e02460551d00f1e00460552,,,,"task RND_0379 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 2000ms
+  set relay1 = 0
+  halt
+}"
+RND_0380,set_read_multi,1,1,1,1,1,1,500650011e024606470152,,,,"task RND_0380 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 1
+  read water_sensor
+  halt
+}"
+RND_0381,multi_set,1,1,1,1,1,1,500550061e0046051e00460652,,,,"task RND_0381 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 0
+  set relay2 = 0
+  halt
+}"
+RND_0382,set_wait_multi_read,1,1,1,1,1,1,5006500350021e02460651324703470252,,,,"task RND_0382 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 50ms
+    read humidity_sensor
+    read temperature_sensor
+    halt
+}"
+RND_0383,long_sequence,1,1,1,1,1,1,5005500250011e02460551f40347021e00460551d00f470152,,,,"task RND_0383 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  require cap(water_sensor)
+  set relay1 = 1
+  wait 500ms
+  read temperature_sensor
+  set relay1 = 0
+  wait 2000ms
+  read water_sensor
+  halt
+}"
+RND_0384,pulse_read,1,1,1,1,1,1,500650031e02460651641e004606470352,,,,"task RND_0384 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 100ms
+    set relay2 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0385,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0385 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0386,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0386 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+RND_0387,set_wait_halt,1,1,1,1,1,1,50061e004606516452,,,,"task RND_0387 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 100ms
+  halt
+}"
+RND_0388,wait_read,1,1,1,1,1,1,50055132470552,,,,"task RND_0388 {
+  require cap(relay1)
+  wait 50ms
+  read relay1
+  halt
+}"
+RND_0389,set_wait_read,1,1,1,1,1,1,500650021e0046065132470252,,,,"task RND_0389 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  set relay2 = 0
+  wait 50ms
+  read temperature_sensor
+  halt
+}"
+RND_0390,multi_read,1,1,1,1,1,1,500350064703470652,,,,"task RND_0390 {
+  require cap(humidity_sensor)
+  require cap(relay2)
+  read humidity_sensor
+  read relay2
+  halt
+}"
+RND_0391,pulse,1,1,1,1,1,1,50061e02460651ac021e00460652,,,,"task RND_0391 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 300ms
+  set relay2 = 0
+  halt
+}"
+RND_0392,set_read_multi,1,1,1,1,1,1,500650031e024606470352,,,,"task RND_0392 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    read humidity_sensor
+    halt
+}"
+RND_0393,multi_set,1,1,1,1,1,1,500550061e0246051e00460652,,,,"task RND_0393 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 1
+  set relay2 = 0
+  halt
+}"
+RND_0394,set_wait_multi_read,1,1,1,1,1,1,5005500250031e02460551324702470352,,,,"task RND_0394 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    set relay1 = 1
+    wait 50ms
+    read temperature_sensor
+    read humidity_sensor
+    halt
+}"
+RND_0395,long_sequence,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task RND_0395 {
+  require cap(relay2, water_sensor, temperature_sensor)
+  set relay2 = 1
+  wait 300ms
+  read water_sensor
+  set relay2 = 0
+  wait 100ms
+  read temperature_sensor
+  halt
+}"
+RND_0396,pulse_read,1,1,1,1,1,1,500650011e02460651e8071e004606470152,,,,"task RND_0396 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 1000ms
+  set relay2 = 0
+  read water_sensor
+  halt
+}"
+RND_0397,single_set,1,1,1,1,1,1,50061e02460652,,,,"task RND_0397 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}"
+RND_0398,single_read,1,1,1,1,1,1,5005470552,,,,"task RND_0398 {
+    require cap(relay1)
+    read relay1
+    halt
+}"
+RND_0399,set_wait_halt,1,1,1,1,1,1,50061e024606516452,,,,"task RND_0399 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  halt
+}"
+RND_0400,wait_read,1,1,1,1,1,1,500551d00f470552,,,,"task RND_0400 {
+    require cap(relay1)
+    wait 2000ms
+    read relay1
+    halt
+}"
+RND_0401,set_wait_read,1,1,1,1,1,1,500650011e00460651e807470152,,,,"task RND_0401 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  wait 1000ms
+  read water_sensor
+  halt
+}"
+RND_0402,multi_read,1,1,1,1,1,1,500550014705470152,,,,"task RND_0402 {
+  require cap(relay1)
+  require cap(water_sensor)
+  read relay1
+  read water_sensor
+  halt
+}"
+RND_0403,pulse,1,1,1,1,1,1,50051e02460551641e00460552,,,,"task RND_0403 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  set relay1 = 0
+  halt
+}"
+RND_0404,set_read_multi,1,1,1,1,1,1,500550011e004605470152,,,,"task RND_0404 {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 0
+  read water_sensor
+  halt
+}"
+RND_0405,multi_set,1,1,1,1,1,1,500550061e0046051e00460652,,,,"task RND_0405 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 0
+  set relay2 = 0
+  halt
+}"
+RND_0406,set_wait_multi_read,1,1,1,1,1,1,5005500350011e02460551d00f4703470152,,,,"task RND_0406 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  require cap(water_sensor)
+  set relay1 = 1
+  wait 2000ms
+  read humidity_sensor
+  read water_sensor
+  halt
+}"
+RND_0407,long_sequence,1,1,1,1,1,1,5005500150021e02460551d00f47011e0046055164470252,,,,"task RND_0407 {
+    require cap(relay1)
+    require cap(water_sensor)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 2000ms
+    read water_sensor
+    set relay1 = 0
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+RND_0408,pulse_read,1,1,1,1,1,1,500550031e02460551d00f1e004605470352,,,,"task RND_0408 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    set relay1 = 1
+    wait 2000ms
+    set relay1 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0409,single_set,1,1,1,1,1,1,50051e00460552,,,,"task RND_0409 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+RND_0410,single_read,1,1,1,1,1,1,5005470552,,,,"task RND_0410 {
+    require cap(relay1)
+    read relay1
+    halt
+}"
+RND_0411,set_wait_halt,1,1,1,1,1,1,50061e00460651f40352,,,,"task RND_0411 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 500ms
+  halt
+}"
+RND_0412,wait_read,1,1,1,1,1,1,50015132470152,,,,"task RND_0412 {
+    require cap(water_sensor)
+    wait 50ms
+    read water_sensor
+    halt
+}"
+RND_0413,set_wait_read,1,1,1,1,1,1,500550021e0046055164470252,,,,"task RND_0413 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 0
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+RND_0414,multi_read,1,1,1,1,1,1,50035005500147034705470152,,,,"task RND_0414 {
+  require cap(humidity_sensor)
+  require cap(relay1)
+  require cap(water_sensor)
+  read humidity_sensor
+  read relay1
+  read water_sensor
+  halt
+}"
+RND_0415,pulse,1,1,1,1,1,1,50051e02460551ac021e00460552,,,,"task RND_0415 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 300ms
+  set relay1 = 0
+  halt
+}"
+RND_0416,set_read_multi,1,1,1,1,1,1,500650021e004606470252,,,,"task RND_0416 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 0
+    read temperature_sensor
+    halt
+}"
+RND_0417,multi_set,1,1,1,1,1,1,500650051e0246061e00460552,,,,"task RND_0417 {
+  require cap(relay2)
+  require cap(relay1)
+  set relay2 = 1
+  set relay1 = 0
+  halt
+}"
+RND_0418,set_wait_multi_read,1,1,1,1,1,1,5005500350021e02460551e8074703470252,,,,"task RND_0418 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 1000ms
+    read humidity_sensor
+    read temperature_sensor
+    halt
+}"
+RND_0419,long_sequence,1,1,1,1,1,1,5005500150021e02460551d00f47011e00460551ac02470252,,,,"task RND_0419 {
+    require cap(relay1)
+    require cap(water_sensor)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 2000ms
+    read water_sensor
+    set relay1 = 0
+    wait 300ms
+    read temperature_sensor
+    halt
+}"
+RND_0420,pulse_read,1,1,1,1,1,1,500650031e02460651321e004606470352,,,,"task RND_0420 {
+require cap(relay2)
+require cap(humidity_sensor)
+set relay2 = 1
+wait 50ms
+set relay2 = 0
+read humidity_sensor
+halt
+}"
+RND_0421,single_set,1,1,1,1,1,1,50061e02460652,,,,"task RND_0421 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}"
+RND_0422,single_read,1,1,1,1,1,1,5005470552,,,,"task RND_0422 {
+    require cap(relay1)
+    read relay1
+    halt
+}"
+RND_0423,set_wait_halt,1,1,1,1,1,1,50051e02460551f40352,,,,"task RND_0423 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 500ms
+    halt
+}"
+RND_0424,wait_read,1,1,1,1,1,1,50065132470652,,,,"task RND_0424 {
+    require cap(relay2)
+    wait 50ms
+    read relay2
+    halt
+}"
+RND_0425,set_wait_read,1,1,1,1,1,1,500550021e02460551ac02470252,,,,"task RND_0425 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 300ms
+    read temperature_sensor
+    halt
+}"
+RND_0426,multi_read,1,1,1,1,1,1,50025003500547024703470552,,,,"task RND_0426 {
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  require cap(relay1)
+  read temperature_sensor
+  read humidity_sensor
+  read relay1
+  halt
+}"
+RND_0427,pulse,1,1,1,1,1,1,50051e02460551d00f1e00460552,,,,"task RND_0427 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 2000ms
+  set relay1 = 0
+  halt
+}"
+RND_0428,set_read_multi,1,1,1,1,1,1,500550021e024605470252,,,,"task RND_0428 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    read temperature_sensor
+    halt
+}"
+RND_0429,multi_set,1,1,1,1,1,1,500550061e0046051e00460652,,,,"task RND_0429 {
+    require cap(relay1)
+    require cap(relay2)
+    set relay1 = 0
+    set relay2 = 0
+    halt
+}"
+RND_0430,set_wait_multi_read,1,1,1,1,1,1,5006500250031e00460651c8014702470352,,,,"task RND_0430 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  set relay2 = 0
+  wait 200ms
+  read temperature_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0431,long_sequence,1,1,1,1,1,1,5006500250031e02460651c80147021e0046065164470352,,,,"task RND_0431 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 200ms
+  read temperature_sensor
+  set relay2 = 0
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+RND_0432,pulse_read,1,1,1,1,1,1,500650011e02460651321e004606470152,,,,"task RND_0432 {
+    require cap(relay2)
+    require cap(water_sensor)
+    set relay2 = 1
+    wait 50ms
+    set relay2 = 0
+    read water_sensor
+    halt
+}"
+RND_0433,single_set,1,1,1,1,1,1,50051e00460552,,,,"task RND_0433 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+RND_0434,single_read,1,1,1,1,1,1,5002470252,,,,"task RND_0434 {
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+RND_0435,set_wait_halt,1,1,1,1,1,1,50051e02460551d00f52,,,,"task RND_0435 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 2000ms
+  halt
+}"
+RND_0436,wait_read,1,1,1,1,1,1,500651f403470652,,,,"task rnd_0436 {
+  require cap(relay2)
+  wait 500ms
+  read relay2
+  halt
+}"
+RND_0437,set_wait_read,1,1,1,1,1,1,500550031e02460551e807470352,,,,"task RND_0437 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 1000ms
+  read humidity_sensor
+  halt
+}"
+RND_0438,multi_read,1,1,1,1,1,1,500250014702470152,,,,"task RND_0438 {
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    read temperature_sensor
+    read water_sensor
+    halt
+}"
+RND_0439,pulse,1,1,1,1,1,1,50061e02460651d00f1e00460652,,,,"task RND_0439 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 2000ms
+  set relay2 = 0
+  halt
+}"
+RND_0440,set_read_multi,1,1,1,1,1,1,500550021e024605470252,,,,"task RND_0440 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  read temperature_sensor
+  halt
+}"
+RND_0441,multi_set,1,1,1,1,1,1,500650051e0246061e00460552,,,,"task RND_0441 {
+    require cap(relay2)
+    require cap(relay1)
+    set relay2 = 1
+    set relay1 = 0
+    halt
+}"
+RND_0442,set_wait_multi_read,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task RND_0442 {
+  require cap(relay1, water_sensor, temperature_sensor)
+  set relay1 = 0
+  wait 2000ms
+  read water_sensor
+  read temperature_sensor
+  halt
+}"
+RND_0443,long_sequence,1,1,1,1,1,1,5005500250031e024605513247021e00460551c801470352,,,,"task RND_0443 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    set relay1 = 1
+    wait 50ms
+    read temperature_sensor
+    set relay1 = 0
+    wait 200ms
+    read humidity_sensor
+    halt
+}"
+RND_0444,pulse_read,1,1,1,1,1,1,500550021e02460551d00f1e004605470252,,,,"task RND_0444 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 2000ms
+    set relay1 = 0
+    read temperature_sensor
+    halt
+}"
+RND_0445,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0445 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0446,single_read,1,1,1,1,1,1,5005470552,,,,"task RND_0446 {
+    require cap(relay1)
+    read relay1
+    halt
+}"
+RND_0447,set_wait_halt,1,1,1,1,1,1,50051e02460551e80752,,,,"task RND_0447 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 1000ms
+  halt
+}"
+RND_0448,wait_read,1,1,1,1,1,1,500151c801470152,,,,"task RND_0448 {
+  require cap(water_sensor)
+  wait 200ms
+  read water_sensor
+  halt
+}"
+RND_0449,set_wait_read,1,1,1,1,1,1,500650011e00460651d00f470152,,,,"task RND_0449 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  wait 2000ms
+  read water_sensor
+  halt
+}"
+RND_0450,multi_read,1,1,1,1,1,1,500350024703470252,,,,"task RND_0450 {
+    require cap(humidity_sensor)
+    require cap(temperature_sensor)
+    read humidity_sensor
+    read temperature_sensor
+    halt
+}"
+RND_0451,pulse,1,1,1,1,1,1,50051e02460551641e00460552,,,,"task RND_0451 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  set relay1 = 0
+  halt
+}"
+RND_0452,set_read_multi,1,1,1,1,1,1,500550011e004605470152,,,,"task RND_0452 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 0
+    read water_sensor
+    halt
+}"
+RND_0453,multi_set,1,1,1,1,1,1,500650051e0046061e00460552,,,,"task RND_0453 {
+  require cap(relay2)
+  require cap(relay1)
+  set relay2 = 0
+  set relay1 = 0
+  halt
+}"
+RND_0454,set_wait_multi_read,1,1,1,1,1,1,5006500150021e02460651e8074701470252,,,,"task RND_0454 {
+    require cap(relay2)
+    require cap(water_sensor)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 1000ms
+    read water_sensor
+    read temperature_sensor
+    halt
+}"
+RND_0455,long_sequence,1,1,1,1,1,1,5006500350011e024606513247031e0046065164470152,,,,"task RND_0455 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 50ms
+  read humidity_sensor
+  set relay2 = 0
+  wait 100ms
+  read water_sensor
+  halt
+}"
+RND_0456,pulse_read,1,1,1,1,1,1,500550031e02460551321e004605470352,,,,"task RND_0456 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 50ms
+  set relay1 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0457,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0457 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0458,single_read,1,1,1,1,1,1,5002470252,,,,"task RND_0458 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+RND_0459,set_wait_halt,1,1,1,1,1,1,50061e02460651f40352,,,,"task RND_0459 {
+require cap(relay2)
+set relay2 = 1
+wait 500ms
+halt
+}"
+RND_0460,wait_read,1,1,1,1,1,1,500251ac02470252,,,,"task RND_0460 {
+  require cap(temperature_sensor)
+  wait 300ms
+  read temperature_sensor
+  halt
+}"
+RND_0461,set_wait_read,1,1,1,1,1,1,500650011e00460651c801470152,,,,"task RND_0461 {
+    require cap(relay2)
+    require cap(water_sensor)
+    set relay2 = 0
+    wait 200ms
+    read water_sensor
+    halt
+}"
+RND_0462,multi_read,1,1,1,1,1,1,50055001500247054701470252,,,,"task RND_0462 {
+  require cap(relay1)
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  read relay1
+  read water_sensor
+  read temperature_sensor
+  halt
+}"
+RND_0463,pulse,1,1,1,1,1,1,50061e02460651f4031e00460652,,,,"task RND_0463 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 500ms
+    set relay2 = 0
+    halt
+}"
+RND_0464,set_read_multi,1,1,1,1,1,1,500650011e004606470152,,,,"task RND_0464 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  read water_sensor
+  halt
+}"
+RND_0465,multi_set,1,1,1,1,1,1,500650051e0246061e02460552,,,,"task RND_0465 {
+  require cap(relay2)
+  require cap(relay1)
+  set relay2 = 1
+  set relay1 = 1
+  halt
+}"
+RND_0466,set_wait_multi_read,1,1,1,1,1,1,5005500250011e00460551d00f4702470152,,,,"task RND_0466 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    set relay1 = 0
+    wait 2000ms
+    read temperature_sensor
+    read water_sensor
+    halt
+}"
+RND_0467,long_sequence,1,1,1,1,1,1,5006500250031e024606513247021e00460651d00f470352,,,,"task RND_0467 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 50ms
+    read temperature_sensor
+    set relay2 = 0
+    wait 2000ms
+    read humidity_sensor
+    halt
+}"
+RND_0468,pulse_read,1,1,1,1,1,1,500650031e02460651ac021e004606470352,,,,"task RND_0468 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 300ms
+  set relay2 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0469,single_set,1,1,1,1,1,1,50051e00460552,,,,"task RND_0469 {
+  require cap(relay1)
+  set relay1 = 0
+  halt
+}"
+RND_0470,single_read,1,1,1,1,1,1,5002470252,,,,"task RND_0470 {
+    require cap(temperature_sensor)
+    read temperature_sensor
+    halt
+}"
+RND_0471,set_wait_halt,1,1,1,1,1,1,50051e024605513252,,,,"task RND_0471 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  halt
+}"
+RND_0472,wait_read,1,1,1,1,1,1,500251d00f470252,,,,"task RND_0472 {
+    require cap(temperature_sensor)
+    wait 2000ms
+    read temperature_sensor
+    halt
+}"
+RND_0473,set_wait_read,1,1,1,1,1,1,500550021e00460551ac02470252,,,,"task RND_0473 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 0
+    wait 300ms
+    read temperature_sensor
+    halt
+}"
+RND_0474,multi_read,1,1,1,1,1,1,500150024701470252,,,,"task RND_0474 {
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  read water_sensor
+  read temperature_sensor
+  halt
+}"
+RND_0475,pulse,1,1,1,1,1,1,50061e02460651e8071e00460652,,,,"task RND_0475 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 1000ms
+    set relay2 = 0
+    halt
+}"
+RND_0476,set_read_multi,1,1,1,1,1,1,500650021e004606470252,,,,"task RND_0476 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  set relay2 = 0
+  read temperature_sensor
+  halt
+}"
+RND_0477,multi_set,1,1,1,1,1,1,500550061e0046051e00460652,,,,"task RND_0477 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 0
+  set relay2 = 0
+  halt
+}"
+RND_0478,set_wait_multi_read,1,1,1,1,1,1,5005500350021e02460551324703470252,,,,"task RND_0478 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  wait 50ms
+  read humidity_sensor
+  read temperature_sensor
+  halt
+}"
+RND_0479,long_sequence,1,1,1,1,1,1,5006500150031e02460651ac0247011e00460651f403470352,,,,"task RND_0479 {
+  require cap(relay2)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 300ms
+  read water_sensor
+  set relay2 = 0
+  wait 500ms
+  read humidity_sensor
+  halt
+}"
+RND_0480,pulse_read,1,1,1,1,1,1,500650031e02460651321e004606470352,,,,"task RND_0480 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 50ms
+  set relay2 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0481,single_set,1,1,1,1,1,1,50061e02460652,,,,"task RND_0481 {
+  require cap(relay2)
+  set relay2 = 1
+  halt
+}"
+RND_0482,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0482 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+RND_0483,set_wait_halt,1,1,1,1,1,1,50051e02460551d00f52,,,,"task RND_0483 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 2000ms
+  halt
+}"
+RND_0484,wait_read,1,1,1,1,1,1,50065132470652,,,,"task RND_0484 {
+    require cap(relay2)
+    wait 50ms
+    read relay2
+    halt
+}"
+RND_0485,set_wait_read,1,1,1,1,1,1,500550031e00460551d00f470352,,,,"task RND_0485 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    set relay1 = 0
+    wait 2000ms
+    read humidity_sensor
+    halt
+}"
+RND_0486,multi_read,1,1,1,1,1,1,50015006500547014706470552,,,,"task RND_0486 {
+  require cap(water_sensor)
+  require cap(relay2)
+  require cap(relay1)
+  read water_sensor
+  read relay2
+  read relay1
+  halt
+}"
+RND_0487,pulse,1,1,1,1,1,1,50051e02460551641e00460552,,,,"task RND_0487 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 100ms
+  set relay1 = 0
+  halt
+}"
+RND_0488,set_read_multi,1,1,1,1,1,1,500650011e004606470152,,,,"task RND_0488 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  read water_sensor
+  halt
+}"
+RND_0489,multi_set,1,1,1,1,1,1,500550061e0246051e02460652,,,,"task RND_0489 {
+    require cap(relay1)
+    require cap(relay2)
+    set relay1 = 1
+    set relay2 = 1
+    halt
+}"
+RND_0490,set_wait_multi_read,1,1,1,1,1,1,5006500250031e02460651d00f4702470352,,,,"task RND_0490 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 2000ms
+    read temperature_sensor
+    read humidity_sensor
+    halt
+}"
+RND_0491,long_sequence,1,1,1,1,1,1,5006500150021e024606513247011e00460651ac02470252,,,,"task RND_0491 {
+  require cap(relay2)
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  set relay2 = 1
+  wait 50ms
+  read water_sensor
+  set relay2 = 0
+  wait 300ms
+  read temperature_sensor
+  halt
+}"
+RND_0492,pulse_read,1,1,1,1,1,1,500650031e02460651c8011e004606470352,,,,"task RND_0492 {
+    require cap(relay2)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 200ms
+    set relay2 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0493,single_set,1,1,1,1,1,1,50061e00460652,,,,"task RND_0493 {
+    require cap(relay2)
+    set relay2 = 0
+    halt
+}"
+RND_0494,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0494 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+RND_0495,set_wait_halt,1,1,1,1,1,1,50051e02460551ac0252,,,,"task RND_0495 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 300ms
+    halt
+}"
+RND_0496,wait_read,1,1,1,1,1,1,50025132470252,,,,"task RND_0496 {
+    require cap(temperature_sensor)
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+RND_0497,set_wait_read,1,1,1,1,1,1,500550021e0246055132470252,,,,"task RND_0497 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  wait 50ms
+  read temperature_sensor
+  halt
+}"
+RND_0498,multi_read,1,1,1,1,1,1,500350024703470252,,,,"task RND_0498 {
+    require cap(humidity_sensor)
+    require cap(temperature_sensor)
+    read humidity_sensor
+    read temperature_sensor
+    halt
+}"
+RND_0499,pulse,1,1,1,1,1,1,50061e02460651f4031e00460652,,,,"task RND_0499 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  halt
+}"
+RND_0500,set_read_multi,1,1,1,1,1,1,500550021e004605470252,,,,"task RND_0500 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 0
+    read temperature_sensor
+    halt
+}"
+RND_0501,multi_set,1,1,1,1,1,1,500650051e0246061e00460552,,,,"task RND_0501 {
+    require cap(relay2)
+    require cap(relay1)
+    set relay2 = 1
+    set relay1 = 0
+    halt
+}"
+RND_0502,set_wait_multi_read,1,1,1,1,1,1,5005500150021e00460551d00f4701470252,,,,"task RND_0502 {
+    require cap(relay1)
+    require cap(water_sensor)
+    require cap(temperature_sensor)
+    set relay1 = 0
+    wait 2000ms
+    read water_sensor
+    read temperature_sensor
+    halt
+}"
+RND_0503,long_sequence,1,1,1,1,1,1,5006500350011e02460651f40347031e00460651e807470152,,,,"task RND_0503 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 500ms
+  read humidity_sensor
+  set relay2 = 0
+  wait 1000ms
+  read water_sensor
+  halt
+}"
+RND_0504,pulse_read,1,1,1,1,1,1,500550011e02460551641e004605470152,,,,"task RND_0504 {
+    require cap(relay1)
+    require cap(water_sensor)
+    set relay1 = 1
+    wait 100ms
+    set relay1 = 0
+    read water_sensor
+    halt
+}"
+RND_0505,single_set,1,1,1,1,1,1,50061e02460652,,,,"task RND_0505 {
+    require cap(relay2)
+    set relay2 = 1
+    halt
+}"
+RND_0506,single_read,1,1,1,1,1,1,5003470352,,,,"task RND_0506 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+RND_0507,set_wait_halt,1,1,1,1,1,1,50051e02460551c80152,,,,"task RND_0507 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 200ms
+    halt
+}"
+RND_0508,wait_read,1,1,1,1,1,1,500151ac02470152,,,,"task RND_0508 {
+    require cap(water_sensor)
+    wait 300ms
+    read water_sensor
+    halt
+}"
+RND_0509,set_wait_read,1,1,1,1,1,1,500650021e00460651d00f470252,,,,"task RND_0509 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 0
+    wait 2000ms
+    read temperature_sensor
+    halt
+}"
+RND_0510,multi_read,1,1,1,1,1,1,50055001500347054701470352,,,,"task RND_0510 {
+    require cap(relay1)
+    require cap(water_sensor)
+    require cap(humidity_sensor)
+    read relay1
+    read water_sensor
+    read humidity_sensor
+    halt
+}"
+RND_0511,pulse,1,1,1,1,1,1,50061e02460651c8011e00460652,,,,"task RND_0511 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 200ms
+  set relay2 = 0
+  halt
+}"
+RND_0512,set_read_multi,1,1,1,1,1,1,500650031e004606470352,,,,"task RND_0512 {
+require cap(relay2)
+require cap(humidity_sensor)
+set relay2 = 0
+read humidity_sensor
+halt
+}"
+RND_0513,multi_set,1,1,1,1,1,1,500650051e0246061e00460552,,,,"task RND_0513 {
+  require cap(relay2)
+  require cap(relay1)
+  set relay2 = 1
+  set relay1 = 0
+  halt
+}"
+RND_0514,set_wait_multi_read,1,1,1,1,1,1,5005500250031e02460551644702470352,,,,"task RND_0514 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    require cap(humidity_sensor)
+    set relay1 = 1
+    wait 100ms
+    read temperature_sensor
+    read humidity_sensor
+    halt
+}"
+RND_0515,long_sequence,1,1,1,1,1,1,5005500250031e02460551e80747021e00460551c801470352,,,,"task RND_0515 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 1000ms
+  read temperature_sensor
+  set relay1 = 0
+  wait 200ms
+  read humidity_sensor
+  halt
+}"
+RND_0516,pulse_read,1,1,1,1,1,1,500550031e02460551e8071e004605470352,,,,"task RND_0516 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    set relay1 = 1
+    wait 1000ms
+    set relay1 = 0
+    read humidity_sensor
+    halt
+}"
+RND_0517,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0517 {
+    require cap(relay1)
+    set relay1 = 1
+    halt
+}"
+RND_0518,single_read,1,1,1,1,1,1,5003470352,,,,"task RND_0518 {
+  require cap(humidity_sensor)
+  read humidity_sensor
+  halt
+}"
+RND_0519,set_wait_halt,1,1,1,1,1,1,50061e00460651c80152,,,,"task RND_0519 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 200ms
+  halt
+}"
+RND_0520,wait_read,1,1,1,1,1,1,50015164470152,,,,"task RND_0520 {
+  require cap(water_sensor)
+  wait 100ms
+  read water_sensor
+  halt
+}"
+RND_0521,set_wait_read,1,1,1,1,1,1,500550021e0246055164470252,,,,"task RND_0521 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 100ms
+    read temperature_sensor
+    halt
+}"
+RND_0522,multi_read,1,1,1,1,1,1,500650034706470352,,,,"task RND_0522 {
+require cap(relay2)
+require cap(humidity_sensor)
+read relay2
+read humidity_sensor
+halt
+}"
+RND_0523,pulse,1,1,1,1,1,1,50051e02460551c8011e00460552,,,,"task RND_0523 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  set relay1 = 0
+  halt
+}"
+RND_0524,set_read_multi,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task RND_0524 {
+    require cap(relay1);
+    require cap(humidity_sensor);
+    set relay1 = 0;
+    read humidity_sensor;
+    halt;
+}"
+RND_0525,multi_set,1,1,1,1,1,1,500650051e0246061e00460552,,,,"task RND_0525 {
+  require cap(relay2)
+  require cap(relay1)
+  set relay2 = 1
+  set relay1 = 0
+  halt
+}"
+RND_0526,set_wait_multi_read,1,1,1,1,1,1,5006500150031e00460651d00f4701470352,,,,"task RND_0526 {
+  require cap(relay2)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay2 = 0
+  wait 2000ms
+  read water_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0527,long_sequence,1,1,1,1,1,1,5005500350021e024605513247031e00460551ac02470252,,,,"task RND_0527 {
+    require cap(relay1)
+    require cap(humidity_sensor)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 50ms
+    read humidity_sensor
+    set relay1 = 0
+    wait 300ms
+    read temperature_sensor
+    halt
+}"
+RND_0528,pulse_read,1,1,1,1,1,1,500650031e02460651e8071e004606470352,,,,"task RND_0528 {
+require cap(relay2)
+require cap(humidity_sensor)
+set relay2 = 1
+wait 1000ms
+set relay2 = 0
+read humidity_sensor
+halt
+}"
+RND_0529,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0529 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0530,single_read,1,1,1,1,1,1,5003470352,,,,"task RND_0530 {
+    require cap(humidity_sensor)
+    read humidity_sensor
+    halt
+}"
+RND_0531,set_wait_halt,1,1,1,1,1,1,50061e024606516452,,,,"task RND_0531 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  halt
+}"
+RND_0532,wait_read,1,1,1,1,1,1,50035164470352,,,,"task RND_0532 {
+  require cap(humidity_sensor)
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+RND_0533,set_wait_read,1,1,1,1,1,1,500650021e00460651c801470252,,,,"task RND_0533 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  set relay2 = 0
+  wait 200ms
+  read temperature_sensor
+  halt
+}"
+RND_0534,multi_read,1,1,1,1,1,1,50025001500647024701470652,,,,"task RND_0534 {
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    require cap(relay2)
+    read temperature_sensor
+    read water_sensor
+    read relay2
+    halt
+}"
+RND_0535,pulse,1,1,1,1,1,1,50061e02460651641e00460652,,,,"task RND_0535 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 100ms
+  set relay2 = 0
+  halt
+}"
+RND_0536,set_read_multi,1,1,1,1,1,1,500550031e004605470352,,,,"task RND_0536 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0537,multi_set,1,1,1,1,1,1,500650051e0246061e00460552,,,,"task RND_0537 {
+  require cap(relay2)
+  require cap(relay1)
+  set relay2 = 1
+  set relay1 = 0
+  halt
+}"
+RND_0538,set_wait_multi_read,1,1,1,1,1,1,5006500250011e00460651c8014702470152,,,,"task RND_0538 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  require cap(water_sensor)
+  set relay2 = 0
+  wait 200ms
+  read temperature_sensor
+  read water_sensor
+  halt
+}"
+RND_0539,long_sequence,1,1,1,1,1,1,5005500150021e02460551ac0247011e00460551f403470252,,,,"task RND_0539 {
+    require cap(relay1)
+    require cap(water_sensor)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 300ms
+    read water_sensor
+    set relay1 = 0
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+RND_0540,pulse_read,1,1,1,1,1,1,500550021e02460551321e004605470252,,,,"task RND_0540 {
+    require cap(relay1)
+    require cap(temperature_sensor)
+    set relay1 = 1
+    wait 50ms
+    set relay1 = 0
+    read temperature_sensor
+    halt
+}"
+RND_0541,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0541 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0542,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0542 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+RND_0543,set_wait_halt,1,1,1,1,1,1,50051e024605513252,,,,"task RND_0543 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  halt
+}"
+RND_0544,wait_read,1,1,1,1,1,1,500251f403470252,,,,"task RND_0544 {
+    require cap(temperature_sensor)
+    wait 500ms
+    read temperature_sensor
+    halt
+}"
+RND_0545,set_wait_read,1,1,1,1,1,1,500650011e0246065132470152,,,,"task RND_0545 {
+    require cap(relay2)
+    require cap(water_sensor)
+    set relay2 = 1
+    wait 50ms
+    read water_sensor
+    halt
+}"
+RND_0546,multi_read,1,1,1,1,1,1,50065005500347064705470352,,,,"task RND_0546 {
+    require cap(relay2)
+    require cap(relay1)
+    require cap(humidity_sensor)
+    read relay2
+    read relay1
+    read humidity_sensor
+    halt
+}"
+RND_0547,pulse,1,1,1,1,1,1,50051e02460551d00f1e00460552,,,,"task RND_0547 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 2000ms
+  set relay1 = 0
+  halt
+}"
+RND_0548,set_read_multi,1,1,1,1,1,1,500650011e004606470152,,,,"task RND_0548 {
+    require cap(relay2)
+    require cap(water_sensor)
+    set relay2 = 0
+    read water_sensor
+    halt
+}"
+RND_0549,multi_set,1,1,1,1,1,1,500550061e0046051e00460652,,,,"task RND_0549 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 0
+  set relay2 = 0
+  halt
+}"
+RND_0550,set_wait_multi_read,1,1,1,1,1,1,5005500350021e02460551f4034703470252,,,,"task RND_0550 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  wait 500ms
+  read humidity_sensor
+  read temperature_sensor
+  halt
+}"
+RND_0551,long_sequence,1,1,1,1,1,1,5005500150031e02460551c80147011e0046055164470352,,,,"task RND_0551 {
+  require cap(relay1)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 200ms
+  read water_sensor
+  set relay1 = 0
+  wait 100ms
+  read humidity_sensor
+  halt
+}"
+RND_0552,pulse_read,1,1,1,1,1,1,500550031e02460551e8071e004605470352,,,,"task RND_0552 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 1000ms
+  set relay1 = 0
+  read humidity_sensor
+  halt
+}"
+RND_0553,single_set,1,1,1,1,1,1,50061e00460652,,,,"task RND_0553 {
+    require cap(relay2)
+    set relay2 = 0
+    halt
+}"
+RND_0554,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0554 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+RND_0555,set_wait_halt,1,1,1,1,1,1,50051e024605513252,,,,"task RND_0555 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 50ms
+  halt
+}"
+RND_0556,wait_read,1,1,1,1,1,1,50055164470552,,,,"task RND_0556 {
+  require cap(relay1)
+  wait 100ms
+  read relay1
+  halt
+}"
+RND_0557,set_wait_read,1,1,1,1,1,1,500650031e0246065132470352,,,,"task RND_0557 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  set relay2 = 1
+  wait 50ms
+  read humidity_sensor
+  halt
+}"
+RND_0558,multi_read,1,1,1,1,1,1,500250054702470552,,,,"task RND_0558 {
+    require cap(temperature_sensor)
+    require cap(relay1)
+    read temperature_sensor
+    read relay1
+    halt
+}"
+RND_0559,pulse,1,1,1,1,1,1,50051e02460551e8071e00460552,,,,"task RND_0559 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 1000ms
+    set relay1 = 0
+    halt
+}"
+RND_0560,set_read_multi,1,1,1,1,1,1,500550021e024605470252,,,,"task RND_0560 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  read temperature_sensor
+  halt
+}"
+RND_0561,multi_set,1,1,1,1,1,1,500550061e0246051e02460652,,,,"task RND_0561 {
+    require cap(relay1)
+    require cap(relay2)
+    set relay1 = 1
+    set relay2 = 1
+    halt
+}"
+RND_0562,set_wait_multi_read,1,1,1,1,1,1,5006500150031e02460651324701470352,,,,"task RND_0562 {
+    require cap(relay2)
+    require cap(water_sensor)
+    require cap(humidity_sensor)
+    set relay2 = 1
+    wait 50ms
+    read water_sensor
+    read humidity_sensor
+    halt
+}"
+RND_0563,long_sequence,1,1,1,1,1,1,5005500250031e024605513247021e00460551e807470352,,,,"task RND_0563 {
+  require cap(relay1)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 1
+  wait 50ms
+  read temperature_sensor
+  set relay1 = 0
+  wait 1000ms
+  read humidity_sensor
+  halt
+}"
+RND_0564,pulse_read,1,1,1,1,1,1,500650021e02460651c8011e004606470252,,,,"task RND_0564 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  set relay2 = 1
+  wait 200ms
+  set relay2 = 0
+  read temperature_sensor
+  halt
+}"
+RND_0565,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0565 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0566,single_read,1,1,1,1,1,1,5005470552,,,,"task RND_0566 {
+  require cap(relay1)
+  read relay1
+  halt
+}"
+RND_0567,set_wait_halt,1,1,1,1,1,1,50061e00460651e80752,,,,"task RND_0567 {
+  require cap(relay2)
+  set relay2 = 0
+  wait 1000ms
+  halt
+}"
+RND_0568,wait_read,1,1,1,1,1,1,500551d00f470552,,,,"task RND_0568 {
+  require cap(relay1)
+  wait 2000ms
+  read relay1
+  halt
+}"
+RND_0569,set_wait_read,1,1,1,1,1,1,500650011e00460651c801470152,,,,"task RND_0569 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  wait 200ms
+  read water_sensor
+  halt
+}"
+RND_0570,multi_read,1,0,0,0,0,0,,parse,MIR_PARSE_ERROR,Rewrite the program using the M-IR grammar exactly.,"task RND_0570 {
+  require cap(relay2);
+  require cap(temperature_sensor);
+  require cap(water_sensor);
+  read relay2;
+  read temperature_sensor;
+  read water_sensor;
+  halt
+}"
+RND_0571,pulse,1,1,1,1,1,1,50061e02460651e8071e00460652,,,,"task RND_0571 {
+    require cap(relay2)
+    set relay2 = 1
+    wait 1000ms
+    set relay2 = 0
+    halt
+}"
+RND_0572,set_read_multi,1,1,1,1,1,1,500550011e004605470152,,,,"task RND_0572 {
+  require cap(relay1)
+  require cap(water_sensor)
+  set relay1 = 0
+  read water_sensor
+  halt
+}"
+RND_0573,multi_set,1,1,1,1,1,1,500650051e0046061e00460552,,,,"task RND_0573 {
+require cap(relay2)
+require cap(relay1)
+set relay2 = 0
+set relay1 = 0
+halt
+}"
+RND_0574,set_wait_multi_read,1,1,1,1,1,1,5005500150031e00460551c8014701470352,,,,"task RND_0574 {
+  require cap(relay1)
+  require cap(water_sensor)
+  require cap(humidity_sensor)
+  set relay1 = 0
+  wait 200ms
+  read water_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0575,long_sequence,1,1,1,1,1,1,5006500350021e02460651d00f47031e00460651f403470252,,,,"task RND_0575 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  require cap(temperature_sensor)
+  set relay2 = 1
+  wait 2000ms
+  read humidity_sensor
+  set relay2 = 0
+  wait 500ms
+  read temperature_sensor
+  halt
+}"
+RND_0576,pulse_read,1,1,1,1,1,1,500650021e02460651321e004606470252,,,,"task RND_0576 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  set relay2 = 1
+  wait 50ms
+  set relay2 = 0
+  read temperature_sensor
+  halt
+}"
+RND_0577,single_set,1,1,1,1,1,1,50051e02460552,,,,"task RND_0577 {
+  require cap(relay1)
+  set relay1 = 1
+  halt
+}"
+RND_0578,single_read,1,1,1,1,1,1,5001470152,,,,"task RND_0578 {
+  require cap(water_sensor)
+  read water_sensor
+  halt
+}"
+RND_0579,set_wait_halt,1,1,1,1,1,1,50051e02460551c80152,,,,"task RND_0579 {
+  require cap(relay1)
+  set relay1 = 1
+  wait 200ms
+  halt
+}"
+RND_0580,wait_read,1,1,1,1,1,1,500551d00f470552,,,,"task RND_0580 {
+  require cap(relay1)
+  wait 2000ms
+  read relay1
+  halt
+}"
+RND_0581,set_wait_read,1,1,1,1,1,1,500650021e02460651e807470252,,,,"task RND_0581 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 1000ms
+    read temperature_sensor
+    halt
+}"
+RND_0582,multi_read,1,1,1,1,1,1,50025001500547024701470552,,,,"task RND_0582 {
+    require cap(temperature_sensor)
+    require cap(water_sensor)
+    require cap(relay1)
+    read temperature_sensor
+    read water_sensor
+    read relay1
+    halt
+}"
+RND_0583,pulse,1,1,1,1,1,1,50061e02460651e8071e00460652,,,,"task RND_0583 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 1000ms
+  set relay2 = 0
+  halt
+}"
+RND_0584,set_read_multi,1,1,1,1,1,1,500650021e024606470252,,,,"task RND_0584 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    read temperature_sensor
+    halt
+}"
+RND_0585,multi_set,1,1,1,1,1,1,500550061e0246051e02460652,,,,"task RND_0585 {
+    require cap(relay1)
+    require cap(relay2)
+    set relay1 = 1
+    set relay2 = 1
+    halt
+}"
+RND_0586,set_wait_multi_read,1,1,1,1,1,1,5006500350011e02460651c8014703470152,,,,"task RND_0586 {
+  require cap(relay2)
+  require cap(humidity_sensor)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 200ms
+  read humidity_sensor
+  read water_sensor
+  halt
+}"
+RND_0587,long_sequence,1,1,1,1,1,1,5005500150021e02460551e80747011e00460551c801470252,,,,"task RND_0587 {
+  require cap(relay1)
+  require cap(water_sensor)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  wait 1000ms
+  read water_sensor
+  set relay1 = 0
+  wait 200ms
+  read temperature_sensor
+  halt
+}"
+RND_0588,pulse_read,1,1,1,1,1,1,500650021e02460651f4031e004606470252,,,,"task RND_0588 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 1
+    wait 500ms
+    set relay2 = 0
+    read temperature_sensor
+    halt
+}"
+RND_0589,single_set,1,1,1,1,1,1,50061e00460652,,,,"task RND_0589 {
+require cap(relay2)
+set relay2 = 0
+halt
+}"
+RND_0590,single_read,1,1,1,1,1,1,5002470252,,,,"task RND_0590 {
+  require cap(temperature_sensor)
+  read temperature_sensor
+  halt
+}"
+RND_0591,set_wait_halt,1,1,1,1,1,1,50061e024606513252,,,,"task RND_0591 {
+  require cap(relay2)
+  set relay2 = 1
+  wait 50ms
+  halt
+}"
+RND_0592,wait_read,1,1,1,1,1,1,500151f403470152,,,,"task RND_0592 {
+    require cap(water_sensor)
+    wait 500ms
+    read water_sensor
+    halt
+}"
+RND_0593,set_wait_read,1,1,1,1,1,1,500650021e0046065132470252,,,,"task RND_0593 {
+    require cap(relay2)
+    require cap(temperature_sensor)
+    set relay2 = 0
+    wait 50ms
+    read temperature_sensor
+    halt
+}"
+RND_0594,multi_read,1,1,1,1,1,1,50015006500547014706470552,,,,"task RND_0594 {
+  require cap(water_sensor)
+  require cap(relay2)
+  require cap(relay1)
+  read water_sensor
+  read relay2
+  read relay1
+  halt
+}"
+RND_0595,pulse,1,1,1,1,1,1,50051e02460551d00f1e00460552,,,,"task RND_0595 {
+    require cap(relay1)
+    set relay1 = 1
+    wait 2000ms
+    set relay1 = 0
+    halt
+}"
+RND_0596,set_read_multi,1,1,1,1,1,1,500650011e004606470152,,,,"task RND_0596 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 0
+  read water_sensor
+  halt
+}"
+RND_0597,multi_set,1,1,1,1,1,1,500550061e0246051e00460652,,,,"task RND_0597 {
+  require cap(relay1)
+  require cap(relay2)
+  set relay1 = 1
+  set relay2 = 0
+  halt
+}"
+RND_0598,set_wait_multi_read,1,1,1,1,1,1,5006500250031e00460651f4034702470352,,,,"task RND_0598 {
+  require cap(relay2)
+  require cap(temperature_sensor)
+  require cap(humidity_sensor)
+  set relay2 = 0
+  wait 500ms
+  read temperature_sensor
+  read humidity_sensor
+  halt
+}"
+RND_0599,long_sequence,1,1,1,1,1,1,5005500350021e02460551c80147031e00460551d00f470252,,,,"task RND_0599 {
+  require cap(relay1)
+  require cap(humidity_sensor)
+  require cap(temperature_sensor)
+  set relay1 = 1
+  wait 200ms
+  read humidity_sensor
+  set relay1 = 0
+  wait 2000ms
+  read temperature_sensor
+  halt
+}"
+RND_0600,pulse_read,1,1,1,1,1,1,500650011e02460651f4031e004606470152,,,,"task RND_0600 {
+  require cap(relay2)
+  require cap(water_sensor)
+  set relay2 = 1
+  wait 500ms
+  set relay2 = 0
+  read water_sensor
+  halt
+}"

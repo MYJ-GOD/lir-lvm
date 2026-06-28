@@ -1,0 +1,16 @@
+task,proto,bytes,rtt_ms_mean,rtt_ms_std,payload_hex,payload_str
+relay1_on,M,7,,,50051e02460552,
+relay1_on,JSON,29,,,,"{""dev"":5,""op"":""set"",""val"":1}"
+relay1_on,MSG,18,,,83a364657605a26f70a3736574a376616c01,
+relay1_off,M,7,,,50051e00460552,
+relay1_off,JSON,29,,,,"{""dev"":5,""op"":""set"",""val"":0}"
+relay1_off,MSG,18,,,83a364657605a26f70a3736574a376616c00,
+water_read,M,5,,,5001470152,
+water_read,JSON,21,,,,"{""dev"":1,""op"":""get""}"
+water_read,MSG,13,,,82a364657601a26f70a3676574,
+temp_read,M,5,,,5002470252,
+temp_read,JSON,21,,,,"{""dev"":2,""op"":""get""}"
+temp_read,MSG,13,,,82a364657602a26f70a3676574,
+combo_on_wait_read,M,14,,,500550011e02460551f403470152,
+combo_on_wait_read,JSON,75,,,,"[{""dev"":5,""op"":""set"",""val"":1},{""op"":""wait"",""ms"":500},{""dev"":1,""op"":""get""}]"
+combo_on_wait_read,MSG,47,,,9383a364657605a26f70a3736574a376616c0182a26f70a477616974a26d73d101f482a364657601a26f70a3676574,

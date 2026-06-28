@@ -1,0 +1,2290 @@
+InterStellar 2.0: Fine-grained stream–guided HW/SW co-design for 
+multi-channel DRAM performance steering
+Abdelrhman Mohamed Abotaleba
+,∗, Maziar Goudarzib
+Reza Azimib
+, Mohamed Hassana,c
+a Electrical and Computer Engineering, McMaster University, Hamilton, Ontario, Canada
+b Huawei Technologies, Canada Research Center, Markham, Ontario, Canada
+c American University of Sharjah, Sharjah, United Arab Emirates
+, Tomasz Czajkowskib
+,∗
+, 
+A R T I C L E  I N F O
+Keywords:
+Multiple channels
+Memory controller
+DRAM
+Intelligent batching
+Streams
+A B S T R A C T
+The gap between processor speed and memory latency limits system scalability, especially in data-intensive 
+and artificial intelligence workloads where memory-level parallelism and bandwidth efficiency are critical. 
+Prior work (InterStellar) showed that hardware/software (HW/SW) co-design can expose program-level access 
+streams to the memory system, enabling more informed memory-controller (MC) scheduling. This work extends 
+that approach to high-bandwidth, multi-channel platforms. We present InterStellar 2.0, a scalable HW/SW 
+co-design that: (1) supports multi-channel dynamic random-access memory (DRAM) by partitioning stream 
+batches across channels, allowing each channel to operate independently without cross-channel coordination; 
+and (2) introduces fine-grained stream descriptors so software can distinguish distinct access patterns, even 
+within the same data structure. These capabilities improve DRAM locality management and allow the MC 
+to issue future requests efficiently. We evaluate InterStellar 2.0 on an 8-core RISC-V platform across DRAM 
+configurations from 1 to 32 channels. At 32 channels, InterStellar 2.0 improves performance by up to 2.92×
+and increases memory bandwidth by up to 2.83× over a commercial off-the-shelf (COTS) controller. Fine
+grained stream tracking alone improves performance by up to 1.35×. Overall, InterStellar 2.0 shows that 
+stream-aware HW/SW co-design is practical, compatible, and scalable for multi-channel memory systems 
+without ISA changes or inter-channel communication.
+1. Introduction
+The widening gap between processing capabilities and main-memory 
+service time remains a fundamental limiter for modern multicore and 
+manycore systems [1–4]. Even with wide out-of-order cores, deep 
+memory-level parallelism, and aggressive hardware prefetching [5
+10], the latency of accessing off-chip dynamic random-access memory 
+(DRAM) remains on the order of hundreds of cycles and has improved 
+only modestly across recent DRAM generations [9,11]. This bottle
+neck is particularly evident in memory-intensive workloads such as 
+scientific simulation, sparse/tensor kernels, graph and data analytics, 
+and modern artificial intelligence (AI) inference and training pipelines. 
+These workloads may be executed on diverse compute substrates, from 
+conventional CPU cores to GPUs, FPGA fabrics, and domain-specific 
+accelerators, but they share a common bottleneck: their performance 
+is ultimately limited by how efficiently off-chip DRAM can service the 
+resulting memory-request stream. InterStellar 2.0 targets this shared 
+∗ Corresponding authors.
+main-memory bottleneck at the LLC-miss/memory-controller interface, 
+making it applicable to any DRAM requestor that generates memory 
+traffic to the same multi-channel subsystem. In these workloads, overall 
+throughput is often constrained by how efficiently the memory system 
+delivers data rather than by the available arithmetic capability. Recent 
+industry reports further highlight that large-scale AI and streaming 
+analytics deployments are increasingly provisioned based on memory 
+bandwidth, and that next-generation double data rate 5 (DDR5)–class 
+systems and multi-channel memory subsystems are primarily adopted 
+to increase delivered bandwidth per socket [12–14]. While we ref
+erence DDR5-class features (e.g., subchannelization) to motivate rel
+evance to emerging high-bandwidth platforms, our evaluation uses 
+DDR4 timing as a widely deployed and well-established baseline. 
+Commodity DRAM subsystems are evolving toward higher concur
+rency rather than fundamentally lower per-access latency. Specifically, 
+DDR5-class dual in-line memory modules (DIMMs) provide multi
+ple semi-independent subchannels per module, each with its own 
+E-mail addresses: abotalea@mcmaster.ca (A.M. Abotaleb), maziar.goudarzi@huawei.com (M. Goudarzi), tomasz.czajkowski@huawei.com (T. Czajkowski), 
+reza.azimi1@huawei.com (R. Azimi), mohamed.hassan@mcmaster.ca (M. Hassan).
+https://doi.org/10.1016/j.sysarc.2026.103832
+Received 29 November 2025; Received in revised form 3 March 2026; Accepted 1 May 2026
+Available online 12 May 2026 
+1383-7621/© 2026 The Authors. Published by Elsevier B.V. This is an open access article under the CC BY-NC license ( http://creativecommons.org/licenses/by- 
+nc/4.0/ ). 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+command/address interface [10,15]. Server-class platforms and high 
+performance systems-on-chip (SoCs) further integrate multiple external 
+DRAM channels and interleave physical addresses across channels, 
+often at cache-line granularity, so that consecutive memory lines are 
+striped across channels [9,16]. This organization increases aggregate 
+delivered bandwidth by allowing multiple memory controllers (MCs) to 
+operate in parallel; however, it also fragments what software perceives 
+as a single logical access stream across channels, so no single controller 
+observes the entire stream.
+Moreover, workloads in AI and scientific computing exhibit struc
+tured but nontrivial access behavior, such as a simple vector accessed 
+within a loop [17]. This is an informal definition of the streaming 
+access. Recent work exploits known streaming access to enrich the 
+memory representation in modern systems [18–24]. However, stream
+ing access patterns appear not only in simple vector-style loops but 
+also in more complex kernels such as multidimensional stencils, tensor 
+sweeps, and structured-grid updates common in scientific simulation 
+and AI/data analytics pipelines [25–27]. These kernels often read or 
+update multiple logically related regions of an array within the same 
+primitive structure (e.g., several neighboring rows or planes). As sys
+tems scale to more cores and higher bandwidth, preserving efficiency 
+for these structured yet intertwined memory streams becomes increas
+ingly important. DRAM serves data at row granularity: opening a row 
+places it in a small row buffer, making subsequent accesses to that row 
+fast row hits, while switching rows needs to close the opened rows first, 
+which adds latency [9,10]. Conventional memory controllers attempt 
+to manage throughput and latency using hardware-only techniques. A 
+typical controller employs the first-ready, first-come, first-served (FR
+FCFS) policy to prioritize requests that hit in the open row and relies on 
+adaptive page policies (open-page vs. close-page) that speculate, based 
+on recent history, when to keep a row open or to close it. In parallel, 
+hardware prefetchers attempt to overlap latency by injecting predicted 
+future requests into the cache hierarchy and memory system. However, 
+these mechanisms operate without explicit knowledge of which loop, 
+data structure, or kernel instance generated each access, and they must 
+react to whatever requests arrive at the controller under cache-queue 
+pressure from miss status holding registers (MSHRs), cache pollution, 
+and queuing contention [28–36]. As a result, commodity controllers 
+cannot (i) deliberately construct long runs of predictable, row-friendly 
+accesses for a given memory stream once a row is opened, or (ii) 
+make row-management decisions using advance knowledge of how that 
+stream will evolve in the near future.
+InterStellar [37] addressed these limitations by introducing a hard
+ware/software (HW/SW) co-design that exposes stream-level intent from 
+software to hardware without requiring instruction set architecture 
+(ISA) or operating system (OS) changes. In InterStellar, the compiler 
+identifies regular access patterns and emits compact per-stream de
+scriptors that capture properties such as base address, stride, loop 
+bounds, and linkage to enclosing loops. These descriptors are con
+veyed to hardware using existing architectural mechanisms and are 
+consumed by a central engine called the Nucleus, which associates last
+level cache (LLC) misses with their originating streams. The memory 
+controller then applies two coordinated policies using this informa
+tion. First, the intelligent page policy (iPP) manages DRAM row-buffer 
+residency per stream, allowing the controller to make explicit row
+management decisions. Second, the deterministic batching mechanism 
+(iBatch) proactively issues bursts of known near-term accesses for that 
+same stream and stages the returned data locally at the controller. 
+This enables future core requests to be satisfied without repeatedly 
+reopening the same DRAM row and without relying on speculative 
+or potentially disruptive cache prefetch traffic. Evaluated on an 8
+core system, InterStellar improved end-to-end performance by up to 
+2.72× (PolyBench [38]), 1.24× Rodinia [39], 1.84× HPCG [40], and 
+1.47× (Parboil [41]) over a commercial off-the-shelf (COTS) DDR 
+controller, while requiring no ISA extensions, and no changes to the 
+OS/application programming model.
+While InterStellar demonstrated that lightweight HW/SW cooper
+ation can substantially improve main-memory efficiency, two scaling 
+questions naturally arise as platforms and workloads evolve:
+(1) Many-channel memory systems. Modern high-bandwidth systems 
+increasingly use multiple DRAM channels with cache-line interleaving 
+across channels [10,15,16]. In such systems, what software views as 
+a single memory stream is physically serviced by multiple controllers 
+operating in parallel. To extend the benefits of InterStellar to these 
+systems, a stream-aware controller must scale across channels without 
+introducing heavy cross-channel communication or global bottlenecks, 
+while allowing per-channel controllers to make local decisions that still 
+reflect software intent.
+(2) Richer stream structures within complex kernels. In many scien
+tific and AI workloads (e.g., multi-dimensional stencils and structured
+grid updates [25–27]), what appears as one logical stream at the 
+source level may actually consist of multiple distinct access patterns 
+that progress concurrently within the same loop body. Treating these 
+collectively as a single coarse-grained stream can blur their behavior 
+inside the controller. A more expressive interface that enables software 
+to describe these access patterns separately allows hardware to manage 
+them with finer granularity.
+To address these questions, this work presents InterStellar 2.0, 
+which evolves InterStellar along these two axes while preserving its 
+original design goals. InterStellar 2.0 retains InterStellar’s foundation: 
+software communicates per-stream intent through compact descriptors 
+with no ISA changes or OS involvement; hardware associates memory 
+requests with those descriptors and uses that information to make 
+informed decisions at the memory controller. InterStellar 2.0 then 
+extends this interface and the controller mechanisms to (i) operate ef
+ficiently in realistic multi-channel DRAM systems, where bandwidth is 
+scaled by striping batched requests across many independent channels; 
+and (ii) represent fine-grained structured access patterns as separately 
+managed sub-streams for better performance.
+At a high level, our contributions are as follows:
+• Revisiting software-informed memory control. We detail the 
+InterStellar HW/SW interface, which allows the compiler to de
+scribe memory streams to hardware without ISA changes, and re
+view how the Nucleus and memory controller cooperate via iPP 
+and iBatch to reduce row-buffer thrashing and improve effective 
+bandwidth in single-channel systems.
+• InterStellar 2.0 for high-bandwidth systems. We extend this 
+architecture to platforms with many DRAM channels (and DDR5
+style subchannels), enabling each channel to apply iPP and iBatch 
+using software-supplied stream information while avoiding global 
+coupling between channels. This supports scalable delivered
+bandwidth with channel count in realistic many-channel config
+urations.
+• Finer-grained expressiveness. We generalize the notion of a 
+‘‘stream’’ so that software can optionally describe multiple related 
+access patterns within the same primitive data structure (for 
+example, multiple structured slices of an array in stencil-like ker
+nels) as distinct sub-streams. InterStellar 2.0 uses this additional 
+information to maintain per-sub-stream locality state, improving 
+controller decisions in complex, bandwidth-bound loops.
+• Extended Experimental analysis. We evaluate InterStellar 2.0 
+on an 8-core RISC-V system with DDR-class timing, sweeping 
+DRAM configurations from 1 to 32 channels. Relative to a
+commercial-style baseline controller, InterStellar 2.0 improves 
+end-to-end performance by up to 2.92× and increases sustained 
+delivered bandwidth by up to 2.83×. We also show that enabling 
+only the finer-grained stream description — without changing 
+channel count — improves controller decisions in structured loop 
+nests, yielding up to 1.35× performance gain.
+2 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+The rest of this paper is organized as follows. Section 2 reviews 
+DRAM organization, multi-channel address interleaving, and stream 
+classes. Section 3 motivates the need for per-stream control, multi
+channel scalability, and finer-grained stream representation. Section 4 
+describes the InterStellar 2.0 architecture, including the HW/SW in
+terface, Nucleus, and controller extensions. Section 5 details the in
+telligent multi-channel memory controller policies. Section 8 outlines 
+our methodology, and Section 9 presents the evaluation. Related work, 
+system considerations, and associated costs of the system are discussed 
+in Sections Section 10, 6, and 7 respectively.
+2. Background
+2.1. DRAM
+2.1.1. Organization and access behavior
+DRAM is organized hierarchically into channels, ranks, bank groups, 
+and banks. Each bank is a two-dimensional array of cells arranged as 
+rows and columns. Accessing a row requires issuing an Activate (ACT)
+command, which copies the selected row into a set of sense amplifiers 
+that form the row buffer or DRAM page. Subsequent reads or writes to 
+columns within the same open row are served directly from this buffer 
+using Column Access Strobe (CAS) commands, completing with column 
+latency 𝑡𝐶𝐿
+ according to JEDEC timing [9]. These are row hits and incur 
+the lowest latency.
+If the next access targets a different row in the same bank, the 
+controller must (i) close the existing row with a Precharge (PRE) com
+mand, incurring 𝑡𝑅𝑃
+ (row precharge delay), (ii) activate the new row, 
+incurring 𝑡𝑅𝐶𝐷
+ (row to column delay), and (iii) issue a CAS. This row 
+conflict path has approximately 𝑡𝑅𝑃 +𝑡𝑅𝐶𝐷 +𝑡𝐶𝐿
+ latency and dominates 
+worst-case service time [9]. When a bank is idle, the first access is a
+row miss, requiring only ACT and CAS and incurring 𝑡𝑅𝐶𝐷+𝑡𝐶𝐿
+ latency 
+cycles.
+Command issue is further constrained by JEDEC timing parameters: 
+ 
+ 𝑅𝑅𝐷
+ (minimum interval between ACT commands to different banks), 
+ 
+ 𝐹𝐴𝑊
+ (no more than four ACTs within a rolling window), 𝑡𝑅𝐴𝑆
+ (mini
+mum time a row must remain active before PRE), and 𝑡𝑊𝑇𝑅
+ (minimum 
+delay from a WR to a subsequent RD due to bus turnaround) [9]. 
+DDR4 introduces bank groups, yielding shorter inter-group and longer 
+intra-group delays; DDR5 increases the number of banks and bank 
+groups and tightens several activate/column timings to reach higher 
+data rates [10]. Consequently, effective inter-request latency depends 
+on whether consecutive requests are row hits or row conflicts and on 
+whether they target banks in the same or in different bank groups.
+2.1.2. Page policies
+The memory controller determines when to keep a row open and 
+when to precharge it, directly affecting the average latency:
+• Open-page policy. Leaves a row open after service, exploiting lo
+cality but performing poorly when streams switch rows frequently 
+due to repeated 𝑡𝑅𝑃 +𝑡𝑅𝐶𝐷
+ penalties.
+• Closed-page policy. Precharges immediately after each access, 
+bounding worst-case latency but eliminating row reuse.
+• Adaptive (COTS) policy. Implements a per-bank heuristic that 
+predicts whether to leave a row open or close it based on re
+cent hit/miss patterns [42–47]. These reactive, hardware-only 
+schemes cannot distinguish which loop or kernel issued each 
+access and thus ignore program-level intent.
+Quality of Service (QoS) vs. access intent. Many controllers also 
+support QoS/priority signals (e.g., requestor IDs or criticality classes) 
+to arbitrate among requesters; however, such signals do not encode
+program access intent or near-future row locality (i.e., which stream 
+is likely to generate row hits next). InterStellar 2.0 is orthogonal: it 
+supplies stream/sub-stream identity and predicted locality to steer page 
+policy and deterministic batching, and can be composed with QoS
+aware arbitration, which allows the controller to manage row buffers 
+per stream or sub-stream rather than per bank. This design reduces 
+avoidable row conflicts and preserves row hits, improving both latency 
+and bandwidth efficiency.
+2.2. Multi-channel DRAM systems
+High-performance systems employ multiple independent DRAM 
+channels to increase aggregate bandwidth. Each channel operates under 
+its own controller and timing constraints, allowing parallel issue of
+ACT, PRE, and CAS commands. DDR4 scales bandwidth by adding 
+more channels or ranks per channel, while DDR5 enhances throughput 
+through higher data rates, more banks and bank groups, and dual 
+subchannels per DIMM [9,10]. A DRAM channel is typically an inde
+pendently scheduled command/address and data interface managed 
+by a controller. DDR5 subchannels partition a DIMM channel into two 
+(logically) independent 32-bit command/data domains to increase par
+allelism and reduce access granularity. In InterStellar 2.0, segmented 
+batching targets the abstraction of an independently scheduled command 
+domain: the Nucleus generates per-domain batch seeds and each do
+main maintains its own iPP/iBatch state (thus the same mechanism 
+applies whether the domains are channels or DDR5 subchannels).
+Physical address mappings exploit this parallelism by interleav
+ing consecutive cache-line addresses across channels and, within each 
+channel, across banks or bank groups. Interleaving balances utiliza
+tion but introduces a coordination challenge: a single logical soft
+ware stream may map to multiple hardware channels. Global batching 
+across such channels would require inter-controller communication and 
+complex arbitration.
+InterStellar 2.0 resolves this by partitioning each stream’s future ac
+cesses among channels before scheduling. Each channel then performs 
+batching and page management locally, with no shared batch state 
+or cross-channel communication. This enables near-linear bandwidth 
+scaling with channel count while maintaining controller independence 
+and compatibility with DDR4/DDR5 organizations, including DDR5 
+subchannelization.
+2.3. Streams and memory access regularity
+A stream is a predictable sequence of memory accesses described 
+by a compact set of parameters [18]. Streams appear naturally in 
+dense linear algebra, stencil computations, tensor operations, struc
+tured reductions, and analytics kernels [48]. Two main classes are 
+relevant:
+Direct streams. Defined by a base address, fixed stride, and iter
+ation count, direct streams produce spatially sequential or regularly 
+strided accesses with high row-buffer locality. Because the pattern 
+is statically known, the controller can determine future cache-line 
+requests and decide when to keep rows open or batch lines. Such pat
+terns dominate vectorized numerical workloads (e.g., BLAS/LAPACK 
+routines), stencil sweeps, and tensor traversals [17,48].
+Indirect streams. Indirect streams compute addresses through one 
+or more levels of indirection, such as A[B[i]] or A[B[C[i]]], com
+mon in sparse linear algebra, graph analytics, irregular gathers/scat
+ters, and certain machine-learning kernels [18,49–52]. Although their 
+locality is less regular, repeated access to a limited subset of addresses 
+still provides exploitable reuse.
+Prior work (InterStellar) conveyed program-visible stream descrip
+tors to hardware so the controller could (i) group upcoming accesses 
+from direct streams proactively and (ii) apply page-management de
+cisions using per-stream locality metrics rather than per-bank heuris
+tics. This substantially reduced row conflicts and improved effective 
+bandwidth without requiring ISA extensions or application changes.
+3 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+3. Motivation
+Modern multicore performance is still bounded by main-memory 
+service, not core microarchitecture. Even with wide out-of-order cores, 
+large miss status holding registers (MSHRs) capacity, and strong
+prefetching, systems remain limited by (i) latency inflation from row 
+conflicts and bank/bank-group timing, and (ii) delivered-bandwidth 
+limits when traffic concentrates on too few channels. These constraints 
+persist from DDR4 to DDR5, despite DDR5’s higher data rate, additional 
+banks/bank-groups, and dual sub-channels [9,10]. InterStellar demon
+strated that exporting software-visible stream metadata (e.g., base, 
+stride, loop context) to the memory controller enables per-stream 
+batching and per-stream row-buffer decisions without ISA changes, re
+ducing conflicts and improving effective bandwidth under contention. 
+Two gaps remain for realistic platforms: support for multi-channel 
+organization and for multiple logically distinct access slices within 
+complex loops.
+3.1. Limits of conventional prefetching and page policies
+Conventional prefetching and page policies are largely reactive: 
+prefetchers inject predicted requests into the hierarchy, while COTS 
+controllers apply adaptive page policies to keep/close rows per access. 
+In practice, several structural limits these mechanisms from optimizing 
+the performance:
+• Back-pressure and queue limits. Prefetches contend with de
+mand traffic for MSHRs, LLC-miss tracking, NoC bandwidth, 
+and MC read-queue slots. When these structures saturate, extra 
+prefetches either stall or amplify upstream interference, capping 
+effective parallelism even if DRAM banks remain available.
+• Uncoordinated DRAM access. When independent streams in
+terleave, the controller alternates across rows/banks, increas
+ing textttACT/PRE conflicts instead of issuing long runs of row 
+hits. This is exacerbated in multicore and large-stride streaming, 
+where each stream has internal regularity that is destroyed by 
+interleaving.
+• Pollution and wasted bandwidth. Speculative lines can evict 
+useful data and consume bandwidth without being used, increas
+ing latency and reducing throughput, especially for high-stride or 
+irregular patterns.
+• Bank-level, not stream-level, policy. COTS page policies track 
+locality per bank, not per stream. Without knowing which stream 
+generated an access, the controller may close a row that the same 
+stream will reuse soon, or keep a row open when the next access 
+is predictably a conflict.
+InterStellar mitigated these limits in the single-channel setting by 
+moving stream-aware control into the memory controller: it batches 
+predictable row-hit accesses per stream, buffers returned lines locally, 
+and applies page policy per stream rather than per bank. This reduces 
+speculative prefetch flooding and lets the controller schedule for DRAM 
+timing rather than arrival order. However, scaling challenges remain 
+and motivate InterStellar 2.0.
+3.2. Motivation: Multi-channel scaling
+High-performance systems use multiple independent DRAM chan
+nels (and DDR5 subchannels) to raise aggregate bandwidth [9,10]. Be
+cause address mapping interleaves cache lines across channels, a single 
+logical stream is typically striped across controllers. This same abstrac
+tion appears in stacked-memory systems such as HBM, which expose 
+many independently scheduled command domains (channels/pseudo
+channels) to provide high aggregate bandwidth. InterStellar 2.0 targets 
+any such independently scheduled domain: the Nucleus emits per
+domain batch seeds, and each domain maintains its own iPP/iBatch 
+Fig. 1. daxpy kernel C code and its stream-flow graph.
+state and buffers. A naive multi-channel extension of InterStellar would 
+require a global batch structure spanning channels, inter-channel co
+ordination for request ownership/ordering, and shared backpressure 
+when any channel stalls. This introduces a cross-controller dependency 
+path (harder timing closure) and can throttle aggregate bandwidth to 
+the most backpressured channel, undermining channel scaling.
+We therefore want per-channel autonomy: each DRAM channel 
+should receive only the subset of a stream’s future accesses that map 
+to that channel and should be able to batch, schedule, and manage 
+page policy locally, with no cross-channel communication (mechanism 
+is detailed in Section 4.4).
+InterStellar 2.0 adopts exactly this model. The hardware partitions 
+each stream’s predictable future addresses into per-channel segments
+and forwards only the local segment to the corresponding memory con
+troller. Each channel then independently performs: (i) batched issuance 
+of likely row hits, (ii) local buffering of those prefetched lines, and (iii) 
+per-bank row management. Because there is no shared global batch 
+queue, each channel remains self-contained and can scale delivered 
+bandwidth with increasing channel count.
+This requirement is critical for multi-channel DDR4 and DDR5 based 
+systems, where high data rates, multiple bank groups, and per-channel 
+controllers are the norm. It is also essential for future many-channel 
+system-on-chips that demand bandwidth scaling without adding global 
+arbitration structures.
+3.3. Illustrative example: Batching and multi-channel segmentation
+To make the need for InterStellar 2.0 concrete, we revisit a simple 
+two-stream kernel, daxpy, shown in Fig.  1. The kernel issues two direct 
+streams, A and B, that access different arrays with predictable stride. 
+Even though each stream individually has strong row locality, the two 
+streams interfere when their requests reach DRAM close in time.
+Fig.  2 compares four cases: (a) a baseline open-page controller 
+on a single channel, (b) the same baseline controller on two channels 
+under a RoBaBgColRaCh mapping (row → bank → bank-group →
+column → rank → channel), (c) InterStellar (which only supports 
+single channel) applying intelligent page policy (iPP) and deterministic 
+batching (iBatch), and (d) InterStellar 2.0 applying the same policies 
+on two channels with channel-aware segmentation. For clarity, timing 
+values are representative of DDR4/DDR5- devices: a row hit is modeled 
+as 5 cycles, a row miss (open on an idle bank) as 20 cycles, and a row 
+conflict (precharge old row + activate new row + serve column) as 40 
+cycles, consistent with the order of magnitude of 𝑡𝐶𝐿, 𝑡𝑅𝐶𝐷, and 𝑡𝑅𝑃
+ in 
+JEDEC DRAM timing [9,10].
+We report two quantities: (i) end-to-end (E2E) latency, mea
+sured from the first request arrival to the last request completion 
+on the critical path seen by the core; and (ii) active DRAM cycles, 
+i.e., the cumulative busy service time spent by the controller(s) issuing 
+ACT/PRE/CAS to DRAM. Active DRAM cycles capture how hard the 
+memory system had to work to serve the same logical sequence of 
+requests; reducing this value indicates higher efficiency, fewer row 
+conflicts, and lower energy per unit of delivered data.
+4 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+(1) E2E latency: 250 cycles.
+(a) Baseline open-page policy on single channel.
+(b) Baseline open-page policy on two channels.
+(c) InterStellar applying iPP+iBatch on single channel.
+(d) InterStellar 2.0 applying iPP+iBatch on two channels.
+(e) 
+Fig. 2. Two streams from daxpy BM: baseline DRAM latency vs. iPP+iBatch
+policy.
+Baseline, single channel. Fig.  2(a) shows two streams (A, B) targeting 
+the same channel. Because requests from A and B arrive interleaved, 
+the open-page controller alternates rows: every new arrival forces a 
+row conflict in the same bank. The controller repeatedly precharges 
+and re-activates different rows instead of issuing long runs of row hits. 
+The result is as following:
+(1) E2E latency: 320 cycles.
+(2) Active DRAM cycles: 5+7×40 = 285 cycles.
+Baseline, two channels. Fig.  2(b) shows the same open-page policy, but 
+now the physical address mapping interleaves consecutive cache lines 
+across two channels (Channel0 and Channel1) using RoBaBgCol
+RaCh. Because the two channels can operate in parallel, some service 
+time overlaps. We observe:
+(1) E2E latency: 290 cycles.
+(2) Active DRAM cycles: each channel still pays repeated 40-cycle 
+conflict penalties, but now in parallel. Summing both channels’ work 
+and subtracting the overlap gives 2 × (5 + 3 × 40) − 20 = 2×125−20 =
+230 cycles.
+Thus active time drops by ∼20% versus the single-channel baseline 
+(285 cycles), driven by parallelism rather than improved row reuse.
+Interstellar (single channel). Fig.  2(c) shows InterStellar’s iPP+iBatch 
+on one channel. Two mechanisms are active: (i) iBatch issues a burst 
+of predicted row-hit requests for a stream after that row is opened and 
+buffers the returned data at the memory controller; and (ii) iPP explic
+itly closes a row with auto-precharge when the controller determines 
+that useful row hits for that stream are exhausted, so the next stream’s 
+first access to a new row is a row miss (20 cycles) instead of a row
+conflict (40 cycles). Observed behavior:
+(2) Active DRAM cycles: 5×4+20+5×3 = 55 cycles.
+Interstellar 2.0 (two channels). Fig.  2(d) applies the same concepts in 
+a two-channel setting with channel-aware segmentation. Rather than 
+constructing one global batch spanning both channels, InterStellar 2.0 
+partitions the future access stream into per-channel segments and sends 
+each segment only to its corresponding channel. Each channel then (1) 
+forms its own batch, (2) issues its own run of row hits, and (3) applies 
+its own page-close decisions. The outcome is:
+(1) E2E latency: 250 cycles.
+(2) Active DRAM cycles: with two independent channels executing 
+segmented batches in parallel, (2 × 5) + 20 + 5 = 35 cycles, which is a 
+∼37% reduction versus the 55-cycle active time in the single-channel 
+InterStellar case.
+This example highlights three properties that motivate InterStellar 
+2.0:
+1. Batching and page control eliminate conflict latency. Issuing 
+bursts of row hits per stream and explicitly closing the row when 
+it ceases to be useful removes nearly all 40-cycle conflicts (285 
+→ 55 active cycles).
+2. Channel parallelism alone is insufficient. Moving from one to 
+two channels in a conventional controller reduces active DRAM 
+time primarily via overlap (285 → 230 cycles) with modest E2E 
+improvement (320 → 290 cycles).
+3. Channel-aware segmented batching scales efficiency. Com
+bining iPP+iBatch with per-channel segmentation cuts active 
+time further (55 → 35 cycles) without any cross-channel arbi
+tration. The benefit grows with batch size: longer per-stream 
+row-hit bursts amplify per-channel efficiency.
+So, the two new design goals of InterStellar 2.0 are necessary: (i) 
+per-channel segmented execution so that bandwidth scales with chan
+nel count under realistic address mappings such as RoBaBgColRaCh, 
+and (ii) controller-managed batching and page policy (iPP+iBatch) so 
+that predictable streams are served predominantly as row hits rather 
+than as a sequence of row conflicts.
+3.4. Motivation: Fine-grained sub-stream tracking
+A second limitation arises in complex loops (stencils, tensor sweeps, 
+multi-D grids) that touch multiple logically distinct slices of an array 
+per iteration (e.g., 𝑖−1, 𝑖, 𝑖+1 in Jacobi). Treating these as one coarse 
+stream pollutes locality signals: histories for different slices merge, 
+short reuse is masked by long jumps, and page decisions become 
+incorrect, increasing conflicts. The controller should instead track these 
+slices as independent sub-streams.
+InterStellar 2.0 enables the compiler to emit multiple sub-stream 
+descriptors in place of a single coarse stream. The controller then 
+maintains row-hit/conflict state per sub-stream, preventing cross-slice 
+interference and improving page decisions under DDR4/DDR5 timing. 
+Overall, InterStellar 2.0 is motivated by two needs: (1) per-stream 
+batching/page control that scales across many channels without cross
+channel coordination, and (2) sub-stream granularity so distinct access 
+slices do not corrupt locality signals. Together, these extensions re
+duce conflict-driven latency and improve delivered bandwidth under 
+realistic multi-channel interleaving.
+4. InterStellar 2.0 architecture
+The overall InterStellar 2.0 microarchitecture is illustrated in Fig. 
+3. InterStellar 2.0 generalizes InterStellar to support multi-channel
+DRAM systems, introduces mechanisms for segmented batching, and in
+tegrates fine-grained stream descriptors and mapping-aware scheduling 
+policies to improve scalability and efficiency.
+5 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+Fig. 3. InterStellar 2.0 block diagram.
+InterStellar 2.0 comprises three components: (1) a HW/SW inter
+face that transfers loop/stream metadata from the compiler, (2) the 
+LLC-resident Nucleus that interprets the descriptors and adds runtime 
+context, and (3) MC extensions that enforce stream-aware batching 
+and page/scheduling policies. Relative to InterStellar, the interface 
+supports fine-grained sub-streams, the Nucleus performs address-based 
+multi-channel segmentation, and each MC applies localized batching, 
+per-channel buffering, and mapping-aware scheduling. Together, these 
+changes preserve metadata-driven control while scaling across many 
+channels.
+4.1. HW/SW interface
+InterStellar 2.0 preserves InterStellar’s interface goal: conveying 
+compiler-generated metadata to hardware without ISA or OS changes. 
+On RISC-V, descriptors are written via CSRs (using csrrw); the CSR 
+address space provides sufficient room for custom metadata in typical 
+deployments [53]. If spare CSRs are unavailable, the same descrip
+tors can be exposed through a reserved memory-mapped region that 
+hardware reads directly.
+Stream taxonomy and descriptors. Stream taxonomy and de
+scriptors. The compiler extracts loop-embedded memory streams and 
+classifies them as direct (affine) or indirect (index-based). To represent 
+loop structure and parameterization, InterStellar 2.0 uses four descrip
+tor types: Loop, Direct Stream, Indirect Stream, and Link Variable. 
+All share a common header (type, enable, and control flags). Fig.  4 
+summarizes their formats.
+Loop Descriptor. The Loop Descriptor specifies a loop’s iteration space 
+using Start, End, and Step. To support runtime-dependent bounds, it 
+can link either boundary to a Link Variable Descriptor: if the start (end) 
+expression depends on another variable, the SL (EL) bit is set and the 
+corresponding Start (End) field stores the linked variable’s descriptor 
+ID instead of a constant. For nested loops, Parent Loop ID encodes the 
+loop hierarchy, allowing hardware to reconstruct multi-level iteration 
+structure without parsing source code.
+Direct Stream Descriptor. The Direct Stream Descriptor captures 
+an affine (stride-based) access stream. It references its enclosing loop 
+via Loop ID and defines addresses using Base Address (BA) and Stride
+(bytes between consecutive accesses), where the effective stride reflects 
+both loop stepping and element size. If the base pointer is runtime
+dependent, the BL bit is set and the BA field stores the ID of a Link 
+Variable Descriptor that provides the current base value, preserving 
+static stride predictability while allowing dynamic base updates.
+Indirect Stream Descriptor. The Indirect Stream Descriptor repre
+sents data-dependent (non-affine) streams produced by an index array. 
+Fig. 4. Descriptors formats. InterStellar 2.0 formats remain compatible with 
+InterStellar; fine-grained stencil streams are represented as multiple Direct 
+Stream descriptors without changing the format.
+It includes the index-array Base Address, the accessed data Element 
+Size, and Stream Size (total number of indexed elements), enabling 
+the controller to size grouping/batching windows even when addresses 
+are not sequential. As with direct streams, BL indicates a runtime
+dependent base, in which case the base field stores a linked-variable 
+descriptor ID.
+Link Variable Descriptor. Link descriptors supply runtime values 
+referenced by other descriptors (e.g., bounds or base pointers) via
+Register ID and Size. They eliminate extra control flow for parame
+ter updates, and can be chained to express multi-level dependencies 
+compactly.
+Multi-threading. The Shared (S) bit marks streams shared across 
+cores/threads. Although not used by the current batching path, it 
+preserves forward compatibility for cache coherence.
+4.2. Fine-grained stream identification
+A key enhancement introduced in InterStellar 2.0 is the ability 
+to identify and represent fine-grained sub-streams within multi
+dimensional or irregular access patterns. Traditional stream analysis 
+treats each array reference as a single stream tied to its enclosing 
+loop; however, in many scientific and machine-learning workloads—
+such as stencil computations (Jacobi-2D, FDTD-2D, Heat-3D)—different 
+loop iterations access multiple non-contiguous rows, planes, or tiles 
+6 
+A.M. Abotaleb et al.
+concurrently. For example, a 2D stencil may read alternating even 
+and odd rows (as illustrated in Fig.  5), producing two interleaved 
+but independent access paths. If modeled as a single coarse-grained 
+stream, such access behavior pollutes per-stream counters and confuses 
+the memory controller’s page and batching policies. To address this, 
+InterStellar 2.0 allows the compiler to generate multiple sub-stream 
+descriptors for each array reference, one per logically independent 
+access pattern. Each sub-stream descriptor inherits its loop linkage and 
+base/stride information but operates with independent row-hit and 
+conflict counters in hardware. This fine-grained representation ensures 
+that each sub-stream maintains precise locality statistics, leading to 
+higher DRAM row-hit rates and more accurate page-closing decisions.
+4.2.1. Motivating example: Jacobi–2D
+Consider the jacobi-2d kernel from PolyBench, which applies a 
+5-point stencil update on two arrays, A and B, over multiple time steps:
+for (t = 0; t < T; t++) {
+  // Stencil applied to A:
+  for (i = 1; i < N-1; i += S)
+    for (j = 1; j < M-1; j++)
+      B[i][j] = 0.2 * (A[i][j] + A[i][j-1] + A[i][j+1]
+                                 + A[i-1][j] + A[i+1][j]);
+  // Stencil applied to B:
+  for (i = 1; i < N-1; i += S)
+    for (j = 1; j < M-1; j++)
+      A[i][j] = 0.2 * (B[i][j] + B[i][j-1] + B[i][j+1]
+                                 + B[i-1][j] + B[i+1][j]);
+}
+For jacobi-2d, each update reads a 5-point neighborhood. With 
+ 
+ =1, adjacent iterations overlap in the 𝑖 dimension, so most accesses 
+hit rows already resident in cache/row buffers; a single coarse descrip
+tor per array is typically sufficient. When 𝑆>1 (e.g., 𝑆=3), stencil 
+windows become non-overlapping: each iteration touches three distinct 
+rows with delayed reuse. A single descriptor then mixes independent 
+rows, polluting hit/conflict statistics; iPP can mispredict usefulness 
+and trigger premature precharges, reducing row-hit rate and effective 
+bandwidth.
+4.2.2. Fine-grained sub-stream construction
+To address this, InterStellar 2.0 decomposes such coarse-grained 
+streams into multiple fine-grained sub-streams, each corresponding to 
+one logically independent access path (e.g., one row or plane in a 
+stencil window). For the stencil applied to array A at a given iteration 
+ 
+ , the computation traverses three rows:
+𝙰[𝑖−1,∗], 𝙰[𝑖,∗], 𝙰[𝑖+1,∗].
+The compiler therefore generates three direct sub-stream descrip
+tors:
+A1∶BA=&𝙰[𝑖−1][0], A2∶BA=&𝙰[𝑖][0],
+A3∶BA=&𝙰[𝑖+1][0],
+where & stands for the address of the specified memory location, and 
+each with size =𝑀 elements and stride = sizeof(element). Similarly, 
+for the stencil applied to B, the compiler emits three sub-streams B1, 
+B2, and B3. All sub-streams share the same enclosing loop descriptor 
+but maintain independent row-hit and conflict counters in hardware. 
+At the start of each outer-loop iteration, the compiler overwrites the 
+base addresses via a few CSR writes to advance the stencil window 
+by 𝑆 rows. This results in three steady, independent direct streams 
+per array, eliminating counter interference and improving row-buffer 
+predictability.
+(a) Coarse-grained stream. A single descriptor mixes accesses from 
+multiple rows.
+(b) Fine-grained sub-streams. The compiler emits separate sub-streams 
+(𝐴1, 𝐴2, 𝐴3) corresponding to rows 𝑖−1, 𝑖, and 𝑖+1.
+Fig. 5. Coarse-grained vs. fine-grained stream decomposition for the
+Jacobi-2D stencil with stride 𝑆=3. (a) A single coarse stream interleaves 
+accesses from multiple rows. (b) Fine-grained sub-streams isolate each row’s 
+access sequence.
+Effect on iPP and iBatch. Fine-grained sub-streams primarily ben
+efit iPP: independent hit/conflict tracking yields more accurate open/
+close decisions and avoids premature precharges. iBatch benefits less 
+directly because it already groups row-hit requests by row; fine-grained 
+streams mainly help by reducing conflict-induced disruptions that 
+would otherwise break batching opportunities.
+Software Overhead and Compatibility. The software overhead 
+introduced by fine-grained streaming is negligible. Only a small num
+ber of CSR updates are required at the beginning of each outer-loop 
+iteration—six writes in the Jacobi-2D case (three for A, three for B). 
+Because the sub-stream descriptors reuse the same descriptor format 
+(Fig.  4), no ISA extensions or format changes are needed. This ap
+proach therefore preserves full backward compatibility with InterStel
+lar while improving memory-system efficiency for multi-dimensional 
+stencil workloads.
+Compiler integration. The Low Level Virtual Machine (LLVM) 
+analysis should be extended to detect fine-grained sub-streams by 
+grouping array references whose index expressions are independent 
+affine functions of loop iterators (e.g., 𝐴[𝑖−1][𝑗] vs. 𝐴[𝑖][𝑗]). Each 
+group becomes a separate direct-stream descriptor, emitted statically 
+into CSR initialization code. Since InterStellar 2.0 reuses InterStellar’s 
+descriptor formats and CSR mechanism, the interface is unchanged; 
+only the compiler emits richer metadata.
+Since InterStellar 2.0 reuses the same descriptor structures and CSR 
+access mechanisms as InterStellar, no hardware or software interface 
+change is required—only the compiler emits a richer set of descriptors.
+Through compiler-guided fine-grained stream extraction and de
+scriptor generation, InterStellar 2.0 enhances the expressiveness of 
+the HW/SW interface without changing the underlying ISA, enabling 
+hardware to distinguish and optimize for multiple sub-streams that 
+arise naturally in modern compute kernels.
+4.3. Nucleus: Central engine of InterStellar 2.0
+The nucleus forms the central intelligence of InterStellar 2.0, bridg
+ing compiler-supplied metadata with runtime hardware behavior. Po
+sitioned alongside the last-level cache (LLC), it interprets stream de
+scriptors, enriches them with dynamic information, and guides down
+stream components—such as the memory controllers—to take software
+informed scheduling decisions. The nucleus extends the baseline In
+terStellar design with broader functionality, including multi-channel 
+segmentation and mapping-aware coordination.
+Journal of Systems Architecture 177 (2026) 103832 
+7 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+4.3.1. Baseline nucleus operation
+At initialization, the nucleus reads descriptors written into CSRs and 
+derives loop/stream properties. For loop descriptor 𝑖, it computes the 
+iteration count from Start (𝑆), End (𝐸), and Step (𝐼): 𝑙𝑜𝑜𝑝_𝑖𝑡𝑒𝑟𝑎𝑡𝑖𝑜𝑛𝑠𝑖 =
+𝐸𝑖−𝑆𝑖
+𝐼𝑖
+. For nested loops, it composes iteration counts across levels to 
+reconstruct the program’s multi-level iteration space. For each stream, 
+the nucleus computes the accessed VA interval. For direct stream 𝑖: 
+ 
+ 𝑡𝑎𝑟𝑡_𝑉 𝐴𝑖 = 𝑏𝑎𝑠𝑒_𝑉 𝐴𝑖 + 𝑆𝐿𝑜𝑜𝑝𝐼𝐷[𝑖] ⋅ 𝑠𝑡𝑟𝑖𝑑𝑒𝑖,
+𝑒𝑛𝑑_𝑉 𝐴𝑖 = 𝑏𝑎𝑠𝑒_𝑉 𝐴𝑖 +𝐸𝐿𝑜𝑜𝑝𝐼𝐷[𝑖] ⋅ 𝑠𝑡𝑟𝑖𝑑𝑒𝑖.
+For indirect streams: 
+ 
+ 𝑡𝑎𝑟𝑡_𝑉 𝐴𝑖 = 𝑏𝑎𝑠𝑒_𝑉 𝐴𝑖, 𝑒𝑛𝑑_𝑉 𝐴𝑖 = 𝑏𝑎𝑠𝑒_𝑉 𝐴𝑖 +𝑠𝑖𝑧𝑒𝑖.
+(1)
+(2)
+(3)
+These ranges help disambiguate streams even when they share pages. 
+The nucleus stores descriptor fields and derived attributes in the Desc 
+Table (e.g., Did, Cid, Tid, DType).
+On each LLC miss, the LLC Request Filter checks (in parallel) 
+whether the address falls within any active stream range in the Desc 
+Table. Matching misses are tagged by the LLC Packet Appender
+with stream/core/thread metadata, enabling software-aware schedul
+ing and page policies at the MC. Fig.  6 shows descriptor initializa
+tion, where the Desc Table stores stream information and direct
+stream VA ranges: stream A spans 0x3000–0x3FF8 and stream B spans 
+0x5000–0x5FF8. For LLC misses at 0xB200 and 0x1700, the LLC Re
+quest Filter maps 0xB200 to VA=0x3200 in stream A, marks 0x1700 
+as non-stream, appends metadata, and forwards both packets to the 
+memory controller.
+4.3.2. Nucleus considerations
+Address-domain translation. Descriptors are specified in VA
+space, while LLC misses are in PA space. To bridge this without OS 
+changes, the nucleus uses an Inverse Stream Translation Lookaside 
+Buffer (Stream TLB−1). that caches recent (𝑉 𝐴,𝑃𝐴) pairs for active 
+streams. On a miss, the Desc Table identifies the stream and installs 
+the translation. Sequential streaming keeps the required working set 
+small [54].
+Latency Considerations. The nucleus avoids extending the LLC 
+critical path by overlapping filtering with LLC tag lookup. The check 
+completes in two cycles (one TLB−1 access, one Desc Table lookup). 
+Because requests carry a descriptor ID, descriptor metadata access is 
+a direct indexed lookup (O(1)); moreover, the Desc Table query is 
+overlapped with LLC tag lookup, so it does not become a throughput 
+bottleneck on the critical path. Given that LLC hit/miss determination 
+usually takes more than two cycles, this overlap fully hides nucleus 
+latency. The LLC Packet Appender operates combinationally, adding 
+minimal wire-level delay.
+Communication Efficiency. To minimize interconnect traffic, only 
+compact metadata is forwarded to the memory controller: descriptor 
+ID, core ID, thread ID, and descriptor type. The stride of a direct stream, 
+being static, is transmitted once during stream initialization. Modern 
+SoC fabrics such as ARM AXI provide user-defined bit fields, making 
+this extension compatible with existing interconnect standards.
+4.4. Multi-channel aware Nucleus extension
+Multi-channel DRAM increases bandwidth, but it breaks single
+channel batching: consecutive stream accesses are interleaved across 
+channels, so a global batch would require inter-channel synchroniza
+tion and can reduce concurrency. InterStellar 2.0 instead integrates 
+a multi-channel segmentation mechanism in the nucleus: it computes 
+the per-channel segment starts, then each memory controller locally 
+expands and manages only its own segment.
+Address Mapping for Multi-Channel DRAM. We adopt a Row/
+BNK/BG/CH/column partitioning (Fig.  7) that interleaves consecutive 
+(a) Descriptors.
+(b) Descriptor Table.
+(c) LLC request filter and appender.
+Fig. 6. Illustrative example of nucleus operation: descriptors populate the
+Desc Table; incoming LLC misses are checked by the LLC Request Filter, 
+and matching requests are annotated with stream metadata before being 
+dispatched.
+Fig. 7. Deployed address mapping for Multi-Channel (M-Ch) to interleave 
+consecutive accesses across different channels.
+cache lines across channels to improve bandwidth utilization while 
+preserving row locality within each channel. This mapping interleaves 
+consecutive cache-line addresses across channels, improving bandwidth 
+utilization while retaining row locality within each DRAM.
+Channel-Aware iBatch-Seed Dispatcher. As depicted in Fig.  8, 
+when the nucleus identifies a direct stream, it initiates the intelligent 
+batch (iBatch) and computes the corresponding channel assignments 
+using the address mapping. Channel-Aware iBatch-Seed Dispatcher gen
+erates Only the first request within each iBatch segment; each memory 
+controller (MCi) subsequently expands and manages its own batch 
+segment locally. This approach avoids inter-channel communication 
+while preserving global software awareness, enabling fully parallel 
+batching across channels.
+Illustrative example. In Fig.  9, requests 𝑅0–𝑅15
+ from a stream are 
+interleaved across four channels (CH0–CH3). With stride = 1 and batch 
+size 𝐵 = 16, the nucleus seeds one segment per channel (e.g., 𝑅0–𝑅3), 
+and each MCi
+ expands its local subset (e.g., MC0
+ handles 𝑅4,𝑅8,𝑅12). 
+With two cache lines stride, only channels 1 and 3 receive requests, 
+resulting in segmentation without cross-MC coordination.
+8 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+Fig. 8. Multi-Channel–aware InterStellar 2.0’s Nucleus architecture exten
+sion. The nucleus identifies direct streams and issues distributed iBatch
+requests across channels, allowing each MCi
+ to manage its own batch segment 
+independently.
+Fig. 9. Example of interleaved multi-channel access. With a stride of two 
+cache lines, requests map to channels 1 and 3 (highlighted), showcasing 
+dynamic per-channel segmentation.
+5. Use case: Intelligent multi-channel MC
+The MC orchestrates off-chip DRAM by scheduling commands, en
+forcing timing, and managing row-buffer residency (hits vs. conflicts) to 
+minimize service time. In InterStellar and InterStellar 2.0, this role is 
+augmented with software stream metadata: the Nucleus tags each LLC 
+miss with its thread/stream identity and whether the stream is direct 
+(affine stride) or indirect (index-driven).
+This metadata enables two capabilities unavailable to conventional 
+controllers: (i) stream-aware row residency driven by deterministic 
+locality (rather than bank-only heuristics), and (ii) proactive fetch of 
+predictable future row-hit lines while the row is already open. These 
+are implemented by two coordinated units: iPP and iBatch.
+In InterStellar 2.0, both units are extended beyond the single
+channel baseline to operate over fine-grained sub-streams, to scale 
+across multiple DRAM channels without inter-channel synchronization, 
+and to tolerate deeper batches without stalling the controller datapath.
+(1) Intelligent Page Policy (iPP). iPP controls row residency per 
+bank, keeping rows open while a (sub-)stream is producing hits and 
+precharging when conflicts dominate. InterStellar 2.0 extends iPP with 
+fine-grained sub-stream tracking and fully local per-channel execution 
+so each channel’s banks decide autonomously.
+(2) Intelligent Batching (iBatch). iBatch reduces effective latency 
+by issuing reads for predictable future row-hit lines ahead of demand 
+and staging them in a per-bank iBuffer. InterStellar 2.0 adds sub-stream 
+awareness, channel-aware segmented batching, and a PAQ to absorb 
+overflow when batch depth exceeds immediate buffer/timing capacity. 
+The rest of this section describes iPP and iBatch in detail.
+5.1. Intelligent page policy (iPP) management unit
+iPP manages row-buffer residency per bank: it keeps a row open 
+to harvest locality and precharges to avoid repeated conflicts. Con
+ventional controllers rely on bank-level open/close heuristics with no 
+visibility into which loop/kernel produced each access. In InterStellar 
+and InterStellar 2.0, every request carries a (sub-)stream ID, and iPP 
+maintains locality state per (sub-)stream, making row open/close deci
+sions specialized to each stream’s behavior. InterStellar 2.0 strengthens 
+iPP by (1) tracking fine-grained sub-streams independently to avoid 
+cross-slice pollution and (2) executing locally per bank/per channel so 
+row decisions require no cross-channel coordination.
+iPP is implemented using two complementary policies: one for 
+direct streams and one for indirect streams. Both operate at per-bank 
+scope.
+5.1.1. Direct-stream row-hit counters
+For a direct (affine) stream, once a row is activated the next cache 
+lines within that row are predictable. The goal is to keep the row open 
+while those hits remain and precharge just before the stream transitions 
+to a different row (to avoid a conflict). iPP maintains a per-bank row-hit 
+counter for each active direct sub-stream and estimates how many hits 
+are available in the currently open row: 
+MaxHitstream𝑖 
+=
+DRAM Page Size
+max(Cache Line Size,𝑆𝑡𝑟𝑖𝑑𝑒(stream𝑖)) .
+(4)
+Here, 𝑆𝑡𝑟𝑖𝑑𝑒(stream𝑖) is the byte stride carried in the stream’s Direct 
+Stream Descriptor. The denominator takes the maximum of the cache 
+line size and the stream’s stride to conservatively approximate how 
+quickly that sub-stream will advance across lines and eventually into 
+a different DRAM row. Each row hit for sub-stream 𝑖 increments its 
+counter. When the counter reaches MaxHitstream𝑖
+, iPP precharges the 
+bank and resets the counter, keeping the row open long enough to 
+harvest hits, but closing it before the stream transitions to a new row 
+and begins generating conflicts.
+InterStellar 2.0 instantiates row-hit counters per fine-grained sub
+stream in each bank and channel. For stencil codes, neighbors such as 
+ 
+ [𝑖−1,∗], 𝐴[𝑖,∗], and 𝐴[𝑖+1,∗] track locality independently, preventing 
+one slice from prematurely closing a row needed by another and 
+keeping decisions local to each channel.
+5.1.2. Indirect-stream conflict tracking windows
+Indirect streams are index-driven, so the controller cannot analyt
+ically predict remaining row hits after an ACT. iPP therefore applies 
+a per-bank runtime classifier: for each active indirect stream it tracks 
+recent row addresses and accumulates conflicts in a sliding window, 
+then compares the conflict count against two programmable thresholds 
+to decide whether to keep the row open or precharge. Per bank, iPP 
+maintains for each indirect stream a small conflict window: previ
+ous/current row addresses, a conflict counter, and a short hit/conflict 
+history. On every access to that bank: - If Crnt Addr is the same row as
+Prev Addr, iPP treats this as a row hit and leaves the conflict counter 
+unchanged. - If Crnt Addr refers to a different row than Prev Addr, iPP 
+classifies this as a row conflict, increments the conflict counter, and 
+records ‘‘conflict’’ in the sliding window.
+iPP then uses a two-threshold rule to decide if the row should be 
+closed:
+Close Row ⇐ Conflicts > 𝑇𝐻 ∨
+(
+𝑇𝐿 ≤ Conflicts ≤ 𝑇𝐻 ∧ Prev Access = Conflict
+)
+(5)
+where 𝑇𝐻
+ and 𝑇𝐿
+ are programmable high and low thresholds.
+Intuitively, iPP closes the row when conflicts are clearly high (≥
+𝑇𝐻), or when the conflict rate is borderline (𝑇𝐿–𝑇𝐻) and the most 
+recent access is also a conflict; otherwise it keeps the row open to 
+exploit remaining locality.
+Each request is tagged with its originating (sub-)stream ID, allowing 
+the controller to maintain an independent conflict-tracking window 
+for every active indirect stream in each DRAM bank. This per-stream, 
+per-bank organization isolates locality statistics and drives row-buffer 
+residency decisions using only that stream’s observed behavior.
+9 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+Fig. 10.  Conflict-tracking mechanism for indirect streams. Each bank 
+maintains multiple sliding windows, one per active stream and uses the two
+threshold rule to decide when to precharge.
+Together, the direct-stream row-hit counters and the indirect-stream 
+conflict windows give the controller precise, per-stream control over 
+DRAM row residency. Rows are held open only while they are produc
+tive for that specific stream or sub-stream, and they are precharged as 
+soon as that stream’s access pattern begins to produce conflicts. This 
+increases row-buffer hit rate, reduces destructive row thrashing, and 
+lowers average DRAM service time.
+Fig.  10 summarizes the per-bank tracking structures used by iPP.
+5.2. Intelligent batching (iBatch) management unit
+iBatch proactively issues reads for deterministic future accesses to 
+reduce DRAM latency and interference. For direct streams, once a row 
+is activated the next row-hit cache-line addresses are known from (base, 
+stride), so the MC fetches them ahead of demand and stages them in a 
+per-bank iBuffer. This converts future misses/conflicts into buffer hits 
+and reduces row thrashing by issuing ordered runs of row hits instead 
+of interleaved accesses.
+5.2.1. Baseline iBatch behavior
+In the baseline InterStellar controller, opening a row for a direct 
+stream triggers immediate expansion of the next few row-hit addresses 
+and pre-issuance of their reads. Returned data are stored in a per-bank
+iBuffer with flags {𝑊 ,𝑅} indicating an in-flight read and duplicate
+suppression, respectively. A later demand either (i) hits ready data 
+(𝑊 = 0) and returns immediately, (ii) hits an in-flight entry (𝑊 = 1) 
+and waits for completion, or (iii) misses the iBuffer and issues a new 
+DRAM read. The main knobs are iBatch depth (lookahead) and iBuffer
+capacity. Figs.  13 and 14 shows the iBatch structure and its control 
+flow.
+5.2.2. Sub-stream awareness and per-bank execution
+In InterStellar 2.0, iBatch operates per sub-stream: it uses each 
+sub-stream’s (base, stride) to generate and issue its own row-hit batch, 
+inserting returned lines into the bank’s shared iBuffer. Although the 
+iBuffer is not partitioned by sub-stream, per-sub-stream batch triggers 
+prevent independent slices from being suppressed by a coarse merged 
+stream. iBatch remains strictly per-bank: each bank maintains its own 
+iBuffer and batch-expansion logic. Critically, iBatch executes entirely 
+per bank. Each DRAM bank maintains its own iBuffer and its own 
+iBatch expansion logic, so batching is generated and consumed locally 
+in that bank.
+Fig. 11. Nucleus emitting the start of each iBatch segment according to the 
+target channel ID.
+Fig. 12. The iBatch of 16 requests sub-divided over the multiple channels, 
+each channel generates sequence of addresses hits on the current channel only.
+5.2.3. Channel-local batch expander
+In multi-channel systems, physical-address interleaving stripes a 
+single logical stream across channels, so batching must be performed 
+per channel rather than as one global batch. InterStellar 2.0 addresses 
+this with Channel-Local Batch Expander. When the Nucleus tags a 
+request as belonging to a stream, it also determines (using the address 
+mapping) which subset of that stream’s near-future row-hit addresses 
+will land in each DRAM channel (Fig.  11). For each active chan
+nel, the controller is given a batch segment seed: the initial address 
+and stride information for that channel’s portion of the stream’s next 
+batch window. For channel 𝑐, the expander locally expands only 𝑆𝐸𝐺𝑐
+(Fig.  12), issues its row-hit-eligible reads, and stages returned lines 
+in that channel’s per-bank iBuffers under local timing constraints. No 
+cross-channel ordering, backpressure, or shared batch state is required, 
+eliminating inter-controller dependencies while preserving row-local 
+batching within each channel.
+5.2.4. Pending ACT Queue (PAQ)
+Deeper batches convert more future misses into iBuffer hits, but 
+they also create bursts of outstanding reads that can exceed (i) iBuffer 
+capacity and (ii) what a bank can sustain under DRAM timing limits. 
+To avoid pipeline stalls under deep lookahead, InterStellar 2.0 adds 
+a small per-channel/per-bank Pending ACT Queue (PAQ) that holds 
+overflow batch requests as addresses only. The controller drains PAQ 
+entries when iBuffer space is available and DRAM timing permits 
+additional commands, decoupling logical batch depth from instanta
+neous issue/buffering capacity. This enables aggressive lookahead while 
+respecting timing constraints and avoiding starvation.
+5.3. Coordination between iBatch and iPP
+iBatch and iPP cooperate: iPP signals when a row is productive (hits 
+dominate) versus thrashing (conflicts dominate), and iBatch uses this 
+as a per-(sub-)stream, per-bank stop condition as following:
+10 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+Fig. 13. iBatch organization (per each DRAM channel’s individual banks).
+Fig. 14. Operational flow of channel aware iBatch.
+(1) If a direct sub-stream’s row-hit counter reaches its MaxHitstream𝑖
+budget (Eq. (4)), iPP will request a precharge for that bank. iBatch 
+immediately stops extending that sub-stream’s batch in that bank.
+(2) If an indirect stream’s conflict-tracking window crosses the high 
+threshold 𝑇𝐻
+ in Eq. (5), iPP again requests a precharge, and iBatch 
+halts batch expansion for that stream in that bank.
+(3) As long as locality remains high and capacity (iBuffer or PAQ) 
+is available, iBatch continues to populate future row-hit lines for that 
+sub-stream.
+Configurability and fairness. The controller exposes tunable thresholds 
+for iPP (Eqs. (4), (5)) and capacity/policy knobs for iBatch (iBatch 
+depth, iBuffer and PAQ sizing, and per-channel segment aggressive
+ness). Because each channel maintains its own iPP state, iBuffer, 
+PAQ, and expander logic, channels execute independently and in 
+parallel, preserving timing isolation and avoiding head-of-line blocking 
+from centralized batching. Because each channel maintains its own 
+iPP state, iBuffer, PAQ, and batch expansion logic, channels can 
+run independently and in parallel. This preserves timing isolation 
+between channels, allows scalable multi-channel bandwidth utilization, 
+and avoids head-of-line blocking that would otherwise arise from 
+centralized batching.
+Design-time sizing vs. online tuning. iBuffer and PAQ capacities are mi
+croarchitectural storage choices and are fixed once the controller is 
+implemented. In contrast, iBatch depth is a policy knob and can be 
+tuned online (e.g., reduced under high buffer pressure and increased 
+when banks are underutilized). In practice, iBuffer/PAQ sizing is provi
+sioned for expected worst-case stream behavior (number of concurrent 
+streams and stream aggressiveness); Section 9.8 provides sensitivity 
+guidance for selecting practical operating points.
+5.4. Deployment and scalability considerations
+The Nucleus and InterStellar 2.0’s policies (iPP and iBatch) are 
+deliberately decoupled.
+The Nucleus sits at the LLC boundary. It interprets the com
+piler descriptors, reconstructs per-stream and per-sub-stream metadata 
+(e.g., base address, stride, sub-stream identity), reconciles virtual and 
+physical addresses using a small inverse translation structure, and 
+appends stream and locality metadata to each outgoing LLC miss. The 
+MC consumes these metadata to enforce locality-aware scheduling. 
+Batch work is partitioned per channel: each channel receives only its 
+segment seed and executes it locally. Within a channel, each bank in
+dependently runs iPP (row-hit counters/conflict windows), runs iBatch 
+(iBuffer+PAQ), and issues DRAM commands under its own timing 
+constraints.
+This separation provides two deployment advantages:
+(1) Placement flexibility. The Nucleus can be instantiated once 
+downstream of a banked LLC (minimizing area) or replicated per LLC 
+slice (minimizing miss latency), without requiring changes to the con
+troller logic. The per-channel controllers only require the per-request 
+annotations and batch segment seeds.
+(2) Multi-controller scalability. In an 𝑁-channel system, one Nu
+cleus instance generates 𝑁 per-channel segment seeds. Channels then 
+schedule/buffer and apply iPP/iBatch independently, without cross
+channel synchronization or a global batch queue, preserving bandwidth 
+scaling and a simple interconnect.
+6. System considerations
+InterStellar 2.0 extends the baseline InterStellar design along sev
+eral dimensions: fine-grained sub-stream tracking, multi-channel seg
+mented batching, per-bank execution of page policy, and deeper batch 
+lookahead. This section discusses practical considerations that arise 
+from these extensions, and revisits some system-level issues.
+6.1. Software overhead and practicality
+Fine-grained sub-streams are exposed entirely in software using 
+the existing descriptor interface. For stencil codes, the compiler emits 
+multiple Direct Stream descriptors per array (e.g., one per row/plane 
+slice) and advances the window by updating only their base addresses, 
+requiring just a few CSR writes per outer iteration (e.g., six updates 
+for Jacobi-2D). No ISA changes are needed, and the CSR names
+pace typically provides ample space for this metadata. Because Inter
+Stellar 2.0 reuses InterStellar’s descriptor format (Fig.  4), it remains 
+backward-compatible.
+6.2. iBuffer residency and capacity pressure
+iBatch stages future row-hit lines in a per-bank iBuffer rather 
+than inserting them directly into the LLC, which could otherwise evict 
+unrelated lines with true temporal reuse. iBatch depth bounds this 
+pressure but also limits latency hiding; InterStellar 2.0 keeps depth 
+user-configurable to trade aggressiveness against interference. In prac
+tice, effective depth depends primarily on streaming behavior, how 
+aggressively streams generate misses and how many streams are active 
+per running thread—rather than on a specific DRAM generation; Sec
+tion 9.8 quantifies sensitivity across depths/PAQ under varying stream 
+pressure.
+6.3. PAQ sizing and backpressure
+InterStellar 2.0 adds a PAQ to hold overflow batch requests when 
+the desired lookahead exceeds iBuffer capacity or DRAM timing limits. 
+PAQ decouples logical batch depth from instantaneous issue capacity, 
+preventing the controller front end from stalling. Too-small PAQs 
+reintroduce backpressure, while overly large PAQs increase storage and 
+can delay fairness decisions; practical designs cap PAQ entries per (sub
+)stream and/or apply age-based draining to prevent starvation. Accord
+ingly, PAQ sizing is primarily driven by the burstiness/aggressiveness 
+of stream arrivals and the number of concurrent streams.
+11 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+6.4. Bank- and channel-level autonomy
+iPP and iBatch operate at bank scope. Each bank maintains (i) 
+per-direct-sub-stream row-hit counters (Eq. (4)) and (ii) per-indirect
+stream conflict windows (Eq. (5)), along with its own iBuffer and PAQ 
+state. Because this logic is instantiated per bank inside each channel 
+controller, channels execute independently without inter-channel syn
+chronization, simplifying timing closure and avoiding any shared global 
+batch queue.
+6.5. Address mapping and segmented batching
+Multi-channel DRAM mappings typically use low-order physical bits 
+to select the channel and higher-order bits (row/bank/bank-group) 
+to preserve row locality within each channel. Consequently, a sin
+gle logical stream is often striped across channels. InterStellar 2.0 
+generates a per-channel batch segment seed for each active channel; 
+each channel expands and schedules only its own segment into local 
+per-bank iBuffers. Avoiding a global cross-channel batch eliminates 
+cross-channel timing coordination and shared arbitration even under 
+aggressive interleaving.
+6.6. Tuning thresholds and fairness
+Several control parameters are explicitly tunable: (i) the MaxHit
+budget computed for each direct sub-stream, which determines when a 
+row should be precharged after its useful hit window is consumed; (ii) 
+the high and low conflict thresholds (𝑇𝐻, 𝑇𝐿) used to classify indirect 
+streams as high-locality or conflict-prone in a given bank; (iii) per
+bank iBatch depth and iBuffer capacity; and (iv) PAQ depth. These 
+parameters can be provisioned per stream/sub-stream, per bank, or per 
+channel to balance locality exploitation against fairness. For example, 
+a memory-intensive thread can have its maximum batch depth capped 
+(limiting how many PAQ entries it may occupy) to reduce head-of-line 
+blocking for other threads mapped to the same bank.
+6.7. Interaction with hardware prefetchers
+The MC may receive both demand requests and speculative prefetch 
+requests. Inaccurate hardware prefetchers can inject low-locality traffic 
+that would otherwise not qualify for batching or page residency. If 
+prefetch traffic is not distinguished from demand traffic, iBatch can 
+waste iBuffer capacity on low-value lines and iPP can be biased toward 
+keeping unproductive rows open. Tagging prefetch-generated requests 
+allows the controller to either deprioritize them in iBatch (e.g., do not 
+insert them into the PAQ or iBuffer past a depth limit) or exclude them 
+from the per-stream counters that drive iPP. This prevents speculative 
+traffic from distorting the learned locality signals of high-value streams.
+6.8. Dynamic loop trip counts and runtime parameters
+Loop bounds, strides, and base pointers may be known statically or 
+may depend on runtime values (e.g., problem sizes passed as function 
+arguments or dynamically computed offsets). The descriptor interface 
+supports both cases: when values are static, the compiler encodes them 
+directly in the Loop and Stream Descriptors; when they are dynamic, 
+the compiler emits Link Variable Descriptors that point to architectural 
+storage (e.g., dedicated CSR slots) holding the most recent runtime 
+values. At runtime, the Nucleus resolves these links and populates the 
+controller-visible metadata without requiring ISA changes. This mech
+anism makes InterStellar 2.0 robust to non-constant trip counts and 
+runtime-dependent strides while preserving compile-time analyzability 
+of regular patterns.
+6.9. Placement of the Nucleus and address translation
+The Nucleus attaches stream metadata to LLC misses and must 
+reconcile virtual-address descriptors with physical-address requests. 
+One implementation places the Nucleus alongside the shared LLC and 
+uses a small inverse translation structure (a ‘‘Stream TLB−1’’) to recover 
+the virtual address associated with each physical miss. This allows a 
+single Nucleus instance to serve all cores but requires maintaining 
+recent (PA → VA) mappings for active streams. An alternative design is 
+to place the Nucleus earlier in the pipeline, before address translation. 
+In that case, the Nucleus operates purely in the virtual-address domain 
+and can tag outgoing requests with stream IDs directly, eliminating the 
+need for an inverse translation structure. The tradeoff is that such a de
+sign typically requires one Nucleus instance per core (or per LLC slice), 
+which increases replicated logic cost. Both designs remain compatible 
+with standard SoC fabrics, since modern interconnects (e.g., AXI-style) 
+already support user-defined sideband fields for request metadata.
+7. Implementation and cost
+InterStellar 2.0 introduces two classes of mechanisms: (i) software 
+mechanisms that classify and describe memory streams at compile 
+time and update stream descriptors at runtime, and (ii) hardware 
+mechanisms inside the Nucleus and memory controller that interpret 
+those descriptors and apply stream-aware page and batching policies. 
+This section summarizes the required compiler support and quantifies 
+the hardware overheads, including the incremental costs introduced 
+by fine-grained sub-streams, multi-channel segmented batching, and 
+deeper batch windows.
+7.1. Compiler support
+The compiler’s responsibility is to (1) identify memory streams and 
+their structural relationships, (2) generate the corresponding descrip
+tors, and (3) update those descriptors at runtime when loop-dependent 
+parameters change. The implementation is realized as a mid-end LLVM 
+pass with four main stages.
+Loop selection. The pass first identifies loop nests that are likely 
+to produce DRAM traffic with regular structure. Candidate loops are 
+those that (i) contain memory accesses that depend on loop induction 
+variables (directly or via simple index arithmetic), and (ii) exhibit high 
+dynamic iteration counts. Profile data are used to prune loops whose 
+footprint is already captured in private caches, so that descriptors are 
+generated only for streams that are expected to reach DRAM.
+Stream extraction and dependence analysis. For each load/store 
+in a selected loop, the pass tentatively creates a stream candidate. It 
+then walks backward over the data-dependence graph using a DFS to 
+reconstruct the address computation. This forms a stream dependency 
+tree that classifies each candidate as either: (i) a direct stream, whose 
+address is affine in a loop induction variable and can be represented 
+by a base address and stride, or (ii) an indirect stream, whose address 
+is fetched through an index array (and may itself depend on other 
+streams). Multiple streams within the same loop may share a base 
+address while differing in stride or parent dependence.
+Pruning. The pass prunes candidates using two criteria. First, it 
+keeps only those streams whose base address and stride are loop
+invariant or are computed from simple affine expressions (multipli
+cation/addition by constants). Streams that require composite multi
+induction-variable indexing are currently excluded. Second, it retains 
+only streams that contribute meaningfully to off-chip traffic, as indi
+cated by sampled DRAM access profiles mapped back to static PCs. 
+When a candidate is pruned, its dependent subtree is removed.
+Descriptor generation. For each surviving stream and loop, the 
+pass emits four descriptor types: Loop Descriptors, Direct Stream De
+scriptors, Indirect Stream Descriptors, and Link Variable Descriptors. 
+These are inserted in IR as intrinsics at the loop preheader and lowered 
+12 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+in the backend to CSR writes. At runtime, these CSR writes configure 
+the Nucleus and MC before the loop body executes.
+Fine-grained sub-streams. InterStellar 2.0 extends this flow to 
+support fine-grained sub-streams for multi-dimensional kernels such as 
+stencils. Instead of emitting a single coarse Direct Stream Descriptor 
+for an array reference that touches multiple disjoint rows/planes per 
+iteration, the pass emits multiple Direct Stream Descriptors, one per 
+logically independent row/plane slice (e.g., 𝙰[𝑖 − 1,∗], 𝙰[𝑖,∗], 𝙰[𝑖 +
+1, ∗]). Each sub-stream inherits the same outer loop context but is 
+tracked independently in hardware. Advancing the stencil window 
+across iterations requires only updating the Base Address fields of 
+these descriptors. The runtime cost is a small, fixed number of CSR 
+writes per outer-loop iteration (e.g., six CSR updates per timestep for 
+a Jacobi 2D kernel with two arrays and three row slices per array). 
+InterStellar 2.0 does not require new descriptor formats: sub-streams 
+reuse the same 128-bit Direct Stream Descriptor format as InterStellar, 
+preserving backward compatibility. CSR space is not a limiting factor 
+because RISC-V exposes 4096 CSRs, of which only a subset are re
+served by the privileged specification, leaving ample capacity for such 
+metadata.
+Dynamic loop parameters. Loop bounds, strides, and base point
+ers may be statically known or runtime-dependent. When they are 
+not compile-time constants (for example, problem size parameters or 
+dynamically computed pointer bases), they are materialized into Link 
+Variable Descriptors. A Link Variable Descriptor points to an architec
+tural storage location (e.g., a CSR slot) that holds the live value. The 
+Nucleus resolves these links at runtime and associates the concrete 
+values with the corresponding loop or stream descriptor. This mecha
+nism allows InterStellar 2.0 to handle dynamic trip counts and runtime 
+stride/bound updates without ISA changes.
+7.2. Hardware cost
+The hardware cost of InterStellar 2.0 comes from three locations: 
+(1) descriptor state and associated lookup logic in the Nucleus, (2) 
+per-bank, per-channel tracking and buffering structures in the memory 
+controller, and (3) incremental storage required to tolerate deeper 
+batching in multi-channel systems. We discuss each in turn and quantify 
+representative sizes based on the evaluated configuration.
+7.2.1. Descriptor State and Nucleus Structures
+Descriptor storage. On RV64-class systems, each CSR is 64 bits 
+wide. A 128-bit descriptor therefore spans two CSRs. Profiling across 
+evaluated workloads shows that 32 CSRs are sufficient to store up to 16 
+active descriptors per core, supporting a mix of roughly 9 streams and 
+4 loops per context. These descriptors reuse existing CSR infrastructure 
+and therefore do not require new architectural state beyond allocating 
+CSR indices. Although a binary may contain many descriptors, only a 
+bounded subset is live at runtime (those corresponding to concurrently 
+executing loops/streams). The compiler controls descriptor lifetime via 
+writing descriptor to a CSR at loop entry and can reuse CSR slots when 
+loops complete (Section 7.1).
+Descriptor Table. At runtime, the Nucleus consolidates software 
+descriptors and derived runtime metadata into a Descriptor Table. 
+Each table entry records, for one stream/sub-stream: (i) static de
+scriptor fields (base address/stride or index base and size), (ii) loop 
+linkage information, (iii) the computed virtual-address span for that 
+stream, and (iv) core/thread identifiers. In addition, a small type field 
+(direct/indirect/loop/link) is stored. For 𝑆 streams across 𝐶 cores, and 
+assuming ∼128 bits static state plus bookkeeping (2-bit type, ∼40 bits 
+for end-of-range VA, and ID fields), total storage is on the order of
+𝑆 ×𝐶×(log2𝑆 +log2𝐶 +170) bits.
+For 16 streams and 8 cores, this corresponds to approximately 2.76kB.
+LLC Request Filter and Packet Appender. The Nucleus monitors 
+LLC misses, determines whether the miss falls within any tracked 
+stream’s virtual-address span, and, on a hit, appends the corresponding 
+stream/sub-stream ID and classification metadata to the request. This 
+logic is dominated by comparators and narrow associative lookups into 
+the Descriptor Table; it does not require large CAMs or queues. The
+LLC Packet Appender is a combinational extension to the outgoing 
+miss path that attaches a small metadata header (stream ID, sub-stream 
+ID, stride class, bank/channel mapping).
+Inverse translation structure. When the Nucleus is instantiated 
+at the shared LLC and therefore sees physical addresses on LLC misses, 
+it must recover the originating virtual address in order to match the 
+miss to a stream whose descriptor is expressed in virtual space. This is 
+implemented as a small inverse translation structure (denoted Stream 
+TLB−1) that caches recently observed (PA → VA) pairs per core/thread. 
+A 256-entry Stream TLB−1 is sufficient to cover active streams in the 
+evaluated workloads.
+Multi-channel segmentation logic. InterStellar 2.0 extends the 
+Nucleus with channel-aware segmentation. For each active direct 
+stream (or sub-stream), the Nucleus determines which DRAM channel 
+each upcoming cache line maps to under the platform’s physical ad
+dress mapping and generates a per-channel ‘‘batch segment seed’’. This 
+requires computing channel/bank/row bits from the physical address 
+and tagging each outgoing request with its channel-local segment ID. 
+Hardware cost is minimal: the logic is a set of bit extractions plus a 
+small FIFO/record per channel to hold the initial seed (e.g., the first 
+address and stride for that channel’s segment). There is no need for a 
+shared global batch queue across channels.
+7.2.2. Memory controller extensions
+The MC is extended with (i) per-bank page policy state (iPP), (ii) 
+per-bank speculative data buffering (iBuffer), (iii) per-bank pending 
+request staging (PAQ), and (iv) per-bank/per-channel control logic for 
+segmented iBatch expansion.
+iBuffer. Each DRAM bank maintains an iBuffer that holds future 
+cache lines fetched speculatively by iBatch. Each iBuffer entry stores 
+a 64-byte cache line and metadata (address tag, row status flags, 
+stream/sub-stream ID, and two control bits 𝑊 and 𝑅 indicating ‘‘wait
+ing for data’’ and ‘‘already requested’’). The metadata per entry is on 
+the order of 42 bits. With 𝑅 entries per bank and 𝐵 banks per channel, 
+total capacity is
+𝐵×𝑅×(64 B+42 bits).
+For 16 banks and 64 entries per bank, total storage is ≈69kB, which 
+is ∼1.7% of a 4MB LLC. This remains the dominant SRAM structure 
+introduced by the controller extension.
+Per-bank iPP state. For direct sub-streams, iPP maintains a small 
+saturating counter per (sub-)stream per bank to track how many row 
+hits have been served from the currently open row and to compare 
+that count to 𝙼𝚊𝚡𝙷𝚒𝚝stream𝑖
+ (Eq. (4)). These are short (few-bit) counters 
+plus a row tag. For indirect streams, iPP maintains a ‘‘conflict-tracking 
+window’’ per stream per bank: a compact record of the last row 
+accessed, a conflict counter, and a narrow shift register that encodes 
+recent hit/conflict outcomes. In practice this is on the order of a few 
+bytes per active stream. The total storage for these tables across all 
+banks is negligible relative to the iBuffer and scales linearly with the 
+maximum number of simultaneously tracked streams per core (tens, not 
+hundreds).
+PAQ (Pending ACT Queue). PAQ stores only addresses; it omits a 
+request-type field because it buffers only temporarily stalled batched
+RDs. Per-entry storage is therefore minimal, allowing generous pro
+visioning to absorb transient overflow. Assuming 64-bit physical ad
+dresses, a 4KiB PAQ can hold 512 addresses:
+𝑁entries = 4 KiB
+8B = 512.
+Channel-Local Batch Expander logic. Each channel’s controller 
+receives only its own batch segment seed from the Nucleus. Locally, 
+per-bank iBatch logic walks forward through that segment using the 
+13 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+Table 1
+Evaluation parameters.
+Out of order @2.4 GHz
+(One and Eight-cores)
+8-wide Superscalar, 64 IQ 
+32 LQ & SQ, 192 ROB entries. 
+InterStellar engine
+iBuffer = 4 kB/bank.
+iPP Unit = 256 registers
+L1-I/L1-D
+L2
+L3 (Shared LLC)
+64 kB - 4 way - 3-cycles latency 16 MSHRs 
+512 kB - 8 way - 10-cycles latency 32 MSHRs 
+2MB - 16 way - 30-cycles latency 64 MSHRs 
+HW prefetchers
+AMPM - BOP - IMP -SlimAMPM - SPP - Stride (Stream) 
+DRAM
+Organization
+Micron DDR4 2400 MHz, 
+8GB × 8. 
+DRAM addressing
+DRAM scheduling
+RoBaBgColRaCh 
+FRFCFS Priority Hit 
+sub-stream’s base address and stride, generates read commands for the 
+predicted row-hit addresses, enqueues them (or places them in the PAQ 
+if not yet issuable), and inserts returning data into that bank’s iBuffer. 
+This logic consists of address generators, simple stride incrementers, 
+per-bank issue state, and a small arbiter to merge speculative reads 
+with demand requests. There is no global cross-channel coordinator: 
+each channel executes only its own segment, and each bank manages 
+only its own queuing and buffering.
+7.2.3. Energy overhead
+The dominant energy cost of the added structures is due to iBuffer 
+accesses, since the iBuffer is the largest SRAM introduced by the 
+controller. For reference, prior SRAM characterizations report an access 
+energy of approximately 2.4pJ per 32-bit read or write for a 2.5GHz 
+SRAM datapath [55]. For a workload with a 4MB working set (roughly 
+1, 048,576 32-byte/64-byte line operations), the corresponding cumula
+tive iBuffer access energy is on the order of 𝐸𝗂𝖡𝗎𝖿𝖿𝖾𝗋 ≈ 2.52μJ. This is 
+less than 0.3% of the total DRAM energy for the same working set, as 
+measured with DRAMPower.
+The incremental dynamic energy of PAQ lookups, per-bank row-hit 
+counters, and conflict-window metadata updates is negligible compared 
+to iBuffer accesses, since these structures consist of narrow counters 
+and short shift registers. The channel-aware segmentation logic in the 
+Nucleus is dominated by address bit extraction and bookkeeping FIFOs 
+and is similarly negligible.
+Despite their small internal energy footprint, these mechanisms 
+reduce off-chip DRAM energy substantially: by keeping rows open only 
+while they are locally useful, and by converting future misses into short
+latency iBuffer hits, InterStellar 2.0 reduces DRAM traffic and therefore 
+directly lowers DRAM activation and read energy. Measurements using 
+DRAMPower indicate average DRAM energy reductions of ∼24% and 
+reductions of up to 60% in favorable cases.
+8. Experimental environment
+Our evaluation focuses on validating the architectural mechanisms 
+of InterStellar 2.0 using timing-accurate system simulation (gem5) 
+coupled with a detailed DRAM timing model (Ramulator). This setup 
+captures bank/bank-group timing constraints and controller queueing 
+effects while allowing exploration of multi-channel organizations. 
+8.1. Simulation platform
+We evaluate InterStellar 2.0 using a cycle-level simulation frame
+work that integrates gem5 [56] with Ramulator. The simulated system 
+is a RISC-V out-of-order processor complex with a high-performance 
+memory hierarchy modeled after a Neoverse-class core/memory sub
+system [57]. The main parameters are summarized in Table  1. The 
+core model is an 8-wide superscalar backend with a 64-entry issue 
+queue, 32-entry load/store queues, and a 192-entry ROB. Private L1
+I/L1-D caches (64kB, 4-way, 3-cycle latency) and private L2 caches 
+(512kB, 8-way, 10-cycle latency) feed into a shared LLC (2MB, 16-way, 
+30-cycle latency). We model realistic MSHR capacities at each level 
+and include several aggressive hardware prefetchers (AMPM, BOP, 
+IMP, SlimAMPM, SPP, and a stride/stream prefetcher) to ensure that 
+InterStellar 2.0 is evaluated in the presence of conventional prefetch 
+hardware.
+On the memory side, DRAM is modeled using Micron DDR4 timing 
+at 2400MHz, FR-FCFS-style scheduling with row-hit prioritization, and 
+an address mapping of the form RoBaBgColRaCh, which preserves 
+column locality while distributing requests across banks and channels. 
+The baseline memory controller is extended with the iPP and iBatch 
+units described earlier, including per-bank iBuffer structures and the 
+PAQ (Pending ACT Queue). InterStellar 2.0 parameters in Table  1 
+reflect the default configuration: 4kB iBuffer per bank and a 256-entry 
+page/locality tracking structure for iPP.
+Because gem5+Ramulator modeling fidelity has been questioned 
+in recent work [58], we performed validation passes similar to those 
+in the original study. First, we exercised pointer-chase style access 
+patterns (e.g., spmv-like indirect streams) to measure unloaded latency 
+and confirmed that observed access time matches the expected DRAM 
+timing for row hits vs. row conflicts. Second, we stressed bandwidth 
+using dense streaming kernels such as daxpy and verified that the 
+sustained bandwidth converges to the theoretical channel bandwidth 
+under full activation pressure. Third, targeted microbenchmarks were 
+used to confirm that row hits, row conflicts, and bank-level parallelism 
+are reflected with the correct latency deltas. These checks provide 
+confidence that the DRAM model reproduces timing-sensitive behavior 
+(hit vs. conflict vs. bank parallelism) that InterStellar 2.0 relies on.
+8.2. Baseline controllers
+We compare InterStellar 2.0 against 4 schedulers representative 
+of commercial and academic practice. (1) An FR-FCFS controller with 
+an always-open-page policy (prioritizes row hits opportunistically). (2) 
+A COTS-style adaptive page policy that dynamically decides whether 
+to keep or close a row. (3) PARBS (Parallelism-Aware Batch Schedul
+ing), which batches requests per core to increase fairness and service 
+parallelism [59]. (4) BLISS (Blacklisting Memory Scheduler), which 
+deprioritizes interference-heavy requesters to reduce slowdown [29]. 
+We also evaluate all policies under multiple hardware prefetchers 
+(AMPM, BOP, IMP, SlimAMPM, SPP, and Stride) [49,60–62], since 
+prefetch-driven traffic can affect row-buffer residency and batching 
+depth. PARBS and BLISS are included primarily for the multi-core case, 
+since they are designed as multi-core throughput/fairness schedulers; 
+InterStellar 2.0 is evaluated under both single-core and multi-core load 
+to unify comparison.
+8.3. Workloads
+Our evaluation uses 36 memory-intensive kernels drawn from Poly
+Bench, BLAS/LAPACK-style numeric kernels [63,64], stencil codes, 
+data mining and machine learning workloads, and graph/irregular 
+HPC-style codes. These benchmarks span predominantly direct, stride
+regular accesses (e.g., daxpy, gesummv, heat-3d); multi
+dimensional stencils (jacobi-2d, fdtd-2d, seidel-2d); mixed di
+rect+indirect access patterns (spmv, knn-2d, srad_v2); and
+histogram-like, scatter/gather kernels representative of streaming an
+alytics. Table  2 summarizes each benchmark’s ID, suite, access type, 
+number of extracted streams, and dimensional pattern class. Direct ker
+nels are further split by stride regime: ‘‘DS’’ (small stride, e.g., element
+size stride), ‘‘DL’’ (large stride sweeps), ‘‘DM’’ (mixture of small- and 
+large-stride direct streams), and ‘‘MX’’ (mixture of direct and indirect 
+streams). Table  2 lists single-kernel benchmark instances used for both 
+14 
+A.M. Abotaleb et al.
+Table 2
+Used BMs ID, Name, Suite, Stream type (T): (DS: Direct with small stride, DL: Direct with large stride, DM: Direct with mixed small and large strides, and MX: 
+Mixture of direct and Indirect stream.),  Streams Number (S), and Pattern (P).
+ ID BM Suite T S P ID BM Suite T S P ID BM Suite T S P 
+ A atax ALGEBRA DS 1 2D B bicg ALGEBRA DS 1 2D C daxpy LAPACK DS 2 1D  D daxpys LAPACK DL 2 1D E ddot LAPACK DS 2 1D F ddots LAPACK DL 2 1D  G doitgen ALGEBRA DS 3 3D H dscal LAPACK DS 1 1D I dscals LAPACK DL 1 1D  J fdtd-2d Stencil DS 3 2D K floyd-warshall Dyn. Prog. DS 1 2D L gemver BLAS DM 9 2D  M gesummv BLAS DS 5 2D N heat-3d Stencil DS 2 3D O Jacobi-1d Stencil DS 2 1D  P Jacobi-2d Stencil DS 2 2D Q knn-1d Data Mining MX 3 1D R knn-2d Data Mining MX 5 2D  S knn-3d Data Mining MX 7 3D T memcpy Memory DS 2 1D U mvt BLAS DM 5 2D  V scusumbkn LAPACK DS 2 1D W scusumbkns LAPACK DL 2 1D X seidel-2d Stencil DS 4 2D  Y spmv HPCG MX 5 2D Z histo Parboil MX 2 2D 𝛼 stencil Parboil MX 2 2D  𝛽 needle Rodinia MX 5 2D 𝛾 srad_v2 Rodinia MX 7 2D 𝛿 histogram Phoenix MX 4 1D  𝜖 linear regression Phoenix DS 2 2D 𝜁 mm Phoenix DS 3 2D 𝜂 pca Phoenix DS 3 2D  𝜅 reverse index Phoenix MX 7 2D 𝜆 string match Phoenix DS 1 1D 𝜇 word count Phoenix MX 2 1D 
+1C and homogeneous 8C runs. Table  3 separately defines the hetero
+geneous 8-core mixes (Z1–Z8), where different benchmarks execute 
+concurrently across cores. For LAPACK-style kernels, we evaluate two 
+modes. In the fixed-stride mode (e.g., daxpy, ddot, dscal), array 
+traversals use an 8-byte stride (double-precision). In the stride-sweep 
+mode (e.g., daxpys, ddots, dscals), we sweep strides from 16B 
+up to 4KB to emulate sparse or tiled access. The ‘‘s’’ suffix in Table 
+2 indicates this stride-sweep variant. This stress test is important for 
+iPP, because large strides shorten the useful row-hit window and 
+increase row conflicts if the controller’s policy is not stream-aware. In 
+figures where these stride variants appear, we append a suffix to the 
+benchmark name (e.g., _1C, _2C, _4C) to denote stride = 1/2/4 cache 
+lines, respectively.
+In addition to single-kernel runs, we construct heterogeneous multi
+core mixes in which different benchmarks execute on different cores 
+concurrently. Table  3 lists eight such mixes (Z1–Z8). These mixes 
+include combinations of (i) dense streaming kernels, (ii) irregular/
+indirect kernels, and (iii) communication-heavy kernels (e.g., memcpy
+like behavior). This stresses fairness, interference between streams 
+mapped to the same bank, and controller behavior when multiple 
+bursty producers share memory bandwidth.
+8.4. InterStellar 2.0 experiments design
+We run extended experiments to quantify the multiple channels and 
+fine grained performance in three categories: 1- DRAM Channel Scaling. 
+2- stencil fine grained performance enhancement. 3- iBatch and iBuffer 
+size sweep as DRAM channels are scaled.
+1- Channel scaling We study scalability across up to 32 channels. 
+We sweep the DRAM organization across {1, 2, 4, 8, 16, 32} chan
+nels while holding per-channel timing, per-bank buffer sizes, and per
+core configuration constant. Each channel is instantiated with its own 
+controller, iPP state, and iBatch/iBuffer/PAQ structures, and address 
+mapping interleaves consecutive accesses across different DRAM chan
+nels. Each channel is instantiated with its own memory-controller 
+instance for all evaluated multi-channel policies (InterStellar 2.0 and 
+PARBS/BLISS/COTS), under the same cache-line interleaving address 
+mapping across channels. InterStellar 1.0 is evaluated only for the 
+single-channel configuration.
+2- Fine grained stream definition’s enhancement on stencil BMs.
+Two stencil BMs are used to explore the improvement associated with 
+the fine grained sub-stream definition introduced in InterStellar 2.0. 
+The selected BMs are: jacobi-2d and seidel-2d. The stencil BMs 
+also are running on stride = 3 to avoid overlapping the sub-streams 
+accesses as in the latter case, some sub-streams would be ready in cache 
+memory from earlier accesses. We compare the E2E cycles speedup and 
+BW improvement of using fine grained streams over coarse grained 
+streams.
+3- iBatch depth at practical iBuffer size sweep exploration. In the 
+single channel case, iBatch depth was constrained by iBuffer capacity 
+and bank timing. InterStellar 2.0 introduces PAQ per bank, which can 
+temporarily hold predicted accesses when the iBuffer is full. Also an 
+important factor is that iBatch is sub-divided over multiple channels. 
+To quantify the value of this decoupling, we sweep the iBatch depth, 
+which is the known lookahead window, i.e., number of known future 
+row-hit lines issued per sub-stream once a row becomes active. In the 
+multi-channel case, deeper logical iBatches do not necessarily imply 
+proportionally larger per-channel iBuffers, because each channel only 
+services its own batch segment. Evaluating this design space isolates 
+how PAQ and per-channel segmentation affect latency hiding and 
+bank-level interference under heavy memory pressure.
+8.5. Metrics
+We report three primary metrics:
+1.Normalized end-to-end speedup. For policy 𝑃, we compute
+Speedup𝑃=Execution Time (COTS adaptive page policy)
+Execution Time (𝑃) ,
+where the baseline is a COTS-style adaptive page policy con
+troller.
+2.Normalized bandwidth. For policy 𝑃, we define bandwidth as
+𝐵𝑊𝑃=Total bytes transferred to/from DRAM
+Total active DRAM cycles ,
+and report 𝐵𝑊𝑃∕𝐵𝑊COTS. This captures effective channel/bank 
+utilization and row-buffer efficiency.
+3.Normalized DRAM energy. Using traces from Ramulator and 
+DRAMPower [65], we estimate the DRAM energy for each policy 
+and report it normalized to COTS. This reflects the impact of iPP 
+(fewer wasted activates/precharges) and iBatch (higher row-hit 
+rates, fewer long-latency demand reads).
+Unless otherwise stated, all results are reported for both single-core 
+and 8-core systems; multi-core experiments include both homogeneous 
+(same benchmark per core) and heterogeneous mixes from Table  3.
+9. Evaluation
+This section evaluates InterStellar 2.0. We begin by revisiting and 
+extending the baseline single-channel results from InterStellar to estab
+lish the sources of performance gain in isolation (Section 9.1). We then 
+present multicore scaling results and compare against prior memory 
+controller policies (Section 9.2). Next, we introduce the new evaluation 
+axes enabled by InterStellar 2.0: multi-channel scaling (Section 9.6), 
+Journal of Systems Architecture 177 (2026) 103832 
+15 
+A.M. Abotaleb et al.
+Table 3
+Selected BMs for the mixed-case eight-core setup.
+ ID C1 C2 C3 C4 C5 C6 C7 C8 
+ Z1 atax bicg dscal gesummv atax bicg dscal gesummv  Z2 memcpy gesummv knn1d spmv memcpy gesummv knn1d spmv  Z3 memcpy mvt ddot spmv daxpy gesummv knn1d dscal  Z4 atax mvt histogram spmvid daxpy lin.reg. knn1d dscal  Z5 gemver scusumkbn srad_v2 memcpy dscal bicg knn2d gesummv  Z6 knn1d daxpy dscal gesummv knn1d daxpy dscal gesummv  Z7 histogram lin.reg. atax bicg histogram lin.reg. atax bicg  Z8 memcpy scusumkbn srad_v2 gesummv daxpy dscal daxpy dscal 
+batch-depth and buffer sizing sensitivity (Section 9.8), , Finally, we 
+study interaction with hardware prefetchers (Section 9.3) and DRAM 
+energy (Section 9.4).
+Unless otherwise noted, results use an 8-core out-of-order RISC-V 
+system integrated with a cycle-accurate memory controller and DDR
+class DRAM timing, as described in Section 8. All performance values 
+are reported as normalized end-to-end (E2E) speedup relative to COTS 
+baseline, and all bandwidth values are reported as delivered memory 
+bandwidth normalized to that same baseline.
+9.1. Single-core performance and sources of gain
+This experiment isolates a single core running one benchmark (BM) 
+at a time to quantify the intrinsic benefits of the InterStellar mech
+anisms (per-stream intelligent Page Policy, iPP, and per-stream de
+terministic batching, iBatch) without multicore interference. Fig.  15 
+reports normalized E2E speedup and normalized delivered DRAM band
+width across all evaluated BMs. Fig.  16 breaks down DRAM request 
+types (row hits, row misses, row conflicts, and serviced iBatch hits) 
+for representative BMs. We choose these representative benchmarks to 
+span distinct memory behaviors that InterStellar 2.0 targets: (i) highly 
+row-local direct streaming (high row-hit opportunity), (ii) conflict
+heavy alternation/thrashing that inflates active DRAM cycles, and (iii) 
+mixed direct+indirect patterns where interference between regular and 
+irregular slices stresses stream-aware page policy. Across all single-core 
+experiments, InterStellar achieves on average: 1.44× normalized E2E 
+speedup and 2.7× normalized bandwidth improvement versus the COTS 
+baseline. For direct-stream workloads with short stride (e.g., dense 
+vector/row scans), the gains are higher: 1.6× average speedup and 
+3.3× bandwidth improvement. These kernels exhibit high intra-stream 
+locality but normally suffer when two or more streams alternate quickly 
+enough to force row thrashing. InterStellar prevents this thrashing.
+For long-stride direct streams (e.g., strided daxpy-like loops, scatter/
+gather-like copies), iPP is the primary contributor. As stride increases, 
+accesses are spread across many DRAM rows; the opportunity to form 
+large iBatch bursts naturally decreases. In this regime, iPP converts 
+most ‘‘row conflicts’’ (activate/precharge ping-pong between rows in 
+the same bank) into ‘‘row misses’’ (activate-on-idle) for the next stream. 
+On representative long-stride kernels such as scusumbkns, sweeping 
+the stride from 512 B to 4 kB shows that the maximum iPP-only 
+speedup reaches 1.25× at a stride of 2 kB, even though batching 
+opportunities diminish. This is because the page-closing decision is 
+made with stream-aware knowledge of when the next request will force 
+a different row.
+For mixed direct/indirect workloads (e.g., sparse gather/scatter pat
+terns similar to spmv), iPP leverages the per-stream conflict-tracking 
+window to decide when to close a row. Meanwhile, iBatch buffers the 
+predictable portions of direct streams so that they no longer ‘‘pollute’’ 
+the indirect-stream locality counters. This separation prevents an irreg
+ular access slice from forcing premature precharge in a regular slice, 
+and vice versa.
+Hence, even in the absence of other cores and other streams, de
+fault memory controllers waste cycles on preventable row conflicts 
+and short-lived row reuse. By combining batched row-hit bursts with 
+per-stream (rather than per-bank) row-buffer residency decisions, In
+terStellar converts those cycles into useful bandwidth.
+9.2. Multicore performance (8-core baseline)
+We now run all 8 cores concurrently. We compare InterStellar 
+with (i) a modern adaptive COTS controller, (ii) PARBS, and (iii) 
+BLISS. PARBS and BLISS are representative hardware-only schedulers 
+that form batches or deprioritize requestors at the granularity of 
+cores/threads to reduce starvation and interference. Fig.  17 shows 
+normalized E2E speedup for each BM, and Fig.  18 shows representative 
+DRAM request-type distributions.
+On an 8-core system:
+• InterStellar achieves up to 2.72× E2E speedup (PolyBench class 
+kernels).
+• PARBS reaches up to 1.6×.
+• BLISS reaches up to 1.2×.
+•On average across all BMs, InterStellar achieves 1.5× E2E
+speedup versus the COTS controller.
+Large gains for C/D/E are expected because they map to streaming 
+BLAS/LAPACK vector kernels (e.g., daxpy, daxpys, ddot) that are 
+strongly bandwidth-bound and therefore highly sensitive to reductions 
+in row conflicts and active DRAM service cycles. The key difference is 
+granularity. PARBS and BLISS cluster by core. This works well when 
+each core runs a single dominant stream with little internal conflict 
+(e.g., in mixes like Z1, where each core runs a mostly single-stream 
+kernel). But in multi-stream or mixed-access kernels, a single core can 
+generate several interfering access streams; batching at core granularity 
+interleaves those streams and still destroys row locality. InterStellar, 
+in contrast, batches and applies page policy at stream granularity, not 
+core granularity. As a result, conflicts drop sharply, many would-be 
+misses become iBatch hits, and even indirect streams see fewer forced 
+precharges. The needle BM is a noteworthy stress case. It generates 
+multiple co-active streams with complex patterns that quickly fill and 
+churn the iBuffer. With a small per-bank iBuffer (4 kB), needle shows 
+limited or even negative speedup due to iBuffer turnover. However, 
+increasing iBuffer capacity raises the speedup to >1×, demonstrating 
+that locality is present and capturable, but more buffering is required 
+to expose it. This motivates the InterStellar 2.0 extension of decoupling 
+batch depth from the physical buffer size using a Pending ACT Queue 
+(PAQ) (Section 9.8).
+In multicore settings, interference among streams — both within 
+a core and across cores — is the main reason why memory stalls 
+dominate execution. Per-stream batching and per-stream page policy, 
+as implemented by InterStellar, directly attack that interference, unlike 
+core-centric schedulers.
+9.3. Interaction with hardware prefetchers
+To demonstrate orthogonality to cache-level hardware prefetchers 
+(HWPs), we evaluate InterStellar and InterStellar 2.0 both with and 
+without several state-of-the-art HWPs (AMPM, BOP, IMP, SlimAMPM, 
+SPP, and Stride). We consider two scenarios: (i) COTS controller + 
+HWP only, (ii) InterStellar/InterStellar 2.0 alone (no HWP), and (iii) 
+InterStellar/InterStellar 2.0 combined with each HWP. The reported 
+results here are averaged across the full workload suites. Fig.  19 
+Journal of Systems Architecture 177 (2026) 103832 
+16 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+Fig. 15. Single-core (1C) normalized E2E speedup and delivered bandwidth versus the COTS adaptive controller. One benchmark instance runs on one core while 
+all other cores are idle.
+Fig. 16. Single-core DRAM statistics for representative BMs: breakdown of 
+requests into row hits, iBatch hits, row misses, and row conflicts. Inter* refers 
+to InterStellar.
+shows that InterStellar alone achieves up to 3× E2E speedup over 
+COTS+HWP, and adding InterStellar on top of an HWP delivers up 
+to 2.5× additional speedup beyond that HWP alone. Fig.  20 shows 
+that InterStellar increases delivered memory bandwidth by 2.02× on 
+average versus COTS+HWP, primarily because it eliminates repeated 
+row conflicts and reduces active DRAM cycles per useful byte.
+These results generalize to InterStellar 2.0, where the prefetcher 
+still runs at the cache hierarchy, but the controller remains in charge 
+of deterministic per-stream batching and per-stream page policy on 
+each channel. Critically, InterStellar 2.0 does not rely on speculative 
+injection of requests into already congested controller queues. Instead, 
+it issues batches from within the controller, after a demand access opens 
+a row, so those batches are inherently row-hit dense and scheduled in 
+a DRAM-friendly order.
+Traditional HWPs speculate early and suffer from cache pollution, 
+MSHR pressure, and queue backpressure. InterStellar and InterStellar 
+2.0 batch late (at the controller), deterministically, and per stream. As 
+a result, they can outperform HWPs and stack on top of them.
+9.4. DRAM energy and active-cycle reduction
+To quantify memory energy effects, we estimate DRAM energy 
+using DRAMPower-style modeling on controller traces. Fig.  21 shows 
+normalized DRAM energy for selected BMs in an 8-core setup, com
+paring InterStellar (no HWP), COTS+HWP, PARBS, and BLISS. We 
+evaluate 10 representative homogeneous workloads selected to span 
+Table  2’s diversity in stream type (direct vs. mixed direct+indirect) 
+and, importantly, stream concurrency (from single-stream kernels to 
+multi-stream workloads such as srad_v2)On average, InterStellar 
+reduces DRAM energy by 24% versus COTS without HWP and by 17% 
+versus COTS with HWP. In workloads with multiple interfering streams 
+(e.g., daxpy, ddot, scusumkbn), energy is reduced by up to 60% 
+versus COTS without HWP and up to 54% versus COTS+HWP. The 
+reduction comes from eliminating repeated row opens/precharges and 
+from shrinking active DRAM time per useful byte.
+9.5. 32-Channel results: E2E and bandwidth gains
+All results in this section use the eight-core (8C) configuration 
+described in Table  1. Speedups are normalized against COTS running 
+on 32-DRAM channels. Fig.  22 reports normalized end-to-end (E2E) 
+speedup across the benchmark set when scaling to a 32-channel DRAM 
+system. InterStellar 2.0 (striped gray bars) consistently outperforms 
+PARBS, BLISS, and a STREAM/Stride prefetcher–driven baseline. Across 
+all BMs, InterStellar 2.0 attains up to 2.92× E2E speedup, with a 1.47×
+average speedup relative to the COTS adaptive controller.
+Fig.  23 shows delivered DRAM bandwidth normalized to COTS. 
+InterStellar 2.0 converts controller cycles spent on row conflicts into 
+dense row-hit service, yielding substantially higher effective bandwidth 
+even in interference-heavy cases. The gains are broad: dense linear 
+algebra, stencils, and mixed direct+indirect kernels all benefit once 
+segmented iBatch and per-stream iPP operate per channel.
+9.6. Channel sweep: 1 → 32 channels
+To study scalability, we sweep the memory system across {1, 2, 
+4, 8, 16, 32} channels while holding per-channel timing, per-bank 
+buffers, and core configuration constant. This sweep is an isolation 
+study of memory-parallelism scaling and inter-channel independence. 
+Figs.  24 and 25 plot normalized E2E and bandwidth, respectively. Two 
+observations emerge:
+1. Bandwidth scales nearly linearly with channel count under 
+InterStellar 2.0. Segmented iBatch ensures each channel gener
+ates only its own row-hit runs and never stalls on a global batch 
+queue. As channels double, delivered bandwidth with InterStel
+lar 2.0 almost doubles as well, whereas the COTS controller 
+leaves bandwidth on the table due to cross-stream conflicts 
+within banks.
+2. E2E tracks bandwidth when kernels are memory-bound. For 
+daxpy-like, stencil, and histogram kernels, E2E improves with 
+channels in lockstep with bandwidth. Compute-heavier cases 
+show smaller E2E improves once memory pressure is relieved, 
+as expected.
+9.7. Fine-grained sub-streams for stencils
+We quantify the effect of fine-grained sub-stream descriptors on two 
+stencils: jacobi-2d and seidel-2d. We compare a coarse descrip
+tion (one stream per array: ‘‘1S’’) against a fine-grained description 
+(three sub-streams per array, one per row slice: ‘‘3S’’). All runs use 
+stride 𝑆 = 3 to avoid cache overlap between slices. Fig.  26 reports 
+normalized E2E and bandwidth. Results show the following:
+(1) seidel-2d: up to 35% E2E improvement (1.35×) and larger 
+bandwidth gain when moving from 1S to 3S. Seidel’s stencil exhibits 
+17 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+Fig. 17. Eight-core (8C) normalized E2E speedup versus the COTS adaptive controller for InterStellar, PARBS, BLISS, and Open-Page. Bars include homogeneous 
+8-core runs (same benchmark replicated on all cores) and heterogeneous mixes (Z1–Z8 from Table  3), as labeled on the 𝑥-axis.
+Fig. 18. DRAM request breakdown for representative BMs on 8 cores. Inter
+Stellar aggressively converts conflicts/misses into row hits and iBatch hits.
+Fig. 19.  8-core average normalized E2E speedup. Comparison of InterStellar 
+vs. six HWPs, and InterStellar+HWP vs. HWP alone.
+Fig. 20.  8-core average normalized bandwidth improvement. InterStellar vs. 
+HWPs (COTS baseline).
+strong per-row locality that iPP can fully exploit once each sub-stream 
+maintains independent counters.
+(2) jacobi-2d: modest E2E improvement of ∼5%. Jacobi’s access 
+pattern already exposes two dominant streams with fewer interleavings; 
+sub-stream isolation helps, but the baseline is closer to ideal. Overall, 
+the gains are primarily driven by iPP: tracking each sub-stream sepa
+rately prevents premature precharges caused by mixed histories in the 
+coarse model.
+Fig. 21.  8-core normalized DRAM energy consumption vs. COTS baseline 
+(lower is better).
+9.8. iBatch depth sweep at practical iBuffer size
+We now sweep the iBatch lookahead depth while fixing a practical 
+iBuffer size of 8kB per bank and using PAQ to decouple logical depth 
+from instantaneous issue capacity. Fig.  27 summarizes normalized E2E 
+and bandwidth. Key findings are as follows.
+(1) Depth >64 lines delivers a clear step up in E2E. With seg
+mented batches across channels, deeper windows keep more future row 
+hits resident in the per-bank pipeline, improving overlap and reducing 
+controller idle gaps.
+(2) Diminishing returns beyond very deep windows. Past ∼96
+128 lines, additional depth is limited by DRAM timing (e.g.,
+𝑡𝐹𝐴𝑊 /𝑡𝑅𝑅𝐷), PAQ drain rate, and interference from other active sub
+streams within the same bank.
+(3) No proportional iBuffer growth is required in multi-channel.
+Because each channel handles only its segment, the same 8kB iBuffer 
+per bank suffices for beneficial depth (≥64). 
+9.9. Scalability study with larger LLC and higher concurrency
+Setup. To study sensitivity to a larger cache hierarchy and higher 
+concurrency, we repeat the channel-scaling experiment using a 16-core
+system with a 16MB LLC, and run only LINPACK/BLAS-style streaming 
+kernels (daxpy, ddot, dscal, scusumkbn) due to simulation-time 
+constraints. For this experiment, the working-set size is set to 18MB 
+(per kernel), so the access stream still experiences capacity pressure 
+and produces sustained LLC evictions and DRAM traffic. Increasing LLC 
+capacity can reduce pressure on main memory and therefore reduce the 
+end-to-end gains from InterStellar 2.0. However, this effect is workload 
+dependent. Workloads with (i) streaming behavior and low cache-line 
+reuse, or (ii) working sets that are comparable to or larger than LLC 
+will still generate substantial LLC misses and remain DRAM-bound, and 
+therefore can continue to benefit from InterStellar 2.0 as shown in Figs. 
+18 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+Fig. 22. 32-channel normalized E2E speedup versus COTS for PARBS, BLISS, STREAM prefetcher, and InterStellar 2.0. For daxpys, ddots, dscals, and scusumkbns 
+workloads: _1C, _2C, and _4C denotes stride = 1, 2, and 4 cache lines respectively.
+Fig. 23. 32-channel normalized bandwidth versus COTS for PARBS, BLISS, STREAM prefetcher, and InterStellar 2.0.
+Fig. 24. E2E speedup vs. COTS as channels scale from 1 to 32.
+28 and 29. Moving from 8 to 16 cores increases concurrent memory 
+pressure and interference among outstanding streams, which typically 
+increases row conflicts and contention under conventional controllers. 
+This additional conflict pressure increases the opportunity for Inter
+Stellar 2.0 to convert conflict-heavy service into denser row-hit service 
+and more effective batching, improving throughput in memory-bound 
+phases. Fig.  28 reports normalized end-to-end (E2E) cycle reduction 
+(speedup), and Fig.  29 reports normalized bandwidth improvement, 
+for channel counts from 1 to 32. Normalization is per channel count: 
+e.g., InterStellar 2.0 at 2 channels is normalized against the COTS 
+controller at 2 channels, and similarly for 4/8/16/32 channels.
+10. Related work
+We group related work into three areas: (i) HW/SW co-design for 
+stream-aware memory systems, (ii) HW/SW cooperation frameworks 
+for memory control, and (iii) DRAM controller scheduling and page 
+policy mechanisms.
+10.1. Stream-aware HW/SW co-design
+InterStellar [37] introduced a HW/SW interface in which the com
+piler identifies streams—regular access patterns such as affine (direct) 
+streams and indirect streams—and communicates these patterns to 
+19 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+Fig. 25. Normalized bandwidth vs. COTS as channels scale from 1 to 32. InterStellar 2.0 makes efficient use of added channels asiBatch spans all channels.
+Fig. 26. Fine-grained streaming for stencils: E2E speedup and bandwidth 
+improvement when moving from coarse (1S) to fine-grained (3S) descriptors 
+at 𝑆 =3.
+Fig. 27.  With 32-channels: iBatch depth sweep with fixed iBuffer = 8kB per 
+bank. E2E and bandwidth improve markedly once depth exceeds 64 lines.
+hardware using compact descriptors. The hardware-side nucleus (Nu
+cleus) associates these descriptors with LLC misses and forwards the 
+stream ID and basic access metadata to the memory controller. The 
+controller then applies two policies: (i) an intelligent Page Policy (iPP), 
+which decides DRAM row-buffer residency per stream (rather than per 
+bank), and (ii) iBatch, which proactively issues bursts of predicted row 
+hits for that stream, buffers the resulting data locally at the controller, 
+and returns them to the core on demand. This HW/SW cooperation 
+reduces DRAM row conflicts and improves effective bandwidth without 
+requiring ISA extensions or OS/runtime changes.
+InterStellarRT [66] extends the same philosophy to real-time sys
+tems, but with an explicitly timing-driven objective. It targets affine 
+(direct) streams and uses compiler-provided descriptors to construct 
+groups of row hits (rtBatch) and to schedule those groups deterministi
+cally. InterStellarRT adopts an address mapping that has consecutive 
+requests across DDR4/DDR5 bank groups and serves each batch using 
+a BR-FR-FCFS (Batch-Ready First-Ready First-Come-First-Serve) policy, 
+enforcing uninterrupted service of that batch. This structure enables 
+significantly tighter worst-case and interference bounds than prior real
+time DRAM controllers, while still improving throughput and sustained 
+bandwidth. InterStellarRT reports up to 3.8× tighter isolated worst-case 
+memory latency bounds and up to 13.5× tighter interference bounds 
+over state-of-the-art predictable controllers. These guarantees are valu
+able for real-time systems; they are orthogonal to the high-throughput, 
+multi-channel scalability objective of InterStellar 2.0.
+InterStellar 2.0 builds directly on InterStellar. First, InterStellar 
+2.0 scales stream-aware control to multi-channel DDR-class systems 
+by segmenting each stream’s predicted future accesses across chan
+nels. Each DRAM channel receives only its own segment and inde
+pendently applies batching, buffering, and per-bank row policy. This 
+eliminates cross-channel coordination and shared backpressure, and 
+it preserves timing closure at high controller frequency as channel 
+count increases. Second, InterStellar 2.0 introduces fine-grained sub
+stream descriptors: instead of treating all accesses from a complex loop 
+(e.g., multiple stencil planes) as one stream, the compiler emits multiple 
+sub-streams. The controller tracks locality (row-hit counters, conflict 
+windows) separately per sub-stream and per bank. This prevents un
+related access slices from polluting each other’s locality history and 
+improves DRAM row-buffer residency and row-hit rate. Together, these 
+extensions allow InterStellar 2.0 to scale delivered bandwidth with 
+channel count and to preserve locality within complex loop bodies, 
+while remaining ISA-compatible and OS-transparent like InterStel
+lar.  Recent stacked-memory deployments expose many independently 
+scheduled command domains (channels and pseudo-channels), moti
+vating mechanisms that scale across many domains without global 
+coordination bottlenecks [67,68]. Recent work explores HBM3-based 
+near-data processing accelerators that use hardware–software co-design 
+to map DNN dataflow efficiently while respecting area and thermal con
+straints, reducing the memory wall and improving throughput. [69]. 
+InterStellar 2.0 is complementary: its segmented batching and per
+domain iPP/iBatch operate at the abstraction of an independently 
+scheduled domain and therefore extend naturally to these organizations 
+without relying on DDR4-specific assumptions.
+10.2. HW/SW cooperation for memory management
+A number of prior systems explore HW/SW interfaces that expose 
+semantic information about memory regions to hardware. Täko [70] 
+20 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+Fig. 28. 16-core, 16MB LLC: normalized E2E cycle speedup for LINPACK kernels across channel counts.
+Fig. 29. 16-core, 16MB LLC: normalized bandwidth improvement for LINPACK kernels across channel counts.
+allows software to tag ‘‘phantom data’’ regions and registers software 
+callbacks that are invoked on cache events (miss, eviction, write
+back) for those regions; the callbacks can implement custom memory
+management actions, supported by in-cache execution hardware.
+XMem and MetaSys [35,36,71] generalize this model using explicit 
+metadata objects (‘‘atoms’’) that are attached to memory regions. The 
+ISA is extended to create, map, and unmap these atoms, and the 
+OS participates in maintaining and interpreting them. The hardware 
+then uses atom metadata to guide placement, migration, coherence, or 
+scheduling policy.
+These frameworks demonstrate that exposing semantic intent from 
+software can improve memory behavior, but they rely on ISA changes, 
+OS/runtime cooperation, and page- or region-granularity tagging. By 
+contrast, InterStellar, InterStellarRT, and InterStellar 2.0 communi
+cate per-stream descriptors using existing CSR space (or a reserved 
+MMIO range), requiring no ISA extensions. The granularity is not an 
+OS page but a compiler-identified stream or sub-stream. The nucleus 
+(Nucleus) attaches this metadata to individual LLC misses, so the 
+memory controller can act on a per-stream (and in InterStellar 2.0, 
+per-sub-stream) basis when applying batching and page policy. This 
+avoids programmer-inserted callbacks and avoids kernel modification 
+while still enabling software-guided control at cache-line granularity.
+10.3. DRAM scheduling and page policies
+Commodity DRAM controllers traditionally employ FR-FCFS (First
+Ready, First-Come-First-Serve) scheduling and heuristic/adaptive page 
+policies (open-page, closed-page, or adaptive switching). FR-FCFS pri
+oritizes row hits for throughput and uses arrival order as a tie-breaker. 
+Adaptive page policies monitor recent hit/miss activity per bank and 
+attempt to infer whether to keep a row open or precharge it. These 
+techniques improve average throughput but remain reactive and bank
+centric: they neither anticipate future accesses beyond what is currently 
+queued nor distinguish which loop, stream, or kernel generated each 
+request.
+To improve fairness and QoS in multicore systems, many schedulers 
+cluster, rank, or throttle requests at the granularity of cores or appli
+cations. Examples include PARBS, BLISS, TCM, ATLAS, STFM, MISE, 
+DASH, and staged schedulers [28–33,72,73]. These proposals manage 
+interference and starvation, often by forming batches or deprioritizing 
+‘‘aggressor’’ requesters. Other work applies reinforcement learning to 
+dynamically optimize DRAM scheduling decisions, reporting up to 
+∼1.3× average speedup over FR-FCFS-like baselines [34]. All of these 
+techniques are hardware-only: they infer structure from timing and 
+queue state but do not consume compiler-provided access semantics.
+In contrast, InterStellar and InterStellar 2.0 explicitly move stream 
+semantics into the controller. iPP replaces purely bank-level heuristics 
+with per-stream (and, in InterStellar 2.0, per-sub-stream) row-buffer 
+residency tracking, allowing the controller to close a row precisely 
+when that stream’s useful locality is exhausted. iBatch replaces oppor
+tunistic reordering with deterministic, software-informed bursts of row 
+hits that are buffered locally at the controller, preventing both cache 
+pollution and MSHR/read-queue saturation. InterStellar 2.0 further 
+decentralizes this logic by generating channel-segmented batches so 
+that each DRAM channel can schedule, buffer, and enforce page pol
+icy independently, without cross-channel backpressure. This delivers 
+high effective bandwidth on multi-channel DDR-class systems while 
+preserving compatibility with unmodified ISAs and operating systems.
+11. Conclusion
+InterStellar 2.0 advances stream-aware HW/SW memory control 
+to many-channel DRAM while preserving compatibility—no ISA or 
+OS changes. By partitioning stream-informed batching across channels 
+and tracking fine-grained sub-streams, each controller bank makes 
+precise local decisions that convert conflict-heavy DRAM requests into 
+row-hit bursts. Across 1–32 DRAM channels on an 8-core platform, 
+InterStellar 2.0 delivers up to 2.92× end-to-end speedup and up to 
+2.83× higher sustained bandwidth versus a COTS controller; fine
+grained tracking alone provides up to 1.35× improvement. These results 
+demonstrate that stream-informed memory control provides a scalable 
+21 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+and architecture-agnostic foundation for future high-bandwidth DDR
+class and heterogeneous memory systems, enabling higher efficiency 
+without sacrificing compatibility or design simplicity.
+CRediT authorship contribution statement
+Abdelrhman Mohamed Abotaleb: Writing – original draft, Visu
+alization, Validation, Software, Methodology, Formal analysis, Con
+ceptualization. Maziar Goudarzi: Writing – original draft, Methodol
+ogy, Conceptualization. Tomasz Czajkowski: Writing – original draft, 
+Methodology, Conceptualization. Reza Azimi: Writing – original draft, 
+Methodology, Conceptualization. Mohamed Hassan: Writing – review 
+& editing, Writing – original draft, Visualization, Validation, Supervi
+sion, Software, Methodology, Conceptualization.
+Declaration of competing interest
+The authors declare that they have no known competing finan
+cial interests or personal relationships that could have appeared to 
+influence the work reported in this paper.
+Data availability
+Data will be made available on request.
+References
+[1] A. Bakshi, J.-L. Gaudiot, W.-Y. Lin, M. Makhija, V.K. Prasanna, W. Ro, C. Shin, 
+Memory latency: to tolerate or to reduce, in: 12th Symposium on Computer 
+Architecture and High Performance Computing, SBAC-PAD, 2000.
+[2] C. Carvalho, The gap between processor and memory speeds, in: IEEE 
+International Conference on Control and Automation, ICCA, 2002.
+[3] S. Eyerman, W. Heirman, I. Hur, DRAM bandwidth and latency stacks: Visu
+alizing DRAM bottlenecks, in: IEEE International Symposium on Performance 
+Analysis of Systems and Software, ISPASS, 2022, http://dx.doi.org/10.1109/
+ISPASS55109.2022.00045.
+[4] C.-Y. Liu, H.M. Waidyasooriya, M. Hariyama, Data-transfer-bottleneck-less ar
+chitecture for FPGA-based quantum annealing simulation, in: 7th International 
+Symposium on Computing and Networking, CANDAR, 2019, http://dx.doi.org/
+10.1109/CANDAR.2019.00028.
+[5] D. Lee, Y. Kim, V. Seshadri, J. Liu, L. Subramanian, O. Mutlu, Tiered-latency 
+DRAM: A low latency and low cost DRAM architecture, in: ACM/IEEE 19th 
+International Symposium on High-Performance Computer Architecture, HPCA, 
+2013, http://dx.doi.org/10.1109/HPCA.2013.6522354.
+[6] O. Mutlu, L. Subramanian, Research problems and opportunities in mem
+ory systems, Supercomput. Front. Innov. (2014) http://dx.doi.org/10.14529/
+jsfi140302.
+[7] H. Luo, T. Shahroodi, H. Hassan, M. Patel, A.G. Yağlıkçı, L. Orosa, J. Park, O. 
+Mutlu, CLR-DRAM: A low-cost DRAM architecture enabling dynamic capacity
+latency trade-off, in: ACM/IEEE 47th Annual International Symposium on 
+Computer Architecture, ISCA, 2020, http://dx.doi.org/10.1109/ISCA45697.2020.
+00061.
+[8] H. Hassan, M. Patel, J.S. Kim, A.G. Yaglikci, N. Vijaykumar, N.M. Ghiasi, S. 
+Ghose, O. Mutlu, CROW: A low-cost substrate for improving DRAM perfor
+mance, energy efficiency, and reliability, in: IEEE 46th Annual International 
+Symposium on Computer Architecture, ISCA, 2019, http://dx.doi.org/10.1145/
+3307650.3322231.
+[9] JESD79-4A: DDR4 SDRAM, Standard, JEDEC, Arlington, VA, 2021, URL https:
+//www.jedec.org/standards-documents/docs/jesd79-4a.
+[10] JEDEC Solid State Technology Association, DDR5 SDRAM (JESD79-5c.01_v1.31), 
+2024, URL https://www.jedec.org/standards-documents/docs/jesd79-5c01. Edi
+torial Revision of JESD79-5C_v1.30, April 2024.
+[11] JESD79-3D: DDR3 SDRAM, Standard, JEDEC, Arlington, VA, 2012, URL https:
+//www.jedec.org/standards-documents/docs/jesd-79-3d.
+[12] ATP Electronics, Why DDR5 matters for servers: Is it worth the switch?, 2023, 
+URL https://shorturl.at/4OLoV.
+[13] Rambus Inc, Scaling DRAM technology to meet future demands, 2025, URL 
+https://www.rambus.com/.
+[14] Emergent Mind, High-bandwidth memory (HBM) overview, 2025, URL https:
+//shorturl.at/gqvsq. HBM delivers 5–10× the bandwidth of commodity DDR 
+by exploiting multiple parallel channels and wide interfaces for HPC and AI 
+accelerators.
+[15] K. Technology, DDR5 memory standard: An introduction to the next generation 
+of dram module technology, 2024, URL https://shorturl.at/SL1vt.
+[16] A. Bhiksha, contributors, Memory controllers: The brain behind RAM 
+management, 2025, URL https://www.abhik.xyz/concepts/memory/memory
+controllers.
+[17] H. Nasiri, S. Nasehi, M. Goudarzi, Evaluation of distributed stream processing 
+frameworks for IoT applications in smart cities, J. Big Data 6 (2019) http:
+//dx.doi.org/10.1186/s40537-019-0215-2.
+[18] Z. Wang, T. Nowatzki, Stream-based memory access specialization for general 
+purpose processors, in: ACM/IEEE 46th International Symposium on Computer 
+Architecture, ISCA, 2019, http://dx.doi.org/10.1145/3307650.3322229.
+[19] J.M. Domingos, N. Neves, N. Roma, P. Tomás, Unlimited vector extension with 
+data streaming support, in: ACM/IEEE 48th Annual International Symposium on 
+Computer Architecture, ISCA, IEEE, 2021, http://dx.doi.org/10.1109/ISCA52012.
+2021.00025.
+[20] F. Schuiki, F. Zaruba, T. Hoefler, L. Benini, Stream semantic registers: A 
+lightweight risc-v isa extension achieving full compute utilization in single-issue 
+cores, IEEE Trans. Comput. (TC) 70 (2) (2020) http://dx.doi.org/10.1109/TC.
+2020.2987314.
+[21] Z. Wang, J. Weng, J. Lowe-Power, J. Gaur, T. Nowatzki, Stream floating: 
+Enabling proactive and decentralized cache optimizations, in: ACM/IEEE Inter
+national Symposium on High-Performance Computer Architecture, HPCA, 2021, 
+http://dx.doi.org/10.1109/HPCA51647.2021.00060.
+[22] N. Talati, K. May, A. Behroozi, Y. Yang, K. Kaszyk, C. Vasiladiotis, T. Verma, 
+L. Li, B. Nguyen, J. Sun, J.M. Morton, A. Ahmadi, T. Austin, M. O’Boyle, S. 
+Mahlke, T. Mudge, R. Dreslinski, Prodigy: Improving the memory latency of data
+indirect irregular workloads using hardware-software co-design, in: International 
+Symposium on High-Performance Computer Architecture, HPCA, 2021, http:
+//dx.doi.org/10.1109/HPCA51647.2021.00061.
+[23] Z. Wang, J. Weng, S. Liu, T. Nowatzki, Near-stream computing: General and 
+transparent near-cache acceleration, in: IEEE International Symposium on High
+Performance Computer Architecture, HPCA, 2022, http://dx.doi.org/10.1109/
+HPCA53966.2022.00032.
+[24] Z. Wang, C. Liu, A. Arora, L. John, T. Nowatzki, Infinity stream: Portable 
+and programmer-friendly in-/near-memory fusion, in: 28th ACM International 
+Conference on Architectural Support for Programming Languages and Operating 
+Systems, ASPLOS, 2023, http://dx.doi.org/10.1145/3582016.3582032.
+[25] K. Datta, S. Kamil, S. Williams, L. Oliker, J. Shalf, K. Yelick, Optimization and 
+performance modeling of stencil computations on modern microprocessors, Soc. 
+Ind. Appl. Math. (SIAM) (2009) http://dx.doi.org/10.1137/070693199.
+[26] Y. Pei, Q. Cao, G. Bosilca, P. Luszczek, V. Eijkhout, J. Dongarra, Commu
+nication avoiding 2d stencil implementations over parsec task-based runtime, 
+in: 2020 IEEE International Parallel and Distributed Processing Symposium 
+Workshops, IPDPSW, IEEE Computer Society, 2020, http://dx.doi.org/10.1109/
+IPDPSW50202.2020.00127.
+[27] F. Zhu, X. Qi, P. Zhang, J. Fang, T. Tang, Y. Che, K. Yu, J. Xie, C. Huang, J. 
+Ren, Optimizing stencil computation on multi-core DSPs, in: Proceedings of the 
+53rd International Conference on Parallel Processing, ICPP ’24, Association for 
+Computing Machinery, New York, NY, USA, 2024, pp. 679–690, http://dx.doi.
+org/10.1145/3673038.3673062.
+[28] Y. Kim, M. Papamichael, O. Mutlu, M. Harchol-Balter, Thread cluster memory 
+scheduling: Exploiting differences in memory access behavior, in: ACM/IEEE 43rd 
+Annual International Symposium on Microarchitecture, 2010, http://dx.doi.org/
+10.1109/MICRO.2010.51.
+[29] L. Subramanian, D. Lee, V. Seshadri, H. Rastogi, O. Mutlu, The blacklisting 
+memory scheduler: Achieving high performance and fairness at low cost, in: 
+IEEE 32nd International Conference on Computer Design, ICCD, 2014, http:
+//dx.doi.org/10.1109/ICCD.2014.6974655.
+[30] O. Mutlu, T. Moscibroda, Parallelism-aware batch scheduling enabling high
+performance, fair shared memory controllers, IEEE Micro 29 (1) (2009) http:
+//dx.doi.org/10.1145/1394608.138212.
+[31] Y. Kim, D. Han, O. Mutlu, M. Harchol-Balter, ATLAS: A scalable and 
+high-performance scheduling algorithm for multiple memory controllers, in: 
+ACM/IEEE 16th International Symposium on High-Performance Computer 
+Architecture, HPCA, 2010, http://dx.doi.org/10.1109/HPCA.2010.5416658.
+[32] L. Subramanian, V. Seshadri, Y. Kim, B. Jaiyen, O. Mutlu, MISE: Providing per
+formance predictability and improving fairness in shared main memory systems, 
+in: ACM/IEEE 19th International Symposium on High Performance Computer 
+Architecture, HPCA, 2013, http://dx.doi.org/10.1109/HPCA.2013.6522356.
+[33] H. Usui, L. Subramanian, K.K.-W. Chang, O. Mutlu, DASH: Deadline-aware 
+high-performance memory scheduler for heterogeneous systems with hardware 
+accelerators, ACM Trans. Archit. Code Optim. (TACO) (2016) http://dx.doi.org/
+10.1145/2847255.
+[34] E. Ipek, O. Mutlu, J.F. Martínez, R. Caruana, Self-optimizing memory controllers: 
+Areinforcement learning approach, in: ACM/IEEE International Symposium on 
+Computer Architecture, ISCA, 2008, http://dx.doi.org/10.1109/ISCA.2008.21.
+[35] N. Vijaykumar, A. Jain, D. Majumdar, K. Hsieh, G. Pekhimenko, E. Ebrahimi, 
+N. Hajinazar, P.B. Gibbons, O. Mutlu, A case for richer cross-layer abstractions: 
+Bridging the semantic gap with expressive memory, in: ACM/IEEE 45th Annual 
+International Symposium on Computer Architecture, ISCA, 2018, http://dx.doi.
+org/10.1109/ISCA.2018.00027.
+22 
+A.M. Abotaleb et al.
+Journal of Systems Architecture 177 (2026) 103832 
+[36] N. Vijaykumar, A. Olgun, K. Kanellopoulos, F.N. Bostanci, H. Hassan, M. Lotfi, 
+P.B. Gibbons, O. Mutlu, MetaSys: A practical open-source metadata management 
+system to implement and evaluate cross-layer optimizations, ACM Trans. Archit. 
+Code Optim. (TACO) (2022) http://dx.doi.org/10.1145/3505250.
+[37] A. Abotaleb, M. Goudarzi, T. Czajkowski, R. Azimi, M. Hassan, Stream-aware 
+intelligent memory controller through HW/SW co-design, in: Proceedings of the 
+International Symposium on Memory Systems, MEMSYS ’25, (16) NY, USA, 2025, 
+pp. 121–136, http://dx.doi.org/10.1145/3767110.3767122, MEMSYS ’25.
+[38] L.-N. Pouchet, T. Yuki, PolyBench/C 4.2.1, 2016, [Online (Accessed 01 July 
+2023)]. http://polybench.sourceforge.net/.
+[39] S. Che, M. Boyer, J. Meng, D. Tarjan, J.W. Sheaffer, S.-H. Lee, K. Skadron, 
+Rodinia: A benchmark suite for heterogeneous computing, in: IEEE International 
+Symposium on Workload Characterization, IISWC, 2009, http://dx.doi.org/10.
+1109/IISWC.2009.5306797.
+[40] J. Dongarra, M. Heroux, P. Luszczek, A new metric for ranking high performance 
+computing systems, Natl. Sci. Rev. 3 (01) (2016) http://dx.doi.org/10.1093/nsr/
+nwv084.
+[41] J.A. Stratton, C.I. Rodrigues, I.-J. Sung, N. Obeid, L.-W. Chang, N. Anssari, G. 
+Liu, W. mei W. Hwu, Parboil: A revised benchmark suite for scientific and 
+commercial throughput computing, 2012, URL https://api.semanticscholar.org/
+CorpusID:497928.
+[42] J.M. Dodd, Adaptive Page Management, Google Patents, 2006, US Patent 7, 076, 
+617 B2.
+[43] R. Gill, Everything you always wanted to know about SDRAM (memory): But 
+were afraid to ask, 2010, URL https://www.cnblogs.com/tcicy/p/10094580.html. 
+(Accessed 28 October 2025).
+[44] Intel xeon processor X5650 12M cache 2.66 GHz 6.40 GTs intel QPI product 
+specifications, 2010, URL https://shorturl.at/zLzkM.
+[45] M. Hassan, A.M. Kaushik, H. Patel, Reverse-engineering embedded memory 
+controllers through latency-based analysis, in: ACM/IEEE 21st Real-Time and 
+Embedded Technology and Applications Symposium, RTAS, 2015, http://dx.doi.
+org/10.1109/RTAS.2015.7108453.
+[46] M. Hassan, A.M. Kaushik, H. Patel, Exposing implementation details of embedded 
+DRAM memory controllers through latency-based analysis, ACM Trans. Embed. 
+Comput. Syst. (TECS) 17 (5) (2018) http://dx.doi.org/10.1145/3274281.
+[47] M. Ghasempour, A. Jaleel, J.D. Garside, M. Luján, HAPPY: Hybrid address
+based page policy in DRAMs, in: ACM/IEEE 2nd International Symposium on 
+Memory Systems, MEMSYS ’16, NY, USA, 2016, http://dx.doi.org/10.1145/
+2989081.2989101, MEMSYS ’16.
+[48] Z. Wang, T. Nowatzki, Stream-based memory access specialization for gen
+eral purpose processors, in: Proceedings of the 46th International Symposium 
+on Computer Architecture, ISCA, 2019, http://dx.doi.org/10.1145/3307650.
+3322229.
+[49] X. Yu, C.J. Hughes, N. Satish, S. Devadas, IMP: Indirect memory prefetcher, in: 
+ACM/IEEE 48th Annual International Symposium on Microarchitecture, MICRO, 
+2015, http://dx.doi.org/10.1145/2830772.2830807.
+[50] T. Nowatzki, V. Gangadhar, N. Ardalani, K. Sankaralingam, Stream-dataflow ac
+celeration, in: 44th Annual International Symposium on Computer Architecture, 
+ISCA, 2017, http://dx.doi.org/10.1145/3079856.3080255.
+[51] G. Rao, J. Chen, J. Yik, X. Qian, Sparsecore: stream isa and processor 
+specialization for sparse computation, in: 27th ACM International Conference 
+on Architectural Support for Programming Languages and Operating Systems, 
+ASPLOS, 2022, http://dx.doi.org/10.1145/3503222.3507705.
+[52] A.S. Molyakov, Secured supercomputer technologies in Russia: Functional com
+puting units based on multithread-stream cores with specialized accelerators, 
+in: 7th International Congress on Information and Communication Technology, 
+ICICT, Springer, 2022.
+[53] A. Waterman, K. Asanovi, J. Hauser, The RISC-V Instruction Set Manual, Volume 
+II: Privileged Architecture, 20211203 ed., RISC-V International, 2021.
+[54] C.H. Park, S. Cha, B. Kim, Y. Kwon, D. Black-Schaffer, J. Huh, Perforated 
+page: Supporting fragmented memory allocation for large pages, in: ACM/IEEE 
+47th Annual International Symposium on Computer Architecture, ISCA, 2020, 
+http://dx.doi.org/10.1109/ISCA45697.2020.00079.
+[55] R.D. Kadhao, R.K. Siddharth, Y.B. Nithin Kumar, M.H. Vasantha, D. Dwivedi, 
+A2.5 GHz, 1-Kb SRAM with auxiliary circuit assisted sense amplifier in 65
+nm CMOS process, in: 36th International Conference on VLSI Design and 22nd 
+International Conference on Embedded Systems, VLSID, http://dx.doi.org/10.
+1109/VLSID57277.2023.00036.
+[56] N. Binkert, B. Beckmann, G. Black, S.K. Reinhardt, A. Saidi, A. Basu, J. Hestness, 
+D.R. Hower, T. Krishna, S. Sardashti, et al., The gem5 simulator, ACM SIGARCH 
+Comp. Arch. News 39 (2) (2011).
+[57] A. Pellegrini, Arm neoverse N2: Arm’s 2nd generation high performance in
+frastructure CPUs and system IPs, in: IEEE Hot Chips 33 Symposium, 2021, 
+http://dx.doi.org/10.1109/HCS52781.2021.9567483.
+[58] P. Esmaili-Dokht, F. Sgherzi, V.S. Girelli, I. Boixaderas, M. Carmin, A. Monemi, 
+A. Armejach, E. Mercadal, G. Llort, P. Radojković, M. Moreto, J. Giménez, 
+X. Martorell, E. Ayguadé, J. Labarta, E. Confalonieri, R. Dubey, J. Adlard, A 
+mess of memory system benchmarking, simulation and application profiling, in: 
+ACM/IEEE 57th International Symposium on Microarchitecture, MICRO, 2024, 
+http://dx.doi.org/10.1109/MICRO61859.2024.00020.
+[59] O. Mutlu, T. Moscibroda, Parallelism-aware batch-scheduling: Enhancing both 
+performance and fairness of shared DRAM systems, in: ACM/IEEE 35th Inter
+national Symposium on Computer Architecture, thirty fifth ed., ISCA, 2008, 
+http://dx.doi.org/10.1109/ISCA.2008.7.
+[60] P. Michaud, Best-offset hardware prefetching, in: ACM/IEEE International Sym
+posium on High-Performance Computer Architecture, HPCA, 2016, http://dx.doi.
+org/10.1109/HPCA.2016.7446087.
+[61] V. Young, A. Krishna, Towards bandwidth-efficient prefetching with slim ampm, 
+The 2nd Data Prefetching Championship, DPC-2 Workshop in ISCA 2015, 2015.
+[62] J. Kim, S.H. Pugsley, P.V. Gratz, A.N. Reddy, C. Wilkerson, Z. Chishti, Path 
+confidence based lookahead prefetching, in: ACM/IEEE 49th Annual International 
+Symposium on Microarchitecture, MICRO, 2016, http://dx.doi.org/10.1109/
+MICRO.2016.7783763.
+[63] A. Petitet, R. Whaley, J. Dongarra, A. Cleary, HPL 2.0 – a portable imple
+mentation of the high-performance linpack benchmark for distributed-memory 
+computers, 2008.
+[64] E. Anderson, et al., LAPACK (linear algebra package) users’ guide, 1999, https:
+//www.netlib.org/lapack/. (Accessed 11 July 2025).
+[65] K. Chandrasekar, C. Weis, Y. Li, Goossens, K. Goossens, DRAMPower: Open
+source DRAM power & energy estimation tool, 2025, (Accessed 14 July 2025). 
+http://www.drampower.info.
+[66] A.M. Abotaleb, M. Hassan, The case for HW/SW harmony in real-time systems: 
+Tightening memory latency of streaming applications, ACM Trans. Embed. 
+Comput. Syst. (2025) http://dx.doi.org/10.1145/3762647.
+[67] K. Asifuzzaman, M. Abuelala, M. Hassan, F.J. Cazorla, Demystifying the charac
+teristics of high bandwidth memory for real-time systems, in: 2021 IEEE/ACM 
+International Conference on Computer Aided Design, ICCAD, 2021, pp. 1–9, 
+http://dx.doi.org/10.1109/ICCAD51958.2021.9643473.
+[68] A. Olgun, M. Osseiran, A.G. Yağlıkçı, Y.C. Tuğrul, H. Luo, S. Rhyner, B. Salami, 
+J.G. Luna, O. Mutlu, Read disturbance in high bandwidth memory: A detailed 
+experimental study on HBM2 DRAM chips, in: 2024 54th Annual IEEE/IFIP 
+International Conference on Dependable Systems and Networks, DSN, 2024, pp. 
+75–89, http://dx.doi.org/10.1109/DSN58291.2024.00022.
+[69] T. Glint, M. Awasthi, J. Mekie, Hardware-software co-design of a collaborative 
+DNN accelerator for 3D stacked memories with multi-channel data, in: 2024 
+29th Asia and South Pacific Design Automation Conference, ASP-DAC, 2024, pp. 
+454–459, http://dx.doi.org/10.1109/ASP-DAC58780.2024.10473935.
+[70] B.C. Schwedock, P. Yoovidhya, J. Seibert, N. Beckmann, Täk¯o: A polymor
+phic cache hierarchy for general-purpose optimization of data movement, in: 
+ACM/IEEE 49th Annual International Symposium on Computer Architecture, 
+ISCA, NY, USA, 2022, http://dx.doi.org/10.1145/3470496.3527379.
+[71] O. Mutlu, Intelligent architectures for intelligent computing systems, in: Design, 
+Automation and Test in Europe Conference, DATE, 2021, http://dx.doi.org/10.
+23919/DATE51398.2021.9474073.
+[72] O. Mutlu, T. Moscibroda, Stall-time fair memory access scheduling for chip multi
+processors, in: ACM 40th Annual International Symposium on Microarchitecture, 
+MICRO, 2007, http://dx.doi.org/10.1109/MICRO.2007.21.
+[73] R. Ausavarungnirun, K.K.-W. Chang, L. Subramanian, G.H. Loh, O. Mutlu, Staged 
+memory scheduling: Achieving high performance and scalability in heteroge
+neous systems, in: ACM/IEEE 39th Annual International Symposium on Comp

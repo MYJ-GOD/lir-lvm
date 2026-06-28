@@ -1,0 +1,49 @@
+% Fig.3: LVM Execution Flow — auto-generated
+\begin{tikzpicture}[scale=0.90, transform shape,
+  >=Stealth, font=\sffamily\small,
+  stage/.style={draw=black!80, fill=white, minimum width=2.0cm,
+                minimum height=1.5cm, align=center, inner sep=3pt,
+                font=\sffamily\scriptsize\bfseries},
+  arr/.style={-Stealth, thick, draw=black!70},
+  darrow/.style={-Stealth, thick, draw=black!70, dashed},
+]
+
+% Stage labels
+\node[font=\sffamily\tiny\bfseries, black!50] at (0.00, 1.85) {FETCH};
+\node[font=\sffamily\tiny\bfseries, black!50] at (2.40, 1.85) {DECODE};
+\node[font=\sffamily\tiny\bfseries, black!50] at (4.80, 1.85) {VALIDATE};
+\node[font=\sffamily\tiny\bfseries, black!50] at (7.20, 1.85) {GUARD};
+\node[font=\sffamily\tiny\bfseries, black!50] at (9.60, 1.85) {EXECUTE};
+\node[font=\sffamily\tiny\bfseries, black!50] at (12.00, 1.85) {OUTPUT};
+
+% Stage boxes
+\node[stage] (s1) at (0.00, 0.70) { Load\\[-1pt]Frame };
+\node[stage] (s2) at (2.40, 0.70) { Decode\\[-1pt]Opcode };
+\node[stage] (s3) at (4.80, 0.70) { Static\\[-1pt]Checks };
+\node[stage] (s4) at (7.20, 0.70) { Runtime\\[-1pt]Guards };
+\node[stage] (s5) at (9.60, 0.70) { Execute\\[-1pt]IOW/IOR };
+\node[stage] (s6) at (12.00, 0.70) { Emit\\[-1pt]Result };
+
+% Annotations
+\node[font=\sffamily\tiny, black!45, anchor=north] at (0.00, -0.15) {fetch bytecode};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (2.40, -0.15) {instruction decode};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (4.80, -0.15) {bounds / encoding};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (7.20, -0.15) {cap / step stack};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (9.60, -0.15) {stack-based exec};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (12.00, -0.15) {OK or FAULT};
+
+% Pipeline arrows
+\draw[arr] (s1.east) -- (s2.west) ;
+\draw[arr] (s2.east) -- (s3.west) ;
+\draw[arr] (s3.east) -- (s4.west) ;
+\draw[arr] (s4.east) -- (s5.west) ;
+\draw[arr] (s5.east) -- (s6.west) ;
+
+% Fault branch
+\node[stage, draw=red!70, fill=red!5, minimum height=1.0cm]
+  (fault) at (7.20, -1.35) {Fault};
+\node[font=\sffamily\tiny, black!45, anchor=north] at (7.20, -2.05) {code, pc};
+\draw[darrow, red!70] (s4.south) -- (fault.north);
+\node[font=\sffamily\tiny, red!70!black, anchor=west] at (8.35, -1.35) {violation};
+
+\end{tikzpicture}

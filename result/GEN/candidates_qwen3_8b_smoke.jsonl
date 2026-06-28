@@ -1,2 +1,0 @@
-{"task_id": "T001", "attempt": 1, "mir": "require cap(relay1)\nset relay1 = 1\nhalt", "prompt_eval_count": 185, "eval_count": 490, "total_duration": 75032146500, "model": "qwen3:8b"}
-{"task_id": "T002", "attempt": 1, "mir": "require cap(relay1)\nset relay1 = 1\nhalt", "prompt_eval_count": 184, "eval_count": 847, "total_duration": 26285256500, "model": "qwen3:8b"}

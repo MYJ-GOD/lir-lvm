@@ -1,0 +1,47 @@
+% Fig.2: LIR-to-Bytecode Lowering (two-column before -> after)
+\begin{tikzpicture}[scale=1.0, transform shape,
+  >=Stealth, font=\sffamily\normalsize,
+  col/.style={draw=black!80, fill=white, line width=0.6pt, rounded corners=3pt},
+  code/.style={font=\ttfamily\small, anchor=north west},
+  head/.style={font=\sffamily\normalsize\bfseries, black!90},
+  note/.style={font=\sffamily\footnotesize, black!65},
+]
+
+% ======================= Column 1: LIR Source =======================
+\draw[col] (0.0,-3.30) rectangle (5.7,3.30);
+\node[head] at (2.85,2.95) {LIR Source};
+\draw[black!40] (0.15,2.62) -- (5.55,2.62);
+\node[code] at (0.30,2.30) {require cap(relay1)};
+\node[code] at (0.30,1.70) {require cap(water\_sensor)};
+\node[code] at (0.30,1.10) {set relay1 = 1};
+\node[code] at (0.30,0.50) {wait 500ms};
+\node[code] at (0.30,-0.10) {read water\_sensor};
+\node[code] at (0.30,-0.70) {halt};
+\node[note] at (2.85,-2.75) {6 lines, LLM-generated};
+
+% ======================= Column 2: Bytecode =========================
+\draw[col] (9.3,-3.30) rectangle (15.8,3.30);
+\node[head] at (12.55,2.95) {Bytecode};
+\draw[black!40] (9.45,2.62) -- (15.65,2.62);
+\node[code] at (9.65,2.30) {GTWAY 5};
+\node[code] at (9.65,1.70) {GTWAY 1};
+\node[code] at (9.65,1.10) {LIT 1};
+\node[code] at (9.65,0.50) {IOW 5};
+\node[code] at (9.65,-0.10) {WAIT 500};
+\node[code] at (9.65,-0.70) {IOR 1};
+\node[code] at (9.65,-1.30) {HALT};
+% plain-English glosses for THIS example (value the rule table lacks)
+\node[note, anchor=east] at (15.55,2.05) {authorize relay1};
+\node[note, anchor=east] at (15.55,1.45) {authorize sensor};
+\node[note, anchor=east] at (15.55,0.85) {push 1};
+\node[note, anchor=east] at (15.55,0.25) {write relay1};
+\node[note, anchor=east] at (15.55,-0.35) {delay 500\,ms};
+\node[note, anchor=east] at (15.55,-0.95) {read sensor};
+\node[note, anchor=east] at (15.55,-1.55) {stop};
+\node[note] at (12.55,-2.75) {12 bytes, varint-encoded};
+
+% ===================== Compile arrow (single) =======================
+\draw[-Stealth, line width=1.3pt, black] (5.85,0.0) -- (9.15,0.0);
+\node[font=\sffamily\small\bfseries, black!85] at (7.5,0.42) {compile};
+
+\end{tikzpicture}
