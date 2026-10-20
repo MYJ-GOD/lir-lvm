@@ -4,20 +4,10 @@
 
 > Yingjie Ma, Mengjia Ma, Sheng Zhao, Peng Liu
 > North China Institute of Aerospace Engineering (NCIAE)
-> *Journal of Systems Architecture* (JSA), Elsevier。DOI 见文末「引用」一节。
+> *Journal of Systems Architecture* (JSA), Elsevier.
+> **DOI: [10.1016/j.sysarc.2026.104013](https://doi.org/10.1016/j.sysarc.2026.104013)**
 >
 > 本仓库为论文发表版本的冻结快照。
-
-> **术语对照**：论文使用 **LIR** / **LVM**，代码库沿用历史前缀 **M-IR** / **MVM**。
-> 对应关系如下，复现时请按此对照：
->
-> | 论文术语 | 代码库 / 文件 / 符号 |
-> |---|---|
-> | LIR（结构化 IR） | `mir_compiler.py`、M-IR、`.mir` 程序 |
-> | LVM（轻量虚拟机） | `backend_adapter.py`（参考 VM）、MVM、`mvm_*.ino` 固件 |
-> | compact bytecode | M-bytecode，`M_LIT`/`M_IOW`/… 等 `M_*` 操作码常量 |
->
-> 语义与编码完全一致，仅命名不同。
 
 > **纯软件复现（无需 MCU / LLM）**：运行 `bash reproduce_software_only.sh`
 > 可离线复现编译器-VM 单元测试、E1 载荷体积（Table: encoding）以及
@@ -272,11 +262,12 @@ cd latex && latexmk -pdf main.tex     # 或：pdflatex main; bibtex main; pdflat
   author  = {Ma, Yingjie and Ma, Mengjia and Zhao, Sheng and Liu, Peng},
   journal = {Journal of Systems Architecture},
   year    = {2026},
+  doi     = {10.1016/j.sysarc.2026.104013},
+  url     = {https://doi.org/10.1016/j.sysarc.2026.104013},
   note    = {Code: \url{https://github.com/MYJ-GOD/lir-lvm}}
 }
 ```
 
 仓库根目录同时提供 `CITATION.cff`，GitHub 会自动在 "Cite this repository" 中渲染。
-正式 DOI 由期刊在出版时分配，分配后可补充到 `CITATION.cff` 的 `doi:` 字段。
 
 后续扩展工作见 https://github.com/MYJ-GOD/M-Language-Core

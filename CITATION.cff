@@ -17,6 +17,7 @@ license: MIT
 version: "1.0"
 # Release date of the frozen artifact snapshot (git tag v1.0-jsa).
 date-released: "2026-10-20"
+doi: "10.1016/j.sysarc.2026.104013"
 keywords:
   - large language models
   - microcontroller
@@ -27,7 +28,5 @@ keywords:
   - embedded security
   - reproducible research
 # Venue: Journal of Systems Architecture (JSA), Elsevier.
-# DOI / volume / issue are assigned at publication time and should be added
-# to the `doi:` / `volume:` / `issue:` fields below once available.
 journal:
   name: "Journal of Systems Architecture"
