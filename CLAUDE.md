@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repository is
 
-This is the **experiment + paper reproduction package** for the research paper *LIR + LVM: a compact hardware-control representation for LLM generation with bounded safe execution* (面向大语言模型生成的紧凑硬件控制表示与有界安全执行框架). It is not a deployable application — it is a collection of independent experiment scripts, datasets, firmware sketches, result tables, and the LaTeX manuscript. Most files exist to produce the numbers and figures in `latex/main.tex`.
+This is the **experiment + paper reproduction package** for the research paper *LIR+LVM: Bounded Execution of LLM-Generated Code on Microcontrollers* (面向大语言模型生成的紧凑硬件控制表示与有界安全执行框架), published in *Journal of Systems Architecture* (JSA), Elsevier. It is not a deployable application — it is a collection of independent experiment scripts, datasets, firmware sketches, result tables, and the LaTeX manuscript. Most files exist to produce the numbers and figures in `latex/main.tex`.
 
-The working directory is `论文分区/ccfc` inside a larger `M-Language-Core` tree.
+This repository is a standalone, frozen snapshot of the published artifact.
 
 ## Commands
 

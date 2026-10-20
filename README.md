@@ -1,16 +1,15 @@
-# M-IR + MVM 论文实验复现指南
+# LIR + LVM: Bounded Execution of LLM-Generated Code on Microcontrollers
 
-> **📄 论文**
-> *LIR+LVM: Bounded Execution of LLM-Generated Code on Microcontrollers*
-> Yingjie Ma, Mengjia Ma, Sheng Zhao, Peng Liu — North China Institute of Aerospace Engineering (NCIAE)
-> 发表于 *Journal of Systems Architecture* (JSA), Elsevier。DOI 见文末「引用」一节。
+面向大语言模型生成的紧凑硬件控制表示与有界安全执行框架 —— 论文实验复现包。
+
+> Yingjie Ma, Mengjia Ma, Sheng Zhao, Peng Liu
+> North China Institute of Aerospace Engineering (NCIAE)
+> *Journal of Systems Architecture* (JSA), Elsevier。DOI 见文末「引用」一节。
 >
 > 本仓库为论文发表版本的冻结快照。
 
-本文档对应论文《M-IR + MVM：面向大语言模型生成的紧凑硬件控制表示与有界安全执行框架》的实验部分。
-
-> **术语映射（重要）**：投稿版论文将 **M-IR 更名为 LIR**、**MVM 更名为 LVM**。
-> 代码库仍沿用历史前缀，对应关系如下，复现时请按此对照：
+> **术语对照**：论文使用 **LIR** / **LVM**，代码库沿用历史前缀 **M-IR** / **MVM**。
+> 对应关系如下，复现时请按此对照：
 >
 > | 论文术语 | 代码库 / 文件 / 符号 |
 > |---|---|
@@ -41,12 +40,12 @@ Python 依赖（标准库即可，无需额外 pip 安装）：
 ## 项目结构
 
 ```
-ccfc/
+lir-lvm/
 ├── CLAUDE.md                 # 仓库说明（给 AI 协作者的指南）
 ├── README.md                 # 本文件
 ├── reproduce_software_only.sh # 纯软件离线复现脚本（无需 MCU / LLM）
-├── latex/                    # LaTeX 投稿稿
-│   ├── main.tex              #   论文正文（投稿版）
+├── latex/                    # LaTeX 稿件
+│   ├── main.tex              #   论文正文
 │   ├── cas-refs.bib          #   参考文献
 │   └── verify.py             #   论文统计自检（Wilson CI / 算术复算）
 ├── spec/                     # 规范文档
@@ -240,7 +239,7 @@ python tools/bench_scalability.py
 # 统计自检：复算论文中的 Wilson CI 与算术声明
 python latex/verify.py
 
-# 编译投稿稿
+# 编译论文稿件
 cd latex && latexmk -pdf main.tex     # 或：pdflatex main; bibtex main; pdflatex ×2
 ```
 
