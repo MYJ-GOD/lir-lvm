@@ -3,7 +3,7 @@
 E1: payload size and optional RTT benchmark for M bytecode vs JSON.
 Default tasks cover relay on/off, sensor reads, and a small combo sequence.
 If --serial <port> is provided, the script sends frames and measures round-trip time.
-Results are saved to 论文分区/ccfc/result/e1.csv.
+Results are saved to result/e1.csv.
 """
 import argparse
 import csv
@@ -12,6 +12,10 @@ import sys
 import time
 from datetime import datetime
 from typing import List, Tuple, Optional
+from pathlib import Path
+
+# Repository root, so default output paths do not depend on the CWD.
+_ROOT = Path(__file__).resolve().parent.parent
 
 try:
     import serial  # type: ignore
@@ -225,7 +229,7 @@ def main():
         default="M,JSON,MSG",
         help="comma list of protos to include (M,JSON,MSG). Controls measurement; size rows still written.",
     )
-    parser.add_argument("--out-dir", default="论文分区/ccfc/result", help="directory to write outputs")
+    parser.add_argument("--out-dir", default=str(_ROOT / "result"), help="directory to write outputs")
     parser.add_argument("--tag", default="", help="run tag; default uses timestamp")
     parser.add_argument(
         "--write-latest",

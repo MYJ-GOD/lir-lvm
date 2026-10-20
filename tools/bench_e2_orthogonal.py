@@ -2,7 +2,7 @@
 """
 E2+ orthogonal ablation harness.
 
-This script is a non-destructive fork of tools/bench_e2.py for CCFC E2+
+This script is a non-destructive fork of tools/bench_e2.py for E2+
 single-mechanism experiments (A0~A5). It keeps the same malformed case set
 and serial protocol, but extends --variant naming and always writes
 variant-specific latest CSV files when --write-latest is enabled.

@@ -17,6 +17,10 @@ import os
 import statistics
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
+from pathlib import Path
+
+# Repository root, so default output paths do not depend on the CWD.
+_ROOT = Path(__file__).resolve().parent.parent
 
 try:
     import serial  # type: ignore
@@ -151,7 +155,7 @@ def main() -> int:
     ap.add_argument("--repeat", type=int, default=30)
     ap.add_argument("--timeout", type=float, default=2.0)
     ap.add_argument("--variant", default="e3_telemetry")
-    ap.add_argument("--out-dir", default="论文分区/ccfc/result/E10_deploy")
+    ap.add_argument("--out-dir", default=str(_ROOT / "result" / "E10_deploy"))
     ap.add_argument("--tag", default="", help="run tag; default timestamp")
     ap.add_argument("--write-latest", action="store_true")
     args = ap.parse_args()

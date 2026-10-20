@@ -10,6 +10,10 @@ import csv
 import math
 import os
 from typing import Dict, List, Tuple
+from pathlib import Path
+
+# Repository root, so default output paths do not depend on the CWD.
+_ROOT = Path(__file__).resolve().parent.parent
 
 VARIANTS = [
     "a0_base_guarded",
@@ -64,7 +68,7 @@ def load_variant(path: str) -> Dict:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--results-dir", default="论文分区/ccfc/result/E2_orthogonal")
+    ap.add_argument("--results-dir", default=str(_ROOT / "result" / "E2_orthogonal"))
     ap.add_argument("--tag", default="", help="optional tag suffix for output files")
     args = ap.parse_args()
 

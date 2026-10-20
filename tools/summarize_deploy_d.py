@@ -15,6 +15,10 @@ import argparse
 import csv
 import os
 from typing import Dict, List, Optional, Tuple
+from pathlib import Path
+
+# Repository root, so default output paths do not depend on the CWD.
+_ROOT = Path(__file__).resolve().parent.parent
 
 
 def read_csv(path: str) -> List[Dict[str, str]]:
@@ -70,7 +74,7 @@ def main() -> int:
     ap.add_argument("--throughput-summary", required=True)
     ap.add_argument("--e3-summary", required=True)
     ap.add_argument("--e4-trials", required=True)
-    ap.add_argument("--power-manual", default="论文分区/ccfc/result/E10_deploy/power_manual.csv")
+    ap.add_argument("--power-manual", default=str(_ROOT / "result" / "E10_deploy" / "power_manual.csv"))
     ap.add_argument("--out-csv", required=True)
     ap.add_argument("--out-md", required=True)
     args = ap.parse_args()

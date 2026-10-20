@@ -29,6 +29,10 @@ import statistics
 import time
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
+from pathlib import Path
+
+# Repository root, so default output paths do not depend on the CWD.
+_ROOT = Path(__file__).resolve().parent.parent
 
 try:
     import serial  # type: ignore
@@ -286,8 +290,8 @@ def main() -> int:
     parser.add_argument("--max-retry", type=int, default=3, help="max attempts for closed_loop_retry")
     parser.add_argument("--seed", type=int, default=20260218)
     parser.add_argument("--variant", default="json_real")
-    parser.add_argument("--baseline-e4-summary", default="论文分区/ccfc/result/E4/e4_summary.csv")
-    parser.add_argument("--out-dir", default="论文分区/ccfc/result/E4_json_real")
+    parser.add_argument("--baseline-e4-summary", default=str(_ROOT / "result" / "E4" / "e4_summary.csv"))
+    parser.add_argument("--out-dir", default=str(_ROOT / "result" / "E4_json_real"))
     parser.add_argument("--tag", default="", help="run tag; default timestamp")
     parser.add_argument("--write-latest", action="store_true")
     args = parser.parse_args()

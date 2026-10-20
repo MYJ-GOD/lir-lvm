@@ -24,7 +24,7 @@ Protocol (firmware/mvm_esp8266*.ino):
         OK    payload: [result varint][steps varint][0x01]
         FAULT payload: [fault varint][pc varint][0x00]
 
-Outputs (under 论文分区/ccfc/result/E4 by default):
+Outputs (under result/E4 by default):
   raw/e4_attempts_<variant>_<tag>.csv
   raw/e4_trials_<variant>_<tag>.csv
   e4_summary_<variant>_<tag>.csv
@@ -48,6 +48,10 @@ import time
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, Iterable, List, Optional, Tuple
+from pathlib import Path
+
+# Repository root, so default output paths do not depend on the CWD.
+_ROOT = Path(__file__).resolve().parent.parent
 
 try:
     import serial  # type: ignore
@@ -569,7 +573,7 @@ def main() -> int:
         choices=["guarded", "noguard", "current"],
         help="firmware/config label for output tagging",
     )
-    parser.add_argument("--out-dir", default="论文分区/ccfc/result/E4", help="output directory")
+    parser.add_argument("--out-dir", default=str(_ROOT / "result" / "E4"), help="output directory")
     parser.add_argument("--tag", default="", help="run tag; default timestamp")
     parser.add_argument("--write-latest", action="store_true", help="also write non-tagged latest aliases")
     args = parser.parse_args()

@@ -3,6 +3,10 @@ import argparse
 import csv
 import glob
 import os
+from pathlib import Path
+
+# Repository root, so default output paths do not depend on the CWD.
+_ROOT = Path(__file__).resolve().parent.parent
 
 
 def read_summary(path):
@@ -13,7 +17,7 @@ def read_summary(path):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--results-dir', default='论文分区/ccfc/result/E5_prior')
+    ap.add_argument('--results-dir', default=str(_ROOT / "result" / "E5_prior"))
     ap.add_argument('--tag', default='')
     args = ap.parse_args()
 

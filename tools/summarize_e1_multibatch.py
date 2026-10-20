@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-Summarize E1 multi-batch RTT samples and evaluate rules in 论文分区/ccfc/result/E1/e1_data_rules.md.
+Summarize E1 multi-batch RTT samples and evaluate rules in result/E1/e1_data_rules.md.
 
 Inputs:
-  - 论文分区/ccfc/result/E1/e1_multibatch_tags.txt
-  - 论文分区/ccfc/result/E1/raw/e1_<tag>.csv
-  - 论文分区/ccfc/result/E1/raw/e1_samples_<tag>.csv
+  - result/E1/e1_multibatch_tags.txt
+  - result/E1/raw/e1_<tag>.csv
+  - result/E1/raw/e1_samples_<tag>.csv
 
 Outputs:
-  - 论文分区/ccfc/result/E1/e1_multibatch_summary.csv
-  - 论文分区/ccfc/result/E1/e1_multibatch_compare.csv
-  - 论文分区/ccfc/result/E1/e1_multibatch_compression.csv
-  - 论文分区/ccfc/result/E1/e1_multibatch_outliers.csv
-  - 论文分区/ccfc/result/E1/e1_temp_m_outlier_iter_hist.csv
-  - 论文分区/ccfc/result/E1/e1_multibatch_judgement.md
+  - result/E1/e1_multibatch_summary.csv
+  - result/E1/e1_multibatch_compare.csv
+  - result/E1/e1_multibatch_compression.csv
+  - result/E1/e1_multibatch_outliers.csv
+  - result/E1/e1_temp_m_outlier_iter_hist.csv
+  - result/E1/e1_multibatch_judgement.md
 """
 
 from __future__ import annotations
@@ -25,6 +25,10 @@ from collections import Counter, defaultdict
 from datetime import datetime
 from statistics import median
 from typing import Dict, List, Tuple
+from pathlib import Path
+
+# Repository root, so default output paths do not depend on the CWD.
+_ROOT = Path(__file__).resolve().parent.parent
 
 
 def read_csv(path: str) -> List[Dict[str, str]]:
@@ -103,9 +107,9 @@ def load_tags(path: str) -> List[str]:
 
 def main() -> int:
     p = argparse.ArgumentParser()
-    p.add_argument("--tags-file", default="论文分区/ccfc/result/E1/e1_multibatch_tags.txt")
-    p.add_argument("--raw-dir", default="论文分区/ccfc/result/E1/raw")
-    p.add_argument("--out-dir", default="论文分区/ccfc/result/E1")
+    p.add_argument("--tags-file", default=str(_ROOT / "result" / "E1" / "e1_multibatch_tags.txt"))
+    p.add_argument("--raw-dir", default=str(_ROOT / "result" / "E1" / "raw"))
+    p.add_argument("--out-dir", default=str(_ROOT / "result" / "E1"))
     args = p.parse_args()
 
     tags = load_tags(args.tags_file)
@@ -345,7 +349,7 @@ def main() -> int:
     lines.append(f"- Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     lines.append(f"- Tags: {', '.join(tags)}")
     lines.append(f"- Total batches: {len(tags)}")
-    lines.append("- Rule source: `论文分区/ccfc/result/E1/e1_data_rules.md`")
+    lines.append("- Rule source: `result/E1/e1_data_rules.md`")
     lines.append("")
     lines.append("## Compression")
     lines.append("")
@@ -384,12 +388,12 @@ def main() -> int:
     lines.append("")
     lines.append("## Files")
     lines.append("")
-    lines.append("- `论文分区/ccfc/result/E1/e1_multibatch_summary.csv`")
-    lines.append("- `论文分区/ccfc/result/E1/e1_multibatch_compare.csv`")
-    lines.append("- `论文分区/ccfc/result/E1/e1_multibatch_compression.csv`")
-    lines.append("- `论文分区/ccfc/result/E1/e1_multibatch_outliers.csv`")
-    lines.append("- `论文分区/ccfc/result/E1/e1_temp_m_outlier_iter_hist.csv`")
-    lines.append("- `论文分区/ccfc/result/E1/e1_multibatch_judgement.md`")
+    lines.append("- `result/E1/e1_multibatch_summary.csv`")
+    lines.append("- `result/E1/e1_multibatch_compare.csv`")
+    lines.append("- `result/E1/e1_multibatch_compression.csv`")
+    lines.append("- `result/E1/e1_multibatch_outliers.csv`")
+    lines.append("- `result/E1/e1_temp_m_outlier_iter_hist.csv`")
+    lines.append("- `result/E1/e1_multibatch_judgement.md`")
 
     judgement_path = os.path.join(args.out_dir, "e1_multibatch_judgement.md")
     os.makedirs(os.path.dirname(judgement_path) or ".", exist_ok=True)

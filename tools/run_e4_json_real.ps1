@@ -1,4 +1,4 @@
-Param(
+﻿Param(
   [string]$SerialPort = "COM5",
   [int]$Repeat = 100,
   [double]$DisturbProb = 0.30,
@@ -10,11 +10,11 @@ Param(
 
 $ErrorActionPreference = "Stop"
 
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..\..")).Path
-$outDir = Join-Path $repoRoot "论文分区\ccfc\result\E4_json_real"
-$benchScript = Join-Path $repoRoot "论文分区\ccfc\tools\bench_e4_json_real.py"
-$summarizeScript = Join-Path $repoRoot "论文分区\ccfc\tools\summarize_e4_json_real.py"
-$e4Summary = Join-Path $repoRoot "论文分区\ccfc\result\E4\e4_summary.csv"
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$outDir = Join-Path $repoRoot "result\E4_json_real"
+$benchScript = Join-Path $repoRoot "tools\bench_e4_json_real.py"
+$summarizeScript = Join-Path $repoRoot "tools\summarize_e4_json_real.py"
+$e4Summary = Join-Path $repoRoot "result\E4\e4_summary.csv"
 $openSummary = Join-Path $outDir "e4_json_real_summary_open_loop.csv"
 $closedNoRetrySummary = Join-Path $outDir "e4_json_real_summary_closed_loop_no_retry.csv"
 $closedRetrySummary = Join-Path $outDir "e4_json_real_summary_closed_loop_retry.csv"
@@ -24,7 +24,7 @@ $finalMd = Join-Path $outDir "e4_json_real_matrix_final.md"
 New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 
 Write-Host ""
-Write-Host "请先烧录固件: 论文分区/ccfc/固件烧录/mvm_esp8266_e4_json_real.ino"
+Write-Host "请先烧录固件: 固件烧录/mvm_esp8266_e4_json_real.ino"
 Read-Host "烧录完成后输入任意内容继续"
 
 Set-Location $repoRoot

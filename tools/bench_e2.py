@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 E2: generate malformed or unsafe M bytecode cases, optionally send to serial
-and log device/validator responses. Results -> 论文分区/ccfc/result/e2.csv; binaries -> 论文分区/ccfc/result/e2_cases/.
+and log device/validator responses. Results -> result/e2.csv; binaries -> result/e2_cases/.
 Device/host side应在收到字节码后返回 fault_code 或 ACK 行，脚本仅记录收到的首行。
 """
 import argparse
@@ -11,6 +11,10 @@ import sys
 import time
 from datetime import datetime
 from typing import List, Dict, Optional, Tuple
+from pathlib import Path
+
+# Repository root, so default output paths do not depend on the CWD.
+_ROOT = Path(__file__).resolve().parent.parent
 
 try:
     import serial  # type: ignore
@@ -229,7 +233,7 @@ def main():
         ],
         help="output file variant label",
     )
-    parser.add_argument("--out-dir", default="论文分区/ccfc/result", help="directory to write outputs")
+    parser.add_argument("--out-dir", default=str(_ROOT / "result"), help="directory to write outputs")
     parser.add_argument("--tag", default="", help="run tag; default uses timestamp")
     parser.add_argument(
         "--write-latest",

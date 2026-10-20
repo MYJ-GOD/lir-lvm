@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Minimal M-IR compiler for the current ccfc experiment subset.
+Minimal M-IR compiler for the paper experiment subset.
 
 Supported statements:
   - require cap(<device>)

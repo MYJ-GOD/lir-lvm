@@ -20,6 +20,10 @@ import statistics
 import time
 from datetime import datetime
 from typing import Optional, Tuple
+from pathlib import Path
+
+# Repository root, so default output paths do not depend on the CWD.
+_ROOT = Path(__file__).resolve().parent.parent
 
 try:
     import serial  # type: ignore
@@ -129,7 +133,7 @@ def main() -> int:
     parser.add_argument("--fault-prior", type=float, required=True, help="fault scenario prior in [0,1]")
     parser.add_argument("--seed", type=int, default=20260218)
     parser.add_argument("--variant", default="guarded", choices=["guarded", "noguard", "current"])
-    parser.add_argument("--out-dir", default="论文分区/ccfc/result/E5_prior")
+    parser.add_argument("--out-dir", default=str(_ROOT / "result" / "E5_prior"))
     parser.add_argument("--tag", default="")
     parser.add_argument("--write-latest", action="store_true")
     args = parser.parse_args()

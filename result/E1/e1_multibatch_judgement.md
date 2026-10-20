@@ -3,7 +3,7 @@
 - Generated: 2026-02-11 10:17:55
 - Tags: 20260211_100520_mb1, 20260211_100603_mb2, 20260211_100645_mb3, 20260211_100728_mb4, 20260211_100810_mb5
 - Total batches: 5
-- Rule source: `论文分区/ccfc/result/E1/e1_data_rules.md`
+- Rule source: `result/E1/e1_data_rules.md`
 
 ## Compression
 
@@ -34,10 +34,10 @@
 
 ## Files
 
-- `论文分区/ccfc/result/E1/e1_multibatch_summary.csv`
-- `论文分区/ccfc/result/E1/e1_multibatch_compare.csv`
-- `论文分区/ccfc/result/E1/e1_multibatch_compression.csv`
-- `论文分区/ccfc/result/E1/e1_multibatch_outliers.csv`
-- `论文分区/ccfc/result/E1/e1_temp_m_outlier_iter_hist.csv`
-- `论文分区/ccfc/result/E1/e1_multibatch_judgement.md`
+- `result/E1/e1_multibatch_summary.csv`
+- `result/E1/e1_multibatch_compare.csv`
+- `result/E1/e1_multibatch_compression.csv`
+- `result/E1/e1_multibatch_outliers.csv`
+- `result/E1/e1_temp_m_outlier_iter_hist.csv`
+- `result/E1/e1_multibatch_judgement.md`
 

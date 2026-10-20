@@ -3,7 +3,7 @@
 适用范围：
 
 - `LLM -> M-IR -> compiler -> verifier -> executor -> repair`
-- 当前先服务于 `ccfc` 论文的 P0-3 / P0-6 实验
+- 当前先服务于论文的 P0-3 / P0-6 实验
 
 ---
 
