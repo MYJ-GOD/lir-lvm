@@ -5,16 +5,7 @@
 > Yingjie Ma, Mengjia Ma, Sheng Zhao, Peng Liu — North China Institute of Aerospace Engineering (NCIAE)
 > 发表于 *Journal of Systems Architecture* (JSA), Elsevier。DOI 见文末「引用」一节。
 >
-> **本仓库是论文发表版本的冻结快照。** 论文的实验数据、脚本、固件与结果不在此处继续改动。
-> 同一套 LIR / bytecode 规范的后续开发在
-> [`MYJ-GOD/M-Language-Core`](https://github.com/MYJ-GOD/M-Language-Core) 进行：
-> 同一 IR 被扩展到 PC 侧（文件 / 进程 / 网络三类资源槽），并新增了内核级策略平面
-> （能力清单 → seccomp cBPF + LSM-BPF）。
->
-> **一键复现（纯软件，无需 MCU / LLM）：**
-> ```bash
-> bash reproduce_software_only.sh
-> ```
+> 本仓库为论文发表版本的冻结快照。
 
 本文档对应论文《M-IR + MVM：面向大语言模型生成的紧凑硬件控制表示与有界安全执行框架》的实验部分。
 
@@ -289,7 +280,4 @@ cd latex && latexmk -pdf main.tex     # 或：pdflatex main; bibtex main; pdflat
 仓库根目录同时提供 `CITATION.cff`，GitHub 会自动在 "Cite this repository" 中渲染。
 正式 DOI 由期刊在出版时分配，分配后可补充到 `CITATION.cff` 的 `doi:` 字段。
 
-### 后续工作
-
-同一 IR 的 OS 尺度扩展（PC 资源槽 + 内核级策略平面）见
-[`MYJ-GOD/M-Language-Core`](https://github.com/MYJ-GOD/M-Language-Core)。
+后续扩展工作见 https://github.com/MYJ-GOD/M-Language-Core
