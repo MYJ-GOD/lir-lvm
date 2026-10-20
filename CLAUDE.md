@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repository is
 
-This is the **experiment + paper reproduction package** for the research paper *LIR+LVM: Bounded Execution of LLM-Generated Code on Microcontrollers* (面向大语言模型生成的紧凑硬件控制表示与有界安全执行框架), published in *Journal of Systems Architecture* (JSA), Elsevier. It is not a deployable application — it is a collection of independent experiment scripts, datasets, firmware sketches, result tables, and the LaTeX manuscript. Most files exist to produce the numbers and figures in `latex/main.tex`.
+This is the **experiment + paper reproduction package** for the research paper *LIR+LVM: Bounded Execution of LLM-Generated Code on Microcontrollers* (面向大语言模型生成的紧凑硬件控制表示与有界安全执行框架), published in *Journal of Systems Architecture* (JSA), Elsevier. DOI: 10.1016/j.sysarc.2026.104013. It is not a deployable application — it is a collection of independent experiment scripts, datasets, firmware sketches, result tables, and figure sources. Most files exist to produce the numbers and figures of the paper.
 
-This repository is a standalone, frozen snapshot of the published artifact.
+This repository is a standalone, frozen snapshot of the published artifact. The manuscript source (`latex/main.tex`) and its bibliography are **not** included — the article is behind a paywall, so the manuscript is obtained from the publisher. Nothing needed for reproduction depends on it: `latex/verify.py` is self-contained, and every number in the paper is re-derived from `result/` by `tools/recompute_all.py`.
 
 ## Commands
 
@@ -30,9 +30,6 @@ python tools/mir_compiler.py path/to/prog.mir --dump-plan     # host-side execut
 
 # Verify paper statistics (Wilson CIs and arithmetic claims)
 python latex/verify.py
-
-# Build the manuscript
-cd latex && latexmk -pdf main.tex   # or: pdflatex main.tex; bibtex main; pdflatex x2
 ```
 
 LLM experiments require a local **Ollama** server on `127.0.0.1:11434` (`ollama pull llama3.1:8b`). See `README.md` for the full per-experiment command sequence (generate → eval → repair → token cost → baselines). DeepSeek experiments use `tools/deepseek_client.py` instead.
@@ -82,4 +79,4 @@ Opcodes and unsigned args use uvarint; `LIT` values and jump offsets use zigzag-
 - Compiler errors are typed by `code` (`MIR_PARSE_ERROR`, `UNKNOWN_DEVICE`, `INVALID_CAPABILITY`, `INVALID_SET_TARGET`, `INVALID_ARGUMENT`, `UNSUPPORTED_CONSTRUCT`, `LOWERING_ERROR`); runtime faults by `EXEC_FAULT_*`. The repair loop feeds these codes back to the LLM (`make_feedback` in `run_generation_eval.py`).
 - `tools/` scripts import each other flatly (`from mir_compiler import ...`), so run them with `tools/` as the working directory or on `sys.path`.
 - Result files are versioned by suffix (`_v1`, `_v2_full`, `_r2`, `_final`) rather than overwritten — match the latest when reproducing.
-- When changing paper numbers, update `latex/verify.py` so its asserted statistics stay consistent with `latex/main.tex`.
+- When changing paper numbers, update `latex/verify.py` so its asserted statistics stay consistent with the published manuscript.

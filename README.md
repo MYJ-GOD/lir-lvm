@@ -34,10 +34,9 @@ lir-lvm/
 ├── CLAUDE.md                 # 仓库说明（给 AI 协作者的指南）
 ├── README.md                 # 本文件
 ├── reproduce_software_only.sh # 纯软件离线复现脚本（无需 MCU / LLM）
-├── latex/                    # LaTeX 稿件
-│   ├── main.tex              #   论文正文
-│   ├── cas-refs.bib          #   参考文献
-│   └── verify.py             #   论文统计自检（Wilson CI / 算术复算）
+├── latex/                    # 论文统计自检 + 图源（稿件正文不在本仓库，见 DOI）
+│   ├── verify.py             #   论文统计自检（Wilson CI / 算术复算）
+│   └── fig*_tikz.tex         #   论文图源（compile_tikz.py 编译用）
 ├── spec/                     # 规范文档
 │   └── mir_to_bytecode_mapping.md   # LIR→bytecode 映射规范（编译器/固件须同步）
 ├── vm_full/                  # 完整通用 LVM 的 C 参考实现（~50 指令；见 vm_full/README.md）
@@ -228,10 +227,14 @@ python tools/bench_scalability.py
 ```bash
 # 统计自检：复算论文中的 Wilson CI 与算术声明
 python latex/verify.py
-
-# 编译论文稿件
-cd latex && latexmk -pdf main.tex     # 或：pdflatex main; bibtex main; pdflatex ×2
 ```
+
+> **论文正文不在本仓库。** 本仓库只收录实验代码、数据、固件、规范与结果；
+> 稿件正文（`main.tex`）与参考文献请通过出版方获取：
+> **https://doi.org/10.1016/j.sysarc.2026.104013**
+>
+> 这不影响任何复现路径 —— 论文的每个数字都能从 `result/` 的 CSV 逐项复算
+> （见 `DATA_TRACEABILITY.md` 与 `tools/recompute_all.py`）。
 
 ## 数据说明
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-recompute_all.py - Re-derive every table/figure number in latex/main.tex from
-its source data file and compare against the paper's claimed value.
+recompute_all.py - Re-derive every table/figure number of the published paper
+from its source data file and compare against the paper's claimed value.
 
 Run from repo root:  python tools/recompute_all.py
 Outputs a PASS/MISMATCH line per checked claim.

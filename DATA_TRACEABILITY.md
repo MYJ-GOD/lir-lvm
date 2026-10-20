@@ -1,10 +1,12 @@
 # Data Traceability Matrix
 
-> Maps every quantitative claim in `latex/main.tex` to its source data file, generator
+> Maps every quantitative claim in the paper to its source data file, generator
 > script, reproduction command, and a recompute check.
 >
-> **Synchronised with `main.tex` at git HEAD `0659532` (paper title: "LIR+LVM: Bounded
-> Execution of LLM-Generated Code on Microcontrollers").**
+> **Synchronised with the published manuscript (paper title: "LIR+LVM: Bounded
+> Execution of LLM-Generated Code on Microcontrollers",
+> DOI 10.1016/j.sysarc.2026.104013). The manuscript source itself is not part of
+> this repository; the claims below are stated as they appear in the paper.**
 >
 > **Automated recompute:** every numeric claim below is re-derived from its source by
 > `tools/recompute_all.py`. Last run: **114/114 PASS, 0 FAIL** (3 documented imprecisions
@@ -37,7 +39,7 @@
 
 Each row is a single quantitative claim in the paper. Columns:
 
-- **Claim**: the value as it appears in `main.tex` (table/figure/section).
+- **Claim**: the value as it appears in the paper (table/figure/section).
 - **Source file(s)**: the raw data file(s) holding the numbers.
 - **Generator**: the script that produced the source file (`—` = static asset / manual measurement).
 - **Recompute**: the check id inside `tools/recompute_all.py` (search the label) that re-derives it.
@@ -299,9 +301,8 @@ cd tools && python run_deepseek_generate.py ...                 ; python run_gen
 python tools/recompute_all.py      # re-derive & PASS/MISMATCH every table/figure number
 cd latex && python verify.py       # Wilson CIs + arithmetic
 
-# ---- Figures / manuscript ----
+# ---- Figures ----
 cd tools && python gen_figures_svg.py ; python gen_tikz_figs.py ; python gen_arch_figures.py
-cd latex && latexmk -pdf main.tex
 ```
 
 ---
@@ -321,7 +322,8 @@ cd latex && latexmk -pdf main.tex
 | Forest plot | `fig:forest_rates` | `figures/Fig11_forest_rates.pdf` | `gen_figures_svg.py` ← all TSR CSVs |
 | Scalability ×3 | (`sec:scalability`) | `figures/Fig_scalability_{length,devices,step_limit}.pdf` | `gen_figures_svg.py` ← `scalability/d{1,2,3}_*.csv` |
 
-> Bibliography: `main.tex` uses `\bibliography{cas-refs}` → `latex/cas-refs.bib`
+> The manuscript's bibliography is part of the published article
+> (DOI 10.1016/j.sysarc.2026.104013) and is not redistributed in this repository.
 > (the old `references.bib` was removed; do not cite it).
 
 ---
