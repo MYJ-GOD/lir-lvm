@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "LIR+LVM: Bounded Execution of LLM-Generated Code on Microcontrollers"
+type: software
+authors:
+  - family-names: Ma
+    given-names: Yingjie
+  - family-names: Ma
+    given-names: Mengjia
+  - family-names: Zhao
+    given-names: Sheng
+  - family-names: Liu
+    given-names: Peng
+repository-code: "https://github.com/MYJ-GOD/lir-lvm"
+url: "https://github.com/MYJ-GOD/lir-lvm"
+license: MIT
+version: "1.0"
+# Release date of the frozen artifact snapshot (git tag v1.0-jsa).
+date-released: "2026-10-20"
+keywords:
+  - large language models
+  - microcontroller
+  - intermediate representation
+  - lightweight virtual machine
+  - bounded execution
+  - capability gating
+  - embedded security
+  - reproducible research
+# Venue: Journal of Systems Architecture (JSA), Elsevier.
+# DOI / volume / issue are assigned at publication time and should be added
+# to the `doi:` / `volume:` / `issue:` fields below once available.
+journal:
+  name: "Journal of Systems Architecture"

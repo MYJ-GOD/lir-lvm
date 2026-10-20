@@ -1,5 +1,21 @@
 # M-IR + MVM 论文实验复现指南
 
+> **📄 论文**
+> *LIR+LVM: Bounded Execution of LLM-Generated Code on Microcontrollers*
+> Yingjie Ma, Mengjia Ma, Sheng Zhao, Peng Liu — North China Institute of Aerospace Engineering (NCIAE)
+> 发表于 *Journal of Systems Architecture* (JSA), Elsevier。DOI 见文末「引用」一节。
+>
+> **本仓库是论文发表版本的冻结快照。** 论文的实验数据、脚本、固件与结果不在此处继续改动。
+> 同一套 LIR / bytecode 规范的后续开发在
+> [`MYJ-GOD/M-Language-Core`](https://github.com/MYJ-GOD/M-Language-Core) 进行：
+> 同一 IR 被扩展到 PC 侧（文件 / 进程 / 网络三类资源槽），并新增了内核级策略平面
+> （能力清单 → seccomp cBPF + LSM-BPF）。
+>
+> **一键复现（纯软件，无需 MCU / LLM）：**
+> ```bash
+> bash reproduce_software_only.sh
+> ```
+
 本文档对应论文《M-IR + MVM：面向大语言模型生成的紧凑硬件控制表示与有界安全执行框架》的实验部分。
 
 > **术语映射（重要）**：投稿版论文将 **M-IR 更名为 LIR**、**MVM 更名为 LVM**。
@@ -259,3 +275,21 @@ cd latex && latexmk -pdf main.tex     # 或：pdflatex main; bibtex main; pdflat
 ## 引用
 
 如果使用本文代码或数据，请引用论文。
+
+```bibtex
+@article{ma2026lirlvm,
+  title   = {LIR+LVM: Bounded Execution of {LLM}-Generated Code on Microcontrollers},
+  author  = {Ma, Yingjie and Ma, Mengjia and Zhao, Sheng and Liu, Peng},
+  journal = {Journal of Systems Architecture},
+  year    = {2026},
+  note    = {Code: \url{https://github.com/MYJ-GOD/lir-lvm}}
+}
+```
+
+仓库根目录同时提供 `CITATION.cff`，GitHub 会自动在 "Cite this repository" 中渲染。
+正式 DOI 由期刊在出版时分配，分配后可补充到 `CITATION.cff` 的 `doi:` 字段。
+
+### 后续工作
+
+同一 IR 的 OS 尺度扩展（PC 资源槽 + 内核级策略平面）见
+[`MYJ-GOD/M-Language-Core`](https://github.com/MYJ-GOD/M-Language-Core)。
